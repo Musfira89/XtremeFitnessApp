@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { questionsData } from "./questionsData";
 import { motion } from "framer-motion";
-import Bg from '../assets/fitness_1.jpg'
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import Bg from '../assets/fitness_1.jpg';
+
 const Questionnaire = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const totalSteps = questionsData.length;
   const currentStepData = questionsData[currentStep];
@@ -16,6 +20,9 @@ const Questionnaire = () => {
     } else if (currentStep < totalSteps - 1) {
       setCurrentStep((prev) => prev + 1);
       setCurrentQuestionIndex(0);
+    } else {
+      // Navigate to /payment after the last question in the last step
+      navigate("/payment");
     }
   };
 

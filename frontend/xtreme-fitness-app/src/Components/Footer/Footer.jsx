@@ -1,7 +1,7 @@
 import React from "react";
 import { Facebook, Instagram, Twitter, YouTube } from "@mui/icons-material";
 import { TextField, Button } from "@mui/material";
-import logo from "../../../public/XtremeLogo.png";
+import logo from "../../../public/Logo.png";
 export const Footer = () => {
   return (
     <footer className="bg-black text-white py-10">

@@ -13,10 +13,10 @@ const Dashboard = () => {
       <div className="flex-1 flex flex-col">
         <Topbar />
         <main className="p-8 space-y-8 overflow-auto">
-          {/* Top Section: Receive Plans and Track Progress */}
+          {/* Top Section: Receive Plans and Profile Card */}
           <div className="grid lg:grid-cols-3 gap-6">
-            {/* Receive Plans */}
-            <div className="bg-white rounded-lg shadow-lg p-6 col-span-2">
+            {/* Receive Plans, now with decreased size */}
+            <div className="bg-white rounded-lg shadow-lg p-4 col-span-2">
               <ReceivePlans />
             </div>
 

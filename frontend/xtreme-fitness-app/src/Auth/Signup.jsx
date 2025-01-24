@@ -98,7 +98,7 @@ const Login = () => {
               type="submit"
               className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform"
             >
-              Log In
+              Sign in
             </motion.button>
           </form>
 

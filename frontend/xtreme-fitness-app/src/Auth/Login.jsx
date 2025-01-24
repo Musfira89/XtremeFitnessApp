@@ -1,9 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Logo from "../../public/Logo.png"; // Update the path if needed
 import fitnessBackground from "../assets/fitness_1.jpg"; // Replace with a fitness-related image
+
 const Login = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleLoginClick = () => {
+    // You can add validation or API call logic here
+    navigate("/questions"); // Navigate to /questions page
+  };
+
   return (
     <div className="flex h-screen font-sans">
       {/* Left Section */}
@@ -85,8 +94,8 @@ const Login = () => {
 
             {/* Login Button */}
             <motion.button
-              href="/questions"
-              type="submit"
+              type="button"
+              onClick={handleLoginClick} // Use the function to navigate
               className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform"
             >
               Log In

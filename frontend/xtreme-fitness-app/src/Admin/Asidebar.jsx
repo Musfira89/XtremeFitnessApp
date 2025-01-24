@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHome, FaClipboardList, FaChartLine, FaVideo, FaBullseye } from "react-icons/fa";
+import { FaHome, FaCreditCard, FaUtensils, FaDumbbell, FaCogs } from "react-icons/fa";
 import logo from "../../public/Logo.png";
 
 const Sidebar = () => {
@@ -27,8 +27,18 @@ const Sidebar = () => {
               href="#"
               className="flex items-center space-x-4 text-lg px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
             >
-              <FaClipboardList className="text-red-500 text-2xl" />
-              <span>Plans</span>
+              <FaCreditCard className="text-red-500 text-2xl" />
+              <span>Payment</span>
+            </a>
+          </li>
+        
+          <li>
+            <a
+              href="#"
+              className="flex items-center space-x-4 text-lg px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
+            >
+              <FaDumbbell className="text-red-500 text-2xl" />
+              <span>Manage Meals & Workouts</span>
             </a>
           </li>
           <li>
@@ -36,26 +46,8 @@ const Sidebar = () => {
               href="#"
               className="flex items-center space-x-4 text-lg px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
             >
-              <FaChartLine className="text-red-500 text-2xl" />
-              <span>Tracking</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center space-x-4 text-lg px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
-            >
-              <FaVideo className="text-red-500 text-2xl" />
-              <span>Videos</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="flex items-center space-x-4 text-lg px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
-            >
-              <FaBullseye className="text-red-500 text-2xl" />
-              <span>Progress</span>
+              <FaCogs className="text-red-500 text-2xl" />
+              <span>Settings</span>
             </a>
           </li>
         </ul>
