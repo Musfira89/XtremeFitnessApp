@@ -1,7 +1,8 @@
 import React from "react";
-import { Facebook, Instagram, Twitter, YouTube } from "@mui/icons-material";
-import { TextField, Button } from "@mui/material";
+import { Instagram } from "@mui/icons-material";
+import { Button } from "@mui/material";
 import logo from "../../../public/Logo.png";
+
 export const Footer = () => {
   return (
     <footer className="bg-black text-white py-10">
@@ -14,7 +15,7 @@ export const Footer = () => {
             className="w-60 mb-4"
           />
           <p className="text-gray-400 ">
-          Unlock your potential with customized workout and meal plans
+            Unlock your potential with customized workout and meal plans
             designed just for you. Start your fitness transformation today!
           </p>
         </div>
@@ -43,54 +44,34 @@ export const Footer = () => {
                 Contact Us
               </a>
             </li>
+            <li>
+              <a href="/no-refund-policy" className="text-gray-400 hover:text-white">
+                No Refund Policy
+              </a>
+            </li>
           </ul>
         </div>
 
-        {/* Newsletter and Social Media */}
+        {/* Contact Info and Social Media */}
         <div className="flex flex-col items-start">
-          <h4 className="font-semibold text-lg mb-4">Stay Updated</h4>
-          <p className="text-gray-400 mb-4">
-            Subscribe to our newsletter for the latest updates and offers.
+          <h4 className="font-semibold text-lg mb-4">Contact Us</h4>
+          <p className="text-gray-400 mb-2">
+            Phone: <span className="text-white"> (800) 383-0689 </span>
           </p>
-          <div className="flex items-center w-full mb-4">
-            <TextField
-              variant="outlined"
-              placeholder="Enter your email"
-              size="small"
-              fullWidth
-              InputProps={{
-                style: {
-                  backgroundColor: "white",
-                  borderRadius: "4px",
-                },
-              }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginLeft: "8px", backgroundColor: "#333" }}
-            >
-              Subscribe
-            </Button>
-          </div>
-          <div className="flex space-x-4">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer">
-              <Facebook className="text-gray-400 hover:text-white" />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer">
+          <p className="text-gray-400">
+            Email: <span className="text-white"> support@xtremeft.com </span>
+          </p>
+          <div className="flex space-x-4 mt-4">
+            <a href="https://www.instagram.com/xtreme_fitness/" target="_blank" rel="noreferrer">
               <Instagram className="text-gray-400 hover:text-white" />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer">
-              <Twitter className="text-gray-400 hover:text-white" />
-            </a>
-            <a href="https://youtube.com" target="_blank" rel="noreferrer">
-              <YouTube className="text-gray-400 hover:text-white" />
             </a>
           </div>
         </div>
       </div>
+
+      {/* Footer Bottom Section */}
       <div className="border-t border-gray-700 mt-8 pt-4 text-center text-gray-400 text-sm">
-        © {new Date().getFullYear()} FitnessApp. All rights reserved.
+        © {new Date().getFullYear()} Xtreme Fitness. All rights reserved.
       </div>
     </footer>
   );

@@ -6,7 +6,6 @@ import { Home } from "./Components/Home";
 import Login from "./Auth/Login";
 import Signup from "./Auth/Signup";
 import Questionnaire from "./Questionnaire/Questionnaire";
-import FitnessPrograms from "./Auth/FitnessPrograms";
 import PaymentPage from "./Auth/PaymentPage";
 import Dashboard from "./Dashboard/Dashboard";
 import AdminDashboard from './Admin/AdminDashboard'
@@ -21,7 +20,6 @@ function App() {
            <Route path="/login" element={<Login />} />
            <Route path="/signup" element={<Signup />} />
            <Route path="/questions" element={<Questionnaire />} />
-           <Route path="/chooseprogram" element={<FitnessPrograms />} />
            <Route path="/payment" element={<PaymentPage />} />
            <Route path="/dashboard" element={<Dashboard />} />
            <Route path="/admin" element={<AdminDashboard />} />

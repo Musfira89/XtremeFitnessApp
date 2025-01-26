@@ -1,77 +1,87 @@
-// import React, { useState, useEffect } from "react";
-// import { useNavigate } from 'react-router-dom'
-// import axios from "axios";
+import React from "react";
+import bgImage from "../../assets/LandingPageImg/cardsBg.jpg"; // Background image
+import proteinImage from "../../assets/products/protein.jpg"; // Product images
+import testBoosterImage from "../../assets/products/test-booster.jpg";
+import proteinBarsImage from "../../assets/products/protein-bars.jpg";
+import fatBurnerImage from "../../assets/products/fat-burner.jpg";
+import dumbbellsImage from "../../assets/products/dumbbells.jpg";
+import workoutMatImage from "../../assets/products/workout-mat.jpg";
+import workoutBenchImage from "../../assets/products/workout-bench.jpg";
+import exerciseBikeImage from "../../assets/products/exercise-bike.jpg";
 
-// const ProductSection = () => {
+const products = [
+  { name: "Protein", image: proteinImage, price: "$39.99" },
+  { name: "Test Booster", image: testBoosterImage, price: "$29.99" },
+  { name: "Protein Bars", image: proteinBarsImage, price: "$19.99" },
+  { name: "Fat Burner", image: fatBurnerImage, price: "$24.99" },
+  { name: "Dumbbells", image: dumbbellsImage, price: "$59.99" },
+  { name: "Workout Mat", image: workoutMatImage, price: "$19.99" },
+  { name: "Workout Bench", image: workoutBenchImage, price: "$149.99" },
+  { name: "Exercise Bike", image: exerciseBikeImage, price: "$399.99" },
+];
 
+const ProductSection = () => {
+  return (
+    <div
+      className="relative bg-cover bg-center py-24"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      {/* Heading */}
+      <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
+        <div className="relative mb-24">
+          <h2 className="text-4xl font-extrabold text-red-700">Fitness Supplements & Products</h2>
+          <div className="mt-2 w-56 h-[3px] bg-red-600 mx-auto"></div>
+        </div>
 
-//   return (
-//     <div className="p-8 flex flex-col items-center">
-//       <div className="flex justify-center gap-4 mb-8">
-//         {["skin", "hair", "body"].map((cat) => (
-//           <button
-//             key={cat}
-//             className={`px-12 py-2 text-white font-semibold rounded-lg transition-all ${category === cat
-//               ? "bg-black shadow-lg transform scale-105"
-//               : "bg-gray-400 hover:bg-gray-500 hover:shadow-md"
-//               }`}
-//             onClick={() => setCategory(cat)}
-//           >
-//             {cat}
-//           </button>
-//         ))}
-//       </div>
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10">
+          {products.map((product, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-2xl rounded-lg overflow-hidden flex flex-col items-center transition-all transform hover:scale-105 hover:shadow-xl"
+            >
+              {/* Product Image */}
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-64 object-cover"
+              />
+              {/* Product Details */}
+              <div className="p-6 text-center w-full">
+                {/* Product Name */}
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{product.name}</h3>
+                
+                {/* Product Price */}
+                <p className="text-xl font-bold text-red-600 mb-4">{product.price}</p>
 
-     
-//         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center w-full max-w-7xl">
-//           {products.map((product) => (
-//             <div
-//               key={product.id}
-//               className="bg-white p-6 rounded-md shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl w-[94%] relative"
-//             >
-//               {product.discount && (
-//                 <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 text-sm font-bold rounded-full shadow-md">
-//                   {product.discount}% OFF
-//                 </div>
-//               )}
+                {/* Star Rating */}
+                <div className="flex justify-center items-center mb-4">
+                  {Array.from({ length: 5 }, (_, starIndex) => (
+                    <svg
+                      key={starIndex}
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill={starIndex < Math.round(product.rating) ? "gold" : "none"}
+                      stroke="gold"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      className="w-5 h-5"
+                    >
+                      <path d="M12 2.25l3.09 6.26 6.91 1-5 4.87 1.18 6.87L12 17.77l-6.18 3.25L7 14.38 2 9.5l6.91-1L12 2.25z" />
+                    </svg>
+                  ))}
+                </div>
 
-//               <div className="h-56 bg-gray-100 rounded-md flex justify-center items-center overflow-hidden">
-//                 <img
-//                   src={`data:image/png;base64,${product.image}`}
-//                   alt={product.name}
-//                   className="h-full object-contain"
-//                 />
+                {/* Buy Now Button */}
+                <button className="bg-red-600 text-white px-8 py-2 rounded-md font-semibold hover:bg-red-700 transition duration-300">
+                  Buy Now
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-//               </div>
-
-//               <h3 className="mt-4 text-xl font-bold text-gray-800">{product.name}</h3>
-//               {product.discount ? (
-//                 <div className="mt-2 text-lg">
-//                   <span className="text-red-500 font-bold">
-//                     Rs {product.price - (product.price * product.discount) / 100}
-//                   </span>
-//                   <span className="line-through text-gray-400 ml-2">
-//                     Rs {product.price}
-//                   </span>
-//                 </div>
-//               ) : (
-//                 <p className="text-gray-600 text-lg mt-2">Rs {product.price}</p>
-//               )}
-
-
-//               {/* Shop Now Button */}
-//               <button
-//                 onClick={() => handleShopNow(product)}
-//                 className="mt-4 px-5 py-2 w-full bg-black text-white rounded-md transition-all hover:bg-gray-500"
-//               >
-//                 Shop Now
-//               </button>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default ProductSection;
+export default ProductSection;

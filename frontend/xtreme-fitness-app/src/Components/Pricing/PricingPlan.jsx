@@ -1,110 +1,86 @@
 import React from "react";
+import { CheckCircle } from "lucide-react";
+import freePlanImage from "../../assets/free.jpeg"; // Replace with actual image paths
+import basicPlanImage from "../../assets/basic.png";
+import proPlanImage from "../../assets/pro.png";
 
-const PricingPlan = () => {
+const PricingPlans = () => {
   const plans = [
     {
-      title: "Starter Plan",
-      price: "$19",
-      description: "Perfect for beginners starting their fitness journey.",
+      name: "Free",
+      price: "$0",
+      image: freePlanImage,
       features: [
-        "Access to gym equipment",
-        "1 personal training session/week",
-        "Basic diet plan guidance",
-        "Fitness tracking app",
-        "Email support",
-        "Basic diet plan guidance",
+        "Basic support",
+        "Limited access",
+        "Community help",
+        "No ads",
+        "Basic analytics",
       ],
     },
     {
-      title: "Pro Plan",
-      price: "$49",
-      description: "Ideal for enthusiasts aiming for serious progress.",
+      name: "Basic",
+      price: "$120",
+      image: basicPlanImage,
       features: [
-        "Unlimited gym access",
-        "3 personal training sessions/week",
-        "Custom diet plan",
-        "Advanced fitness tracking app",
-        "Priority customer support",
-        "Access to group classes (Yoga, Zumba, HIIT)",
+        "Priority support",
+        "Full access",
+        "Custom options",
+        "Ad-free experience",
+        "Advanced analytics",
+        "Access to exclusive content",
       ],
-      highlighted: true, // Black background for the middle card
     },
     {
-      title: "Elite Plan",
-      price: "$99",
-      description: "Designed for athletes who demand the best.",
+      name: "Pro",
+      price: "$250",
+      image: proPlanImage,
       features: [
-        "24/7 gym access",
-        "Dedicated personal trainer",
-        "Comprehensive diet & supplement plan",
-        "Advanced group classes",
-        "Weekly progress check-ins",
-        "VIP fitness community",
+        "Dedicated support",
+        "Unlimited access",
+        "Advanced tools",
+        "Personalized coaching",
+        "Complete analytics",
+        "Early access to features",
+        "Custom branding options",
       ],
     },
   ];
 
   return (
-        <div className="py-16 px-6 bg-white mb-10 mt-10">
-          {/* Section Title */}
-          <h2 className="text-center text-4xl font-bold text-red-600 mb-6">
-            OUR PRICING PLAN
-          </h2>
-          {/* Description */}
-          <p className="text-center text-gray-500 text-md mb-14">
-            Choose the plan that fits your fitness goals. Whether you're starting out or looking to take<br></br> your training to the next level, we’ve got you covered.
-          </p>
-          {/* Pricing Cards */}
-          <div className="flex flex-col md:flex-row justify-center gap-12">
-            {plans.map((plan, index) => (
-              <div
-                key={index}
-                className={`w-[350px] h-[550px] p-8 rounded-lg shadow-lg border ${
-                  plan.highlighted
-                    ? "bg-black text-white border-black"
-                    : "bg-white text-black border-gray-200"
-                }`}
-              >
-                {/* Title */}
-                <h3 className="text-2xl font-bold mb-4">
-                  {plan.title}
-                </h3>
-                {/* Description */}
-                <p
-                  className={`text-sm mb-6 ${
-                    plan.highlighted ? "text-gray-400" : "text-gray-700"
-                  }`}
-                >
-                  {plan.description}
-                </p>
-                {/* Price */}
-                <p className="text-5xl font-bold mb-8">
-                  {plan.price}
-                </p>
-                {/* Features */}
-                <ul className="mb-8">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-center gap-2 mb-3">
-                      <span className="text-green-500">✔</span>
-                      <p className="text-sm">{feature}</p>
-                    </li>
-                  ))}
-                </ul>
-                {/* Subscribe Button */}
-                <button
-                  className={`w-full py-3 text-center font-bold rounded ${
-                    plan.highlighted
-                      ? "bg-white text-black hover:bg-gray-200"
-                      : "bg-black text-white hover:bg-gray-700"
-                  }`}
-                >
-                  Subscribe now
-                </button>
-              </div>
+    <div className="flex flex-col md:flex-row justify-center items-center gap-8 w-full px-4 md:px-10 py-10 mt-16 mb-28">
+      {plans.map((plan, index) => (
+        <div
+          key={index}
+          className="w-full md:w-[28%] flex flex-col items-center text-center bg-white shadow-lg shadow-red-200 border border-gray-200 rounded-lg overflow-hidden"
+        >
+          <img
+            src={plan.image}
+            alt={`${plan.name} Plan`}
+            className="w-full aspect-[4/3] object-cover"
+          />
+
+          {/* Plan Name */}
+          <h2 className="text-2xl font-bold mt-4">{plan.name}</h2>
+          {/* Price */}
+          <p className="text-4xl font-extrabold mt-2">{plan.price}</p>
+          {/* Features */}
+          <ul className="mt-4 space-y-2 px-6">
+            {plan.features.map((feature, i) => (
+              <li key={i} className="text-gray-600 flex items-center gap-2">
+                <CheckCircle className="text-gray-400 w-5 h-5" />
+                {feature}
+              </li>
             ))}
-          </div>
+          </ul>
+          {/* Buy Button */}
+          <button className="mt-6 mb-6 px-6 py-2 bg-red-700 text-white font-semibold uppercase rounded-md hover:bg-red-800 transition">
+            Buy Plan
+          </button>
         </div>
-      );
-    };
-    
-    export default PricingPlan;
+      ))}
+    </div>
+  );
+};
+
+export default PricingPlans;
