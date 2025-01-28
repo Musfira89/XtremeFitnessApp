@@ -1,22 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Logo from "../../public/Logo.png"; // Update the path if needed
-import fitnessBackground from "../assets/fitness_1.jpg"; // Replace with a fitness-related image
+import fitnessBackground from "../assets/LandingPageImg/service1.png"; // Replace with a fitness-related image
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+  
+  // State variables for form fields
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state to handle button text
 
-  const handleLoginClick = () => {
-    // You can add validation or API call logic here
-    navigate("/questions"); // Navigate to /questions page
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true); // Show loading state
+
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        toast.success("Login successful!"); // Show success toast
+        localStorage.setItem("token", response.data.token); // Store token in localStorage (or wherever needed)
+        navigate("/questions"); // Navigate to the /questions page on success
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed. Please try again."); // Show error toast
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   return (
     <div className="flex h-screen font-sans">
       {/* Left Section */}
-      <div className="w-1/2 bg-gradient-to-br from-red-700 to-red-500 relative flex flex-col justify-between items-center text-white px-8 py-6">
+      <div
+        className="w-1/2 relative flex flex-col justify-between items-center text-white px-8 py-6"
+        style={{
+          backgroundImage: `url(${fitnessBackground})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         {/* Logo */}
         <motion.img
           src={Logo} // Replace with your logo image path
@@ -55,9 +86,9 @@ const Login = () => {
       </div>
 
       {/* Right Section */}
-      <div className="w-1/2 flex justify-center items-center bg-gray-100">
+      <div className="w-1/2 flex justify-center items-center bg-gray-100 p-20">
         <motion.div
-          className="w-4/5 max-w-lg p-10 bg-white rounded-2xl shadow-2xl"
+          className="w-full p-12 bg-white rounded-2xl shadow-2xl"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
@@ -71,7 +102,7 @@ const Login = () => {
           </div>
 
           {/* Form */}
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Email Field */}
             <div className="relative">
               <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
@@ -79,6 +110,8 @@ const Login = () => {
                 type="email"
                 placeholder="Email Address"
                 className="w-full pl-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -89,16 +122,18 @@ const Login = () => {
                 type="password"
                 placeholder="Password"
                 className="w-full pl-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
             {/* Login Button */}
             <motion.button
-              type="button"
-              onClick={handleLoginClick} // Use the function to navigate
+              type="submit"
               className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform"
+              disabled={loading}
             >
-              Log In
+              {loading ? "Logging In..." : "Log In"}
             </motion.button>
           </form>
 

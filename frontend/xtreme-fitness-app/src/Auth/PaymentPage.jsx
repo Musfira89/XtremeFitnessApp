@@ -1,21 +1,85 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { CheckCircle } from "lucide-react";
+import fitnessBackground from "../assets/LandingPageImg/service1.png"; // Replace with a fitness-related image
 
 const PaymentPage = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
   const navigate = useNavigate();
 
-  const handlePlanSelection = (plan) => {
-    if (plan === "Free Trial") {
-      navigate("/dashboard");
-    } else {
-      setSelectedPlan(plan);
-    }
+  const plans = [
+    {
+      name: "Xtreme Silver",
+      price: "$899.99/",
+      priceDetails: "Billed monthly until cancelled",
+      features: [
+        "1 on 1 coaching",
+        "Customized Workout Plan",
+        "Customized Meal Plan",
+        "Supplement Recommendations",
+        "Weekly Email Check ins",
+        "Progress Tracking",
+        "Ongoing Support & Communication",
+        "Referral Discounts",
+      ],
+    },
+    {
+      name: "Xtreme Platinum",
+      price: "$499.99/",
+      priceDetails: (
+        <div className="text-gray-600">
+          <p className="text-red-500"> $1499.99 / 3 months</p>
+          <p className="text-red-500">Save $1200 Billed every 3 months until cancelled.</p>
+        </div>
+      ),
+      features: [
+        "1 on 1 coaching",
+        "Customized Workout Plan",
+        "Customized Meal Plan",
+        "Supplement Recommendations",
+        "Weekly Email Check ins",
+        "Progress Tracking",
+        "Ongoing Support & Communication",
+        "Referral Discounts",
+        "Renewal Discounts",
+        "1 Video meeting (20 -30 minutes)",
+      ],
+    },
+    {
+      name: "Xtreme Gold",
+      price: "$699.99/",
+      priceDetails: (
+        <div className="text-gray-600">
+          <p className="text-red-500"> $1399.99 / 2 months</p>
+          <p className="text-red-500">Save $400 Billed every 2 months until cancelled.</p>
+        </div>
+      ),
+      features: [
+        "1 on 1 coaching",
+        "Customized Workout Plan",
+        "Customized Meal Plan",
+        "Supplement Recommendations",
+        "Weekly Email Check ins",
+        "Progress Tracking",
+        "1 Video meeting (20 -30 minutes)",
+        "Ongoing Support & Communication",
+        "Referral Discounts",
+        "Renewal Discounts",
+      ],
+    },
+  ];
+
+  // Navigate to /dashboard when a plan is selected
+  const handlePlanSelection = () => {
+    navigate("/dashboard");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-600 to-red-500 text-white flex flex-col items-center justify-between px-6 py-8">
+    <div
+      className="min-h-screen text-white flex flex-col items-center justify-between px-6 py-8 bg-cover bg-center"
+      style={{ backgroundImage: `url(${fitnessBackground})` }}
+    >
       {/* Step Progress */}
       <div className="w-full max-w-4xl flex items-center justify-between mb-6">
         <div className="flex items-center">
@@ -41,53 +105,57 @@ const PaymentPage = () => {
       </div>
 
       {/* Subscription Plans */}
-      <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
-        {["Free Trial", "Premium", "Pro"].map((plan, index) => (
+      <div className="flex flex-col md:flex-row justify-center items-center gap-8 w-full px-4 md:px-10 py-10 mt-16 mb-28">
+        {plans.map((plan, index) => (
           <div
             key={index}
-            className={`p-8 rounded-lg text-center cursor-pointer ${
-              plan === "Premium"
-                ? "bg-red-600 text-white border-4 border-white"
-                : "bg-white text-red-600"
-            }`}
-            onClick={() => handlePlanSelection(plan)}
+            className="w-full md:w-[28%] flex flex-col items-center text-center bg-white border border-gray-200 rounded-lg overflow-hidden"
           >
-            <h3 className="text-2xl font-bold">{plan}</h3>
-            <ul className="mt-4 text-sm space-y-2">
-              {plan === "Free Trial" && (
-                <>
-                  <li>7 Days Access</li>
-                  <li>Basic Features</li>
-                  <li>No Payment Required</li>
-                </>
-              )}
-              {plan === "Premium" && (
-                <>
-                  <li>Unlimited Workouts</li>
-                  <li>Exclusive Content</li>
-                  <li>Priority Support</li>
-                </>
-              )}
-              {plan === "Pro" && (
-                <>
-                  <li>Personalized Plans</li>
-                  <li>1-on-1 Coaching</li>
-                  <li>Advanced Analytics</li>
-                </>
-              )}
+            {/* Plan Name */}
+            <h2 className="text-2xl font-bold text-black mt-4">{plan.name}</h2> {/* Adjusted color */}
+            {/* Price */}
+            <p className="text-4xl font-extrabold text-black mt-2">{plan.price}</p> {/* Adjusted color */}
+            {/* Price Details */}
+            <p className="text-sm text-red-500 mt-4 mb-2">{plan.priceDetails}</p>
+            {/* Features */}
+            <ul className="mt-4 space-y-2 px-6">
+              {plan.features.map((feature, i) => (
+                <li key={i} className="text-gray-600 flex items-center gap-2">
+                  <CheckCircle className="text-gray-400 w-5 h-5" />
+                  {feature}
+                </li>
+              ))}
             </ul>
-            <div className="text-3xl font-extrabold mt-6">
-              {plan === "Free Trial" ? "$0" : plan === "Premium" ? "$29.99" : "$49.99"}
-            </div>
+            {/* Buy Button */}
             <button
-              className={`mt-6 w-full py-3 ${
-                plan === "Premium" ? "bg-white text-red-600" : "bg-red-600 text-white"
-              } font-bold rounded-lg transition hover:bg-opacity-90`}
+              className="mt-6 mb-6 px-12 py-2 bg-red-700 text-white font-semibold uppercase rounded-md hover:bg-red-800 transition"
+              onClick={handlePlanSelection} // Trigger navigation when clicked
             >
-              {plan === "Free Trial" ? "Start Trial" : `Choose ${plan}`}
+              Buy Plan
             </button>
           </div>
         ))}
+      </div>
+
+      {/* Progress Bar */}
+      <div className="w-full max-w-4xl mb-12">
+        <div className="relative pt-1">
+          <div className="flex mb-2 items-center justify-between">
+            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase">
+              Step Progress
+            </span>
+            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase">
+              60% Completed
+            </span>
+          </div>
+          <div className="flex mb-2">
+            <div className="relative flex w-full mb-2 items-center justify-between">
+              <div className="flex-grow h-1 bg-gray-200">
+                <div className="h-1 bg-red-600" style={{ width: "60%" }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Payment Section */}

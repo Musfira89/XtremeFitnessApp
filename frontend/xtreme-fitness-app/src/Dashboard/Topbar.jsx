@@ -15,7 +15,13 @@ const Topbar = () => {
   return (
     <header className="flex justify-between items-center px-8 py-4 bg-gradient-to-r from-red-500 to-red-800 shadow-md text-white">
       {/* Logo/Title Section */}
-      <h1 className="text-3xl font-bold tracking-wide uppercase">Dashboard</h1>
+      <div>
+        <h1 className="text-3xl font-bold tracking-wide uppercase">Dashboard</h1>
+        {/* Zoom Alert Section */}
+        <p className="mt-1 text-sm underline text-gray-200 cursor-pointer hover:text-gray-100">
+          Join Zoom Meeting
+        </p>
+      </div>
 
       {/* Right Section: Notification + Profile */}
       <div className="flex items-center space-x-8">
