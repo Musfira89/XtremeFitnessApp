@@ -64,7 +64,7 @@ const HeroSection = () => {
               Sign In
             </Link>
             {/* USER Button */}
-            <Link to="/admin">
+            <Link to="/adminlogin">
               <button className="flex items-center gap-2 px-4 py-2 border-2 border-white text-white uppercase font-semibold tracking-wide hover:bg-white hover:text-red-800 transition-all duration-300">
                 <span>
                   <svg

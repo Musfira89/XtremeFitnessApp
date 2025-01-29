@@ -5,34 +5,38 @@ import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 import { Home } from "./LandingPage/Home";
 import Login from "./Auth/Login";
 import Signup from "./Auth/Signup";
-import Questionnaire from "./Questionnaire/Questionnaire";
+import Questionnaire from "./Auth/Questionnaire";
 import PaymentPage from "./Auth/PaymentPage";
-import AdminDashboard from './Admin/AdminDashboard';
 import BuyCards from "./LandingPage/Product/BuyCards";
 import AppRoutes from "./route";
-import MealPlan from "./pages/MealPlan";
-
+import { AuthProvider } from "./context/AuthContext";
+import AdminLogin from "./Admin/AdminLogin/AdminLogin";
+import Adminroutes from "./Admin/Adminroutes";
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Landing Page Routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="/buycards" element={<BuyCards />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Landing Page Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/buycards" element={<BuyCards />} />
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/questions" element={<Questionnaire />} />
-        <Route path="/payment" element={<PaymentPage />} />
+          {/* User Panel Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/questions/:userId" element={<Questionnaire />} />
+          <Route path="/payment/:userId" element={<PaymentPage />} />
+          <Route path="/dashboard/:userId/*" element={<AppRoutes />} />
 
-        <Route path="/dashboard/*" element={<AppRoutes />} />
-        
-        <Route path="/admin" element={<AdminDashboard />} />
-      </Routes>
+          {/* Admin Panel Routes */}
+          <Route path="/adminlogin" element={<AdminLogin />} />
+          <Route path="/admin/*" element={<Adminroutes />} />
+        </Routes>
 
-      {/* Toast Container */}
-      <ToastContainer />
-    </Router>
+        {/* Toast Container */}
+        <ToastContainer />
+      </Router>
+    </AuthProvider>
   );
 }
 

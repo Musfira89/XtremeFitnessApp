@@ -1,15 +1,21 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Outlet, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 
 const Layout = () => {
+  const { userId } = useParams(); // Access the userId from the route parameter
   const [isSidebarOpen] = useState(true); // Sidebar remains open
+
+  useEffect(() => {
+    // Optionally, you can fetch user data based on the userId here
+    console.log("Current userId:", userId);
+  }, [userId]);
 
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar */}
-      <Sidebar />
+      <Sidebar userId={userId} />
 
       {/* Main Content Area */}
       <div

@@ -1,4 +1,4 @@
-// controllers/pricingPlanController.js
+
 import Stripe from 'stripe';
 import dotenv from 'dotenv';
 
@@ -6,20 +6,20 @@ dotenv.config();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Mock plans (ideally, fetch this from your database)
+
 const plans = {
   free: { name: "Free Plan", price: 0 },
-  silver: { name: "Xtreme Silver", price: 89999 }, // Price in cents
+  silver: { name: "Xtreme Silver", price: 89999 }, 
   gold: { name: "Xtreme Gold", price: 69999 },
   platinum: { name: "Xtreme Platinum", price: 149999 },
 };
 
-// Get available plans
+
 export const getPlans = (req, res) => {
   res.json({ success: true, plans });
 };
 
-// Handle plan selection and payment
+
 export const purchasePlan = async (req, res) => {
   const { planName, email } = req.body;
 

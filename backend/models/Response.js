@@ -10,8 +10,9 @@ const responseSchema = new mongoose.Schema({
       "Demographics",
       "Physical Activity",
       "Diet and Nutrition",
-      "Health and Medical Factors",
+      "Health and Medical",
       "Fitness Goals",
+
     ],
     required: true,
   },

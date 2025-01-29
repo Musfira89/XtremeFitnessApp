@@ -4,7 +4,7 @@ import { FaHome, FaClipboardList, FaChartLine, FaVideo, FaBullseye } from "react
 import logo from "../../public/Logo.png";
 import profileImage from "../../public/profile.png"; // Replace with your actual image path or placeholder image
 
-const Sidebar = () => {
+const Sidebar = ({ userId }) => {
   return (
     <aside className="w-72 h-screen bg-gray-50 shadow-lg flex flex-col fixed top-0 left-0">
       {/* Logo Section */}
@@ -31,10 +31,12 @@ const Sidebar = () => {
         <ul className="space-y-2">
           <li>
             <NavLink
-              to="/dashboard"
+              to={`/dashboard/${userId}`}
               className={({ isActive }) =>
                 `flex items-center space-x-4 text-sm px-4 py-2 rounded-lg ${
-                  isActive ? "bg-gray-100 text-gray-800 font-semibold" : "text-gray-700 hover:bg-gray-100 hover:text-gray-800"
+                  isActive
+                    ? "bg-gray-100 text-gray-800 font-semibold"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-800"
                 } transition`
               }
             >
@@ -44,10 +46,12 @@ const Sidebar = () => {
           </li>
           <li>
             <NavLink
-              to="/dashboard/mealPlan"
+              to={`/dashboard/${userId}/mealPlan`}
               className={({ isActive }) =>
                 `flex items-center space-x-4 text-sm px-4 py-2 rounded-lg ${
-                  isActive ? "bg-gray-100 text-gray-800 font-semibold" : "text-gray-700 hover:bg-gray-100 hover:text-gray-800"
+                  isActive
+                    ? "bg-gray-100 text-gray-800 font-semibold"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-gray-800"
                 } transition`
               }
             >

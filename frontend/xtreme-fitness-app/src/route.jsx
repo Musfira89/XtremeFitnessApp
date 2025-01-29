@@ -17,7 +17,7 @@ const AppRoutes = () => (
       {/* Default Route (Dashboard Home) */}
       <Route index element={<Home />} />
 
-      {/* Nested Routes for Dashboard */}
+      {/* Nested Routes for Dashboard with userId */}
       <Route path="mealPlan" element={<Meal />} />
       <Route path="workoutPlan" element={<Workout />} />
       <Route path="supplements" element={<Supplements />} />

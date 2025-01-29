@@ -7,6 +7,8 @@ import connectDB from './mongoConnect.js';  // DB connection
 import authRoutes from './routes/auth.js';
 import questionRoutes from "./routes/question.js";
 import responseRoutes from "./routes/response.js";
+import adminRoutes from './routes/admin.js';
+
 dotenv.config();
 
 const app = express();
@@ -26,6 +28,8 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use("/api/question", questionRoutes); // For questions
 app.use("/api/response", responseRoutes); // For responses
+app.use('/api/admin', adminRoutes);
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

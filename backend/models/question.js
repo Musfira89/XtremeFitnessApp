@@ -10,10 +10,9 @@ const questionSchema = new mongoose.Schema({
     enum: [
       "Demographics",
       "Physical Activity",
-      "Diet & Nutrition",
+      "Diet and Nutrition",
       "Health and Medical",
       "Fitness Goals",
-
     ],
     required: true,
   },
