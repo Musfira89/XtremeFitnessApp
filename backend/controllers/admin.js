@@ -1,37 +1,52 @@
 import bcrypt from 'bcryptjs'; 
 import { StatusCodes } from 'http-status-codes';
-import User from '../models/auth.js'; // Ensure this import is at the top of the file
+import Admin from '../models/admin.js';
+import User from '../models/auth.js'
 
-const ADMIN_EMAIL = "admin@example.com";
-const ADMIN_PASSWORD = "adminPassword"; // Plain password, we'll hash it for comparison
 
-// Hash the fixed admin password for comparison
-const hashedPassword = bcrypt.hashSync(ADMIN_PASSWORD, 10);
+export const adminSignup = async (req, res) => {
+  const { fullName, email, password } = req.body;
+
+  try {
+    const existingAdmin = await Admin.findOne({ email });
+    if (existingAdmin) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Admin already exists' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newAdmin = new Admin({
+      fullName,
+      email,
+      password: hashedPassword,
+    });
+
+    await newAdmin.save();
+    res.status(StatusCodes.CREATED).json({ message: 'Admin created successfully' });
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error creating admin' });
+  }
+};
 
 export const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if the email matches the hard-coded email
-    if (email !== ADMIN_EMAIL) {
-      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid email' });
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Admin not found' });
     }
 
-    // Compare the provided password with the hashed password
-    const isMatch = await bcrypt.compare(password, hashedPassword);
+    const isMatch = await bcrypt.compare(password, admin.password);
     if (!isMatch) {
       return res.status(StatusCodes.BAD_REQUEST).json({ message: 'Invalid credentials' });
     }
 
-    // If the credentials are correct, return a success response
-    return res.status(StatusCodes.OK).json({
+    res.status(StatusCodes.OK).json({
       message: 'Login successful',
-      admin: { email }, // Include the email in the response
+      admin: { id: admin._id, email: admin.email, fullName: admin.fullName },
     });
   } catch (error) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: 'Something went wrong. Please try again later.',
-    });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Error logging in' });
   }
 };
 

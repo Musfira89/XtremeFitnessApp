@@ -1,13 +1,16 @@
 import React from "react";
 import { FaDumbbell, FaClipboardCheck, FaComments } from "react-icons/fa";
+import Message from "./Message";
 
 const ZoomMeetings = () => {
   return (
     <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold text-red-600 mb-6 flex items-center">
-        <FaDumbbell className="text-red-500 mr-3" />
-        Zoom Meetings
-      </h2>
+   <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-lg p-4 mb-6 max-w-3xl">
+        <p className="text-sm font-medium">
+          <strong>Info:</strong> Meeting link will expire after 30 minutes.
+        </p>
+      </div>
+
 
       {/* Upcoming and Past Meetings */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -21,7 +24,7 @@ const ZoomMeetings = () => {
             <strong>Topic:</strong> Weekly Progress Check-in
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            <strong>Date:</strong> Saturday, 10 AM
+            <strong>Date:</strong> Sunday, 12:07 AM
           </p>
           <button className="mt-4 w-full bg-gradient-to-r from-red-500 to-red-700 text-white font-medium px-6 py-2 rounded-lg shadow-md">
             Join Now
@@ -48,22 +51,7 @@ const ZoomMeetings = () => {
       </div>
 
       {/* Coach Communication */}
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-6 rounded-xl shadow-lg mt-6">
-        <h3 className="text-lg font-bold text-red-600 flex items-center">
-          <FaComments className="mr-2" />
-          Coach Communication
-        </h3>
-        <div className="mt-6">
-          <textarea
-            className="w-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-red-500"
-            rows="4"
-            placeholder="Send a message to your coach..."
-          ></textarea>
-          <button className="mt-4 w-full bg-gradient-to-r from-red-500 to-red-700 text-white font-medium px-6 py-2 rounded-lg shadow-md">
-            Send Message
-          </button>
-        </div>
-      </div>
+    <Message/> 
     </div>
   );
 };

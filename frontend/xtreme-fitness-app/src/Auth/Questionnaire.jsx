@@ -47,53 +47,44 @@ const Questionnaire = () => {
   }, [currentCategory]);
 
   const handleNext = async () => {
-    // Extract the current question data
     const currentQuestionData = questionsData[currentQuestion];
-
-    // Determine the user's answer
+  
     const answer =
       currentQuestionData.inputType === "text"
         ? document.getElementById(`question-${currentQuestion}`)?.value
         : selectedOption;
-
-    // Add the answer to the list
+  
     const updatedAnswers = [
       ...answers,
       { questionId: currentQuestionData._id, answer },
     ];
     setAnswers(updatedAnswers);
-
-    // Handle end of questionnaire
-    if (
-      currentQuestion === questionsData.length - 1 &&
-      currentCategory === categories.length - 1
-    ) {
+  
+    if (currentQuestion === questionsData.length - 1 && currentCategory === categories.length - 1) {
       try {
         const payload = {
           userId: auth.userId,
           category: categories[currentCategory],
           answers: updatedAnswers,
         };
-
-        console.log("Submitting responses:", payload);
-
+  
         await axios.post("http://localhost:5000/api/response/save", payload);
+  
+        // Mark the questionnaire as completed
+        await axios.put(`http://localhost:5000/api/auth/mark-complete/${auth.userId}`);
+  
         toast.success("Responses saved successfully!");
         navigate(`/payment/${auth.userId}`);
       } catch (error) {
-        console.error(
-          "Error saving responses:",
-          error.response || error.message
-        );
+        console.error("Error saving responses:", error.response || error.message);
         toast.error("Failed to save responses. Please try again.");
       }
     } else {
-      // Navigate to the next question or category
       if (currentQuestion < questionsData.length - 1) {
         setCurrentQuestion((prev) => prev + 1);
       } else if (currentCategory < categories.length - 1) {
         setCurrentCategory((prev) => prev + 1);
-        setAnswers([]); // Reset answers for the new category
+        setAnswers([]);
       }
     }
   };

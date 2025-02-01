@@ -3,6 +3,7 @@ import { FaBell, FaUserCircle } from "react-icons/fa";
 
 const Topbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [plan, setPlan] = useState("Free"); // Free or Paid plan state
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -13,7 +14,7 @@ const Topbar = () => {
   };
 
   return (
-    <header className="flex justify-between items-center px-8 py-4 bg-gradient-to-r from-red-500 to-red-800 shadow-md text-white">
+    <header className="flex justify-between items-center px-8 py-4 bg-gradient-to-r from-red-700 to-red-800 shadow-md text-white">
       {/* Logo/Title Section */}
       <div>
         <h1 className="text-3xl font-bold tracking-wide uppercase">Dashboard</h1>
@@ -23,8 +24,26 @@ const Topbar = () => {
         </p>
       </div>
 
-      {/* Right Section: Notification + Profile */}
+      {/* Right Section: Notification + Profile + Plan Status */}
       <div className="flex items-center space-x-8">
+        {/* Plan Status */}
+        <div className="flex items-center space-x-2">
+          <div
+            className={`text-sm py-1 px-3 rounded-full ${
+              plan === "Paid" ? "bg-green-500 text-white" : "bg-yellow-500 text-gray-800"
+            }`}
+          >
+            {plan === "Paid" ? "Paid Plan" : "Free Plan"}
+          </div>
+
+          {/* Call to Action for Upgrading Plan */}
+          {plan === "Free" && (
+            <p className="text-sm text-gray-100 cursor-pointer hover:text-white">
+              <span className="underline">Upgrade to Paid Plan</span>
+            </p>
+          )}
+        </div>
+
         {/* Notification Icon with Badge */}
         <button className="relative text-white hover:text-gray-200 transition duration-300 ease-in-out">
           <FaBell className="text-2xl" />
@@ -69,7 +88,7 @@ const Topbar = () => {
                 </li>
                 <li>
                   <a
-                    href="#logout"
+                    href="/"
                     className="block px-4 py-3 hover:bg-red-100 text-red-600 font-medium"
                   >
                     Logout

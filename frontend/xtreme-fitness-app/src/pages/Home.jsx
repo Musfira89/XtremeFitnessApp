@@ -11,7 +11,7 @@ const Home = () => {
       {/* Cards and Calendar: 70% Cards and 30% Calendar */}
       <div className="flex gap-6">
         <div className="w-[70%]">
-          <Cards />
+          <Cards  />
         </div>
         <div className="w-[30%] flex flex-col justify-between">
           <Calendar />

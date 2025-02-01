@@ -1,31 +1,43 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { jwtDecode } from "jwt-decode"; // Corrected import
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({ userId: null, token: null });
+  const [auth, setAuth] = useState({ token: null, adminId: null, user: null });
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      try {
-        const decodedToken = jwtDecode(storedToken); // Correct usage
-        setAuth({ userId: decodedToken.id, token: storedToken });
-        console.log("Auth Loaded from LocalStorage:", decodedToken);
-      } catch (error) {
-        console.error("Invalid token in localStorage", error);
-        localStorage.removeItem("token");
-      }
-    }
+    const storedAdminId = localStorage.getItem("adminId");
+    const storedUser = localStorage.getItem("user");
+
+    setAuth({
+      token: storedToken || null,
+      adminId: storedAdminId || null,
+      user: storedUser ? JSON.parse(storedUser) : null, // Parse user object if available
+    });
+
+    console.log("Auth Loaded from LocalStorage:", { storedToken, storedAdminId, storedUser });
   }, []);
 
   const updateAuth = (data) => {
-    setAuth(data);
+    setAuth((prevAuth) => ({ ...prevAuth, ...data })); // Merge new data with existing auth state
+
     if (data.token) {
       localStorage.setItem("token", data.token);
     } else {
       localStorage.removeItem("token");
+    }
+
+    if (data.adminId) {
+      localStorage.setItem("adminId", data.adminId);
+    } else {
+      localStorage.removeItem("adminId");
+    }
+
+    if (data.user) {
+      localStorage.setItem("user", JSON.stringify(data.user)); // Store user data as JSON
+    } else {
+      localStorage.removeItem("user");
     }
   };
 

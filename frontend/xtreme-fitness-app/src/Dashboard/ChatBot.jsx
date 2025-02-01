@@ -28,7 +28,7 @@ const ChatBot = () => {
       {/* Chatbot Icon */}
       <div
         onClick={toggleChat}
-        className="fixed bottom-6 right-6 bg-red-500 w-14 h-14 rounded-full shadow-lg flex items-center justify-center cursor-pointer hover:bg-red-600 transition"
+        className="fixed bottom-6 right-6 bg-red-700 w-14 h-14 rounded-full shadow-lg flex items-center justify-center cursor-pointer hover:bg-red-600 transition"
       >
         <MessageCircle className="text-white w-6 h-6" />
       </div>
@@ -37,7 +37,7 @@ const ChatBot = () => {
       {isOpen && (
         <div className="fixed bottom-20 right-6 bg-white w-80 h-96 shadow-xl rounded-2xl flex flex-col">
           {/* Header */}
-          <div className="bg-red-500 text-white p-4 rounded-t-2xl flex items-center justify-between">
+          <div className="bg-red-700 text-white p-4 rounded-t-2xl flex items-center justify-between">
             <h2 className="text-lg font-semibold">Chat Support</h2>
             <button
               onClick={toggleChat}

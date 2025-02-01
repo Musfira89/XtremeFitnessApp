@@ -8,6 +8,8 @@ import authRoutes from './routes/auth.js';
 import questionRoutes from "./routes/question.js";
 import responseRoutes from "./routes/response.js";
 import adminRoutes from './routes/admin.js';
+import meetingRoutes from "./routes/meetingRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 
 dotenv.config();
 
@@ -29,6 +31,8 @@ app.use('/api/auth', authRoutes);
 app.use("/api/question", questionRoutes); // For questions
 app.use("/api/response", responseRoutes); // For responses
 app.use('/api/admin', adminRoutes);
+app.use("/api/meeting", meetingRoutes);
+app.use("/api/messages", messageRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

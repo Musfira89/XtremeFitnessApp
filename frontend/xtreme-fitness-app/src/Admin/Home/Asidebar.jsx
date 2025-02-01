@@ -28,36 +28,36 @@ const Sidebar = () => {
           <li>
             <Link
               to="/admin"
-              className="flex items-center space-x-4 text-md px-4 py-2 rounded-lg bg-gray-100 text-gray-800 font-semibold transition"
+              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg bg-gray-100 text-gray-800 font-semibold transition"
             >
-              <FaHome className="text-red-700 text-2xl" />
+              <FaHome className="text-red-700 text-[20px]" />
               <span>HOME</span>
             </Link>
           </li>
           <li>
             <Link
               to="/admin/questionaire"
-              className="flex items-center space-x-4 text-md px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
+              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
             >
-              <FaCreditCard className="text-red-700 text-2xl" />
+              <FaCreditCard className="text-red-700 text-[20px]" />
               <span>QUESTION RESPONSE</span>
             </Link>
           </li>
           <li>
             <Link
               to="/admin/meeting"
-              className="flex items-center space-x-4 text-md px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
+              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
             >
-              <FaDumbbell className="text-red-700 text-2xl" />
-              <span>MEETINGS</span>
+              <FaDumbbell className="text-red-700 text-[20px]" />
+              <span>MEETINGS + CHATS</span>
             </Link>
           </li>
           <li>
             <Link
               to="/admin/profilepage"
-              className="flex items-center space-x-4 text-md px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
+              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
             >
-              <FaCogs className="text-red-700 text-2xl" />
+              <FaCogs className="text-red-700 text-[20px]" />
               <span>ADMIN PROFILE</span>
             </Link>
           </li>

@@ -74,15 +74,14 @@ const Topbar = () => {
                   </a>
                 </li>
                 <li>
-                  <button
-                    onClick={() => {
-                      localStorage.removeItem("admin");
-                      window.location.reload();
-                    }}
-                    className="block w-full text-left px-4 py-3 text-lg font-medium text-red-600 hover:bg-red-100"
+                <li>
+                  <a
+                    href="/"
+                    className="block px-4 py-3 hover:bg-red-100 text-red-600 font-medium"
                   >
                     Logout
-                  </button>
+                  </a>
+                </li>
                 </li>
               </ul>
             </div>

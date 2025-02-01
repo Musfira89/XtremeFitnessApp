@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaEnvelope, FaLock } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import Logo from "../../../public/Logo.png"; 
 import adminBackground from "../../assets/LandingPageImg/service1.png"; 
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAdminAuth } from "../../context/AdminAuthContext"; // Import AdminAuthContext
 import { toast } from "react-toastify";
 
-const AdminLogin = () => {
+const AdminSignup = () => {
   const navigate = useNavigate();
-  const { updateAdminAuth } = useAdminAuth(); // Use admin authentication context
+  const [fullName, setFullName] = useState(""); // Added fullName state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,7 +19,8 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/admin/login", {
+      const response = await axios.post("http://localhost:5000/api/admin/signup", {
+        fullName, // Sending full name
         email,
         password,
       });
@@ -28,23 +28,17 @@ const AdminLogin = () => {
       console.log("Response Data:", response.data);
 
       if (response.status === 200) {
-        const { admin } = response.data;
-
-        console.log("Admin Data:", admin);
-
-        // Store admin data in localStorage and update AdminAuthContext
-        updateAdminAuth({ adminId: admin.id, email: admin.email });
-
-        toast.success("Admin login successful!");
-        navigate("/admin");
+        toast.success("Admin Signup successful!");
+        navigate("/adminlogin");
       }
     } catch (error) {
-      console.error("Login Error:", error.response?.data?.message || error);
-      toast.error(error.response?.data?.message || "Login failed. Please try again.");
+      console.error("Signup Error:", error.response?.data?.message || error);
+      toast.error(error.response?.data?.message || "Signup failed. Please try again.");
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex h-screen font-sans">
       {/* Left Section */}
@@ -56,7 +50,6 @@ const AdminLogin = () => {
           backgroundPosition: "center",
         }}
       >
-        {/* Logo */}
         <motion.img
           src={Logo}
           alt="Admin Logo"
@@ -66,7 +59,6 @@ const AdminLogin = () => {
           transition={{ duration: 0.8 }}
         />
 
-        {/* Decorative Text */}
         <motion.div
           className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-6 shadow-lg mt-10"
           initial={{ opacity: 0, y: -30 }}
@@ -90,12 +82,25 @@ const AdminLogin = () => {
         >
           {/* Header */}
           <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">Admin Login</h2>
-            <p className="text-gray-500">Sign in to access the admin dashboard.</p>
+            <h2 className="text-3xl font-bold text-gray-800">Admin Signup</h2> {/* Changed text */}
+            <p className="text-gray-500">Create an admin account to access the dashboard.</p>
           </div>
 
           {/* Form */}
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Full Name Field */}
+            <div className="relative">
+              <FaUser className="absolute top-3 left-3 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Full Name"
+                className="w-full pl-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+              />
+            </div>
+
             {/* Email Field */}
             <div className="relative">
               <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
@@ -105,6 +110,7 @@ const AdminLogin = () => {
                 className="w-full pl-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
 
@@ -117,16 +123,17 @@ const AdminLogin = () => {
                 className="w-full pl-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
             </div>
 
-            {/* Login Button */}
+            {/* Signup Button */}
             <motion.button
               type="submit"
               className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform"
               disabled={loading}
             >
-              {loading ? "Logging In..." : "Log In"}
+              {loading ? "Signing Up..." : "Sign Up"}
             </motion.button>
           </form>
         </motion.div>
@@ -135,4 +142,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default AdminSignup;

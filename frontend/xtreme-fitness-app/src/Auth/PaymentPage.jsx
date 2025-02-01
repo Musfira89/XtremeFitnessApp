@@ -3,12 +3,26 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
 import fitnessBackground from "../assets/LandingPageImg/service1.png"; // Replace with a fitness-related image
+import { useAuth } from "../context/AuthContext";  // Importing the AuthContext
 
 const PaymentPage = () => {
+  const { auth } = useAuth(); // Retrieve user auth context
+
   const [selectedPlan, setSelectedPlan] = useState(null);
   const navigate = useNavigate();
 
   const plans = [
+    {
+      name: "Free Plan",
+      price: "$0/month",
+      priceDetails: "Access to limited workouts and basic meal guides",
+      features: [
+        "Basic Workout Plan",
+        "Limited Meal Guides",
+        "Community Access",
+        "No Coaching Support",
+      ],
+    },
     {
       name: "Xtreme Silver",
       price: "$899.99/",
@@ -70,10 +84,12 @@ const PaymentPage = () => {
     },
   ];
 
-  // Navigate to /dashboard when a plan is selected
-  const handlePlanSelection = () => {
-    navigate("/dashboard");
+  // Handle the plan selection and navigate to the dashboard with userId
+  const handlePlanSelection = (plan) => {
+    setSelectedPlan(plan);
+    navigate(`/dashboard/${auth.userId}`); // Navigate to dashboard with userId
   };
+
 
   return (
     <div
@@ -105,7 +121,7 @@ const PaymentPage = () => {
       </div>
 
       {/* Subscription Plans */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-8 w-full px-4 md:px-10 py-10 mt-16 mb-28">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-8 w-full px-4 md:px-10 py-10 mt-6 mb-28">
         {plans.map((plan, index) => (
           <div
             key={index}
@@ -116,7 +132,7 @@ const PaymentPage = () => {
             {/* Price */}
             <p className="text-4xl font-extrabold text-black mt-2">{plan.price}</p> {/* Adjusted color */}
             {/* Price Details */}
-            <p className="text-sm text-red-500 mt-4 mb-2">{plan.priceDetails}</p>
+            <p className="text-xs text-red-500 mt-4 mb-2">{plan.priceDetails}</p>
             {/* Features */}
             <ul className="mt-4 space-y-2 px-6">
               {plan.features.map((feature, i) => (
@@ -137,26 +153,7 @@ const PaymentPage = () => {
         ))}
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full max-w-4xl mb-12">
-        <div className="relative pt-1">
-          <div className="flex mb-2 items-center justify-between">
-            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase">
-              Step Progress
-            </span>
-            <span className="text-xs font-semibold inline-block py-1 px-2 uppercase">
-              60% Completed
-            </span>
-          </div>
-          <div className="flex mb-2">
-            <div className="relative flex w-full mb-2 items-center justify-between">
-              <div className="flex-grow h-1 bg-gray-200">
-                <div className="h-1 bg-red-600" style={{ width: "60%" }}></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    
 
       {/* Payment Section */}
       {selectedPlan && (

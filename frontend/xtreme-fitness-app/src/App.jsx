@@ -10,11 +10,15 @@ import PaymentPage from "./Auth/PaymentPage";
 import BuyCards from "./LandingPage/Product/BuyCards";
 import AppRoutes from "./route";
 import { AuthProvider } from "./context/AuthContext";
+import { AdminAuthProvider } from "./context/AdminAuthContext";
+
 import AdminLogin from "./Admin/AdminLogin/AdminLogin";
 import Adminroutes from "./Admin/Adminroutes";
+import AdminSignup from "./Admin/AdminLogin/AdminSignup";
 function App() {
   return (
     <AuthProvider>
+          <AdminAuthProvider>
       <Router>
         <Routes>
           {/* Landing Page Routes */}
@@ -29,6 +33,7 @@ function App() {
           <Route path="/dashboard/:userId/*" element={<AppRoutes />} />
 
           {/* Admin Panel Routes */}
+          <Route path="/adminsignup" element={<AdminSignup />} />
           <Route path="/adminlogin" element={<AdminLogin />} />
           <Route path="/admin/*" element={<Adminroutes />} />
         </Routes>
@@ -36,6 +41,8 @@ function App() {
         {/* Toast Container */}
         <ToastContainer />
       </Router>
+      </AdminAuthProvider>
+
     </AuthProvider>
   );
 }

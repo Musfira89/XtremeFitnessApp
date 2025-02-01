@@ -31,25 +31,23 @@ export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Check if password matches
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Respond with user details (without password)
     res.status(200).json({
       message: "Login successful",
       user: {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        hasCompletedQuestionnaire: user.hasCompletedQuestionnaire,
       },
     });
   } catch (error) {
@@ -95,5 +93,20 @@ export const getAnalytics = async (req, res) => {
   } catch (error) {
     console.error("Error fetching analytics:", error);
     res.status(500).json({ message: "Failed to fetch analytics data." });
+  }
+};
+
+
+// Mark Questionnaire as Completed
+export const markQuestionnaireComplete = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    await User.findByIdAndUpdate(userId, { hasCompletedQuestionnaire: true });
+
+    res.status(200).json({ message: "Questionnaire completion recorded" });
+  } catch (error) {
+    console.error("Error updating questionnaire completion:", error);
+    res.status(500).json({ message: "Error updating user status", error });
   }
 };

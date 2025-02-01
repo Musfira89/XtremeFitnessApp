@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { updateAuth } = useAuth(); // Assuming you're managing user context here
+  const { updateAuth } = useAuth(); 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -18,21 +18,26 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", {
         email,
         password,
       });
-
+  
       if (response.status === 200) {
         const { user } = response.data;
-
-        // Update AuthContext with user details
-        updateAuth({ userId: user.id, fullName: user.fullName, email: user.email });
-
+  
+        updateAuth({
+          userId: user.id,
+          fullName: user.fullName,
+          email: user.email,
+          hasCompletedQuestionnaire: user.hasCompletedQuestionnaire,
+        });
+  
         toast.success("Login successful!");
-        navigate(`/questions/${user.id}`);
+  
+        navigate(user.hasCompletedQuestionnaire ? `/dashboard/${user.id}` : `/questions/${user.id}`);
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed. Please try again.");
@@ -40,6 +45,8 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+
   return (
     <div className="flex h-screen font-sans">
       {/* Left Section */}

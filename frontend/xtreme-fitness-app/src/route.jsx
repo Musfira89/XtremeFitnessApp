@@ -8,7 +8,7 @@ import Meal from "./pages/MealPlan";
 import Workout from "./pages/WorkoutPlan";
 import ProfilePage from "./pages/ProfilePage";
 import Supplements from "./pages/Supplements";
-import Meeting from "./pages/Meeting";
+import Meeting from "./pages/Meeting/Meeting";
 
 const AppRoutes = () => (
   <Routes>
