@@ -3,101 +3,106 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const MealPlan = () => {
-  const { userId } = useParams(); 
-
-  const [mealPlan, setMealPlan] = useState({});
+  const { userId } = useParams();
+  const [mealPlan, setMealPlan] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedDay, setSelectedDay] = useState(null);
+
+  // Array of days to map to the day buttons
+  const daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   useEffect(() => {
-    console.log("User ID:", userId); 
-
     const fetchMealPlan = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/response/generate-meal-plan/${userId}`);
-        
-        console.log("API Response:", response);
+        const response = await axios.get(
+          `http://localhost:5000/api/response/generate-meal-plan/${userId}`
+        );
 
-        if (response.data && response.data.mealPlan) {
-          const mealPlanData = response.data.mealPlan;
-
-          if (typeof mealPlanData === 'string') {
-            const parsedMealPlan = parseMealPlan(mealPlanData);
-            setMealPlan(parsedMealPlan);
-          } else {
-            setMealPlan(mealPlanData);
-          }
+        if (response.data && response.data.meals) {
+          setMealPlan(response.data.meals);
+          setSelectedDay(0); // Default to first day's meals
         } else {
           setError("Meal plan data is empty or malformed.");
         }
       } catch (err) {
-        console.error("Error fetching meal plan:", err);
         setError("Failed to load meal plan. Please try again.");
       } finally {
         setLoading(false);
       }
     };
-
     fetchMealPlan();
   }, [userId]);
 
-  const parseMealPlan = (data) => {
-    const days = data.split("\n\n");
-    let structuredPlan = {};
-
-    days.forEach((dayText) => {
-      const lines = dayText.split("\n");
-      if (lines.length > 1) {
-        const day = lines[0].replace(/\*\*/g, ""); 
-        const meals = lines.slice(1).map((line) => {
-          const [mealName, description] = line.split(": ");
-          return { name: mealName.replace(/\*\*/g, ""), description };
-        });
-
-        structuredPlan[day] = meals;
-      }
-    });
-
-    return structuredPlan;
+  const openRecipePage = (recipe) => {
+    // Open recipe in a new window or display as you prefer
+    window.open(recipe, "_blank");
   };
 
   return (
-    <div className="p-6 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-lg">
-      <h2 className="text-3xl font-bold text-red-600 mb-4">
-        Weekly Meal Plan Overview
-      </h2>      
-      
+    <div className="p-6 bg-white dark:bg-black text-black dark:text-white rounded-lg shadow-md">
+      <h2 className="text-4xl font-bold text-red-600 dark:text-red-400 mb-6 text-center">Weekly Meal Plan</h2>
+
       {loading ? (
-        <p>Loading meal plan...</p>
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-4 border-red-600"></div>
+        </div>
       ) : error ? (
-        <p>{error}</p>
+        <p className="text-center text-red-500 font-semibold">{error}</p>
       ) : (
-        <table className="min-w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
-          <thead>
-            <tr>
-              <th className="p-3 text-left border-b border-gray-200 dark:border-gray-600">Day</th>
-              <th className="p-3 text-left border-b border-gray-200 dark:border-gray-600">Meal</th>
-              <th className="p-3 text-left border-b border-gray-200 dark:border-gray-600">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.keys(mealPlan).map((day) => (
-              <tr key={day} className="border-b border-gray-200 dark:border-gray-600">
-                <td className="p-3">{day}</td>
-                <td colSpan={2}>
-                  <table className="w-full">
-                    {mealPlan[day].map((meal, index) => (
-                      <tr key={index}>
-                        <td className="p-2 border-b border-gray-200 dark:border-gray-600">{meal.name}</td>
-                        <td className="p-2 border-b border-gray-200 dark:border-gray-600">{meal.description}</td>
-                      </tr>
-                    ))}
-                  </table>
-                </td>
-              </tr>
+        <>
+          <div className="flex justify-center space-x-4 mb-6">
+            {mealPlan.map((_, index) => (
+              <button
+                key={index}
+                className={`px-4 py-2 rounded-lg font-semibold transition-all ${selectedDay === index ? "bg-red-600 text-white" : "bg-gray-300 text-black dark:bg-gray-700 dark:text-white"}`}
+                onClick={() => setSelectedDay(index)}
+              >
+                {daysOfWeek[index]} {/* Display day names */}
+              </button>
             ))}
-          </tbody>
-        </table>
+          </div>
+          {selectedDay !== null && (
+            <table className="w-full border-collapse rounded-lg overflow-hidden">
+              <thead>
+                <tr className="bg-red-600 text-white text-lg">
+                  <th className="p-4">Meal</th>
+                  <th className="p-4">Meal Name</th>
+                  <th className="p-4">Calories</th>
+                  <th className="p-4">Carbs</th>
+                  <th className="p-4">Protein</th>
+                  <th className="p-4">Recipe</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(mealPlan[selectedDay]).map(([mealType, meal], index) => (
+                  <tr key={index} className="border-b border-gray-300 dark:border-gray-700 even:bg-gray-100 odd:bg-white dark:even:bg-gray-900 dark:odd:bg-gray-800">
+                    <td className="p-4 flex items-center space-x-2">
+                      <img
+                        src="https://via.placeholder.com/50"
+                        alt={meal.name}
+                        className="w-10 h-10 object-cover rounded-lg"
+                      />
+                      <span className="font-semibold">{mealType.charAt(0).toUpperCase() + mealType.slice(1)}</span>
+                    </td>
+                    <td className="p-4 font-semibold">{meal.name}</td>
+                    <td className="p-4">{meal.calories ? `${meal.calories} kcal` : "N/A"}</td>
+                    <td className="p-4">{meal.carbs ? `${meal.carbs}g` : "N/A"}</td>
+                    <td className="p-4">{meal.protein ? `${meal.protein}g` : "N/A"}</td>
+                    <td className="p-4">
+                      <button
+                        className="bg-red-600 text-white px-3 py-2 rounded-lg hover:bg-red-700"
+                        onClick={() => openRecipePage(meal.recipe)} // Open the recipe in a new tab
+                      >
+                        Recipe
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </>
       )}
     </div>
   );

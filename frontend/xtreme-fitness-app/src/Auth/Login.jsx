@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import Logo from "../../public/Logo.png"; // Update the path if needed
+import Logo from "../../public/LogoWhite.png"; // Update the path if needed
 import fitnessBackground from "../assets/LandingPageImg/service1.png"; // Replace with a fitness-related image
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -78,7 +78,7 @@ const Login = () => {
           <h1 className="text-4xl font-extrabold mb-4 text-center">
             Achieve Your Fitness Goals
           </h1>
-          <p className="text-lg leading-relaxed text-center">
+          <p className="text-sm leading-relaxed text-center">
             Stay motivated with our personalized plans and expert advice.
           </p>
         </motion.div>

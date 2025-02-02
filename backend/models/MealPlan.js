@@ -3,23 +3,47 @@ import mongoose from "mongoose";
 const mealPlanSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User", // Reference to User model, assuming you have a User model
+    ref: "User",
     required: true,
   },
-  mealPlan: {
-    type: String,
-    required: true,
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  lastUpdated: {
-    type: Date,
-    default: Date.now,
-  },
+  meals: [
+    {
+      day: { type: String, required: true },
+      breakfast: {
+        name: String,
+        calories: Number,
+        carbs: Number,
+        protein: Number,
+        recipe: String,
+      },
+      lunch: {
+        name: String,
+        calories: Number,
+        carbs: Number,
+        protein: Number,
+        recipe: String,
+      },
+      dinner: {
+        name: String,
+        calories: Number,
+        carbs: Number,
+        protein: Number,
+        recipe: String,
+      },
+      snacks: {
+        name: String,
+        calories: Number,
+        carbs: Number,
+        protein: Number,
+        recipe: String,
+      }
+    }
+  ],
+  createdAt: { type: Date, default: Date.now },
+  lastUpdated: { type: Date, default: Date.now },
 });
 
-const MealPlan = mongoose.model("MealPlan", mealPlanSchema);
 
-export default MealPlan;
+const WeeklyMealPlan = mongoose.model("WeeklyMeal", mealPlanSchema);
+
+export default WeeklyMealPlan;

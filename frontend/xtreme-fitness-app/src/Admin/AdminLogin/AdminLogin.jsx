@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import Logo from "../../../public/Logo.png"; 
-import adminBackground from "../../assets/LandingPageImg/service1.png"; 
+import Logo from "../../../public/Logo.png";
+import adminBackground from "../../assets/LandingPageImg/service1.png";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAdminAuth } from "../../context/AdminAuthContext"; // Import AdminAuthContext
@@ -20,10 +20,13 @@ const AdminLogin = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/admin/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/admin/login",
+        {
+          email,
+          password,
+        }
+      );
 
       console.log("Response Data:", response.data);
 
@@ -40,7 +43,9 @@ const AdminLogin = () => {
       }
     } catch (error) {
       console.error("Login Error:", error.response?.data?.message || error);
-      toast.error(error.response?.data?.message || "Login failed. Please try again.");
+      toast.error(
+        error.response?.data?.message || "Login failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -49,7 +54,7 @@ const AdminLogin = () => {
     <div className="flex h-screen font-sans">
       {/* Left Section */}
       <div
-        className="w-1/2 relative flex flex-col justify-center items-center text-white px-8 py-6"
+        className="md:w-1/2 w-full relative flex flex-col justify-between items-center text-white px-6 py-8"
         style={{
           backgroundImage: `url(${adminBackground})`,
           backgroundSize: "cover",
@@ -58,26 +63,36 @@ const AdminLogin = () => {
       >
         {/* Logo */}
         <motion.img
-          src={Logo}
-          alt="Admin Logo"
-          className="h-16"
+          src={Logo} // Replace with your logo image path
+          alt="Logo"
+          className="h-12 md:h-16 self-start"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         />
 
-        {/* Decorative Text */}
+        {/* Decorative Card */}
         <motion.div
-          className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-6 shadow-lg mt-10"
+          className="bg-white bg-opacity-10 backdrop-blur-md rounded-lg p-4 md:p-6 shadow-lg text-center"
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl font-extrabold mb-4 text-center">Admin Portal</h1>
-          <p className="text-lg leading-relaxed text-center">
-            Manage your platform efficiently and securely.
+          <h1 className="text-2xl md:text-4xl font-extrabold mb-4">
+            Admin Panel.{" "}
+          </h1>
+          <p className="text-sm md:text-lg leading-relaxed">
+            Manage your platform efficiently and securely.{" "}
           </p>
         </motion.div>
+
+        {/* Highlight Text */}
+        <motion.div
+          className="mt-6 md:mt-10 text-center"
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        ></motion.div>
       </div>
 
       {/* Right Section */}
@@ -91,7 +106,9 @@ const AdminLogin = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-800">Admin Login</h2>
-            <p className="text-gray-500">Sign in to access the admin dashboard.</p>
+            <p className="text-gray-500">
+              Sign in to access the admin dashboard.
+            </p>
           </div>
 
           {/* Form */}

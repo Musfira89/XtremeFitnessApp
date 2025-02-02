@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Logo from "../../public/Logo.png";
+import Logo from "../../public/LogoWhite.png";
 import fitnessBackground from "../assets/LandingPageImg/service1.png";
 import { motion } from "framer-motion";
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
@@ -79,7 +79,7 @@ const Signup = () => {
           <h1 className="text-2xl md:text-4xl font-extrabold mb-4">
             Achieve Your Fitness Goals
           </h1>
-          <p className="text-sm md:text-lg leading-relaxed">
+          <p className="text-sm md:text-md leading-relaxed">
             Stay motivated with our personalized plans and expert advice.
           </p>
         </motion.div>
