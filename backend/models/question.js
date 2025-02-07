@@ -13,6 +13,7 @@ const questionSchema = new mongoose.Schema({
       "Diet and Nutrition",
       "Health and Medical",
       "Fitness Goals",
+      
     ],
     required: true,
   },

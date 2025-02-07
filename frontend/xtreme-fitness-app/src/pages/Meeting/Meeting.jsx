@@ -1,57 +1,80 @@
-import React from "react";
-import { FaDumbbell, FaClipboardCheck, FaComments } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaClipboardList } from "react-icons/fa";
+import axios from "axios";
 import Message from "./Message";
+import { useParams } from "react-router-dom";
 
 const ZoomMeetings = () => {
+  const [meetings, setMeetings] = useState([]);
+  const { userId } = useParams();
+
+  useEffect(() => {
+    const fetchMeetings = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/meeting/user/${userId}`);
+        setMeetings(response.data);
+      } catch (error) {
+        console.error("Error fetching meetings:", error);
+      }
+    };
+    fetchMeetings();
+  }, [userId]);
+
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-lg shadow-lg">
-   <div className="bg-yellow-100 border border-yellow-300 text-yellow-800 rounded-lg p-4 mb-6 max-w-3xl">
-        <p className="text-sm font-medium">
-          <strong>Info:</strong> Meeting link will expire after 30 minutes.
+    <div className="p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-lg w-full">
+      {/* Info Section */}
+      <div className="bg-yellow-100 dark:bg-yellow-700 border-l-4 border-yellow-500 p-4 rounded-lg text-gray-900 dark:text-gray-100 mb-8 shadow-sm">
+        <p className="text-base font-semibold">
+          ⚠️ <strong>Note:</strong> Meeting links expire 30 minutes after the scheduled time.
         </p>
       </div>
 
-
-      {/* Upcoming and Past Meetings */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Upcoming Meeting */}
-        <div className="bg-gradient-to-r from-red-100 to-red-50 dark:from-red-800 dark:to-red-700 p-6 rounded-xl shadow-lg">
-          <h3 className="text-lg font-bold text-red-600 flex items-center">
-            <FaClipboardCheck className="mr-2" />
-            Upcoming Meeting
+      {/* Display Meetings */}
+      {meetings.length > 0 ? (
+        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl shadow-md w-full">
+          <h3 className="text-2xl font-bold text-red-600 dark:text-red-400 flex items-center mb-4">
+            <FaClipboardList className="mr-2" /> Upcoming Meetings
           </h3>
-          <p className="text-gray-700 dark:text-gray-300 mt-4">
-            <strong>Topic:</strong> Weekly Progress Check-in
-          </p>
-          <p className="text-gray-700 dark:text-gray-300">
-            <strong>Date:</strong> Sunday, 12:07 AM
-          </p>
-          <button className="mt-4 w-full bg-gradient-to-r from-red-500 to-red-700 text-white font-medium px-6 py-2 rounded-lg shadow-md">
-            Join Now
-          </button>
-        </div>
 
-        {/* Past Meetings */}
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg">
-          <h3 className="text-lg font-bold text-red-600 flex items-center">
-            <FaClipboardCheck className="mr-2" />
-            Past Meetings
-          </h3>
-          <ul className="mt-6 space-y-4">
-            <li className="flex justify-between items-center py-2 border-b border-gray-300 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-300">Progress Update</span>
-              <span className="text-gray-400 dark:text-gray-500">Jan 20, 2025</span>
-            </li>
-            <li className="flex justify-between items-center py-2 border-b border-gray-300 dark:border-gray-700">
-              <span className="text-gray-600 dark:text-gray-300">Initial Assessment</span>
-              <span className="text-gray-400 dark:text-gray-500">Jan 15, 2025</span>
-            </li>
-          </ul>
+          <div className="space-y-4">
+            {meetings.map((meeting, index) => (
+              <div
+                key={index}
+                className="p-5 bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 flex"
+              >
+                <div className="w-1/3 pr-4">
+                  <h4 className="text-lg font-bold text-red-600 dark:text-red-400">Topic Name:</h4>
+                  <h4 className="text-lg font-bold text-red-600 dark:text-red-400 mt-2">Date:</h4>
+                  <h4 className="text-lg font-bold text-red-600 dark:text-red-400 mt-2">Meeting Link:</h4>
+                </div>
+                <div className="w-2/3">
+                  <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">{meeting.topic}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold mt-2">{new Date(meeting.expirationTime).toLocaleString()}</p>
+                  <p className="mt-2">
+                    <a
+                      href={meeting.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+                    >
+                      Join Meeting
+                    </a>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <p className="text-lg text-gray-600 dark:text-gray-300 font-semibold text-center w-full mt-4">
+          🚀 No upcoming meetings at the moment.
+        </p>
+      )}
 
       {/* Coach Communication */}
-    <Message/> 
+      <div className="mt-10 w-full">
+        <Message />
+      </div>
     </div>
   );
 };

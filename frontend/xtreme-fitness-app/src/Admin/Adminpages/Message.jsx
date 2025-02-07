@@ -8,8 +8,8 @@ const Message = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  const { adminAuth } = useAdminAuth(); // Get admin data from context
-  const adminId = adminAuth.adminId;  // Get adminId from context
+  const { adminAuth } = useAdminAuth(); 
+  const adminId = adminAuth.adminId; 
 
   // Fetch Users
   const fetchUsers = async () => {

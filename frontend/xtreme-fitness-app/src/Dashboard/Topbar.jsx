@@ -3,7 +3,7 @@ import { FaBell, FaUserCircle } from "react-icons/fa";
 
 const Topbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [plan, setPlan] = useState("Free"); // Free or Paid plan state
+  const [subscriptionStatus, setSubscriptionStatus] = useState("inactive"); // 'inactive', 'pending', or 'active' status
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -11,6 +11,17 @@ const Topbar = () => {
 
   const closeDropdown = () => {
     setDropdownOpen(false);
+  };
+
+  // Determine the plan text based on subscription status
+  const getPlanText = () => {
+    if (subscriptionStatus === "active") {
+      return "Paid Plan";
+    } else if (subscriptionStatus === "pending") {
+      return "Pending Plan";
+    } else {
+      return "Free Plan";
+    }
   };
 
   return (
@@ -30,14 +41,18 @@ const Topbar = () => {
         <div className="flex items-center space-x-2">
           <div
             className={`text-sm py-1 px-3 rounded-full ${
-              plan === "Paid" ? "bg-green-500 text-white" : "bg-yellow-500 text-gray-800"
+              subscriptionStatus === "active"
+                ? "bg-green-500 text-white"
+                : subscriptionStatus === "pending"
+                ? "bg-yellow-500 text-gray-800"
+                : "bg-gray-100 text-gray-800"
             }`}
           >
-            {plan === "Paid" ? "Paid Plan" : "Free Plan"}
+            {getPlanText()}
           </div>
 
           {/* Call to Action for Upgrading Plan */}
-          {plan === "Free" && (
+          {subscriptionStatus === "inactive" && (
             <p className="text-sm text-gray-100 cursor-pointer hover:text-white">
               <span className="underline">Upgrade to Paid Plan</span>
             </p>

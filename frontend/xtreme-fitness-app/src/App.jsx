@@ -6,15 +6,17 @@ import { Home } from "./LandingPage/Home";
 import Login from "./Auth/Login";
 import Signup from "./Auth/Signup";
 import Questionnaire from "./Auth/Questionnaire";
-import PaymentPage from "./Auth/PaymentPage";
 import BuyCards from "./LandingPage/Product/BuyCards";
 import AppRoutes from "./route";
 import { AuthProvider } from "./context/AuthContext";
 import { AdminAuthProvider } from "./context/AdminAuthContext";
-
 import AdminLogin from "./Admin/AdminLogin/AdminLogin";
 import Adminroutes from "./Admin/Adminroutes";
 import AdminSignup from "./Admin/AdminLogin/AdminSignup";
+import PlanPage from "./Auth/PlanPage";
+import PaymentPage from "./Auth/PaymentPage";
+
+
 function App() {
   return (
     <AuthProvider>
@@ -29,7 +31,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/questions/:userId" element={<Questionnaire />} />
+          <Route path="/planpage/:userId" element={<PlanPage />} />
           <Route path="/payment/:userId" element={<PaymentPage />} />
+
           <Route path="/dashboard/:userId/*" element={<AppRoutes />} />
 
           {/* Admin Panel Routes */}

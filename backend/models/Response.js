@@ -1,5 +1,3 @@
-// models/Response.js
-
 import mongoose from "mongoose";
 
 const responseSchema = new mongoose.Schema({
@@ -12,14 +10,14 @@ const responseSchema = new mongoose.Schema({
       "Diet and Nutrition",
       "Health and Medical",
       "Fitness Goals",
-
     ],
     required: true,
   },
   answers: [
     {
       questionId: { type: mongoose.Schema.Types.ObjectId, ref: "Question", required: true },
-      answer: { type: mongoose.Schema.Types.Mixed, required: true }, // Can handle multiple input types
+      questionText: { type: String, required: true }, 
+      answer: { type: mongoose.Schema.Types.Mixed, required: true }, 
     },
   ],
 });

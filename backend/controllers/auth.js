@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import User from "../models/auth.js";
+import Response from "../models/Response.js";  // Importing the Response model
 
 // Register User
 export const registerUser = async (req, res) => {
@@ -41,6 +42,9 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
+    // Check if the user has any responses
+    const hasResponses = await Response.findOne({ userId: user._id });
+
     res.status(200).json({
       message: "Login successful",
       user: {
@@ -48,6 +52,7 @@ export const loginUser = async (req, res) => {
         fullName: user.fullName,
         email: user.email,
         hasCompletedQuestionnaire: user.hasCompletedQuestionnaire,
+        hasResponses: !!hasResponses, // Add hasResponses flag
       },
     });
   } catch (error) {
@@ -55,6 +60,7 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ message: "Error logging in", error });
   }
 };
+
 
 // Delete User
 export const deleteUser = async (req, res) => {

@@ -3,10 +3,10 @@ import { PhoneOutlined, EmailOutlined } from "@mui/icons-material";
 
 const ContactForm = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-red-100 px-8 py-12 mb-40">
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-xl p-16">
+    <div id="contact-us" className="min-h-screen flex items-center justify-center bg-red-100 px-6 sm:px-8 py-12 mb-40">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-xl p-8 sm:p-12 md:p-16">
         {/* Heading */}
-        <h1 className="text-5xl font-bold text-black text-center mb-8">
+        <h1 className="text-4xl sm:text-5xl font-bold text-black text-center mb-8">
           Contact Us
         </h1>
 
@@ -54,7 +54,7 @@ const ContactForm = () => {
         </form>
 
         {/* Contact Details */}
-        <div className="mt-8 flex items-center justify-center space-x-12 text-gray-700">
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center space-y-6 sm:space-y-0 sm:space-x-12 text-gray-700">
           {/* Phone */}
           <div className="flex items-center space-x-2">
             <PhoneOutlined className="text-red-600" />

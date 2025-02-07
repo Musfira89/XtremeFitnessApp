@@ -46,22 +46,38 @@ const ReviewsSection = () => {
 
   // Slider settings
   const settings = {
-    dots: true, // Enable dot navigation
-    infinite: true, // Infinite loop
-    speed: 500, // Slide transition speed
-    slidesToShow: 3, // Show 3 cards at a time
-    slidesToScroll: 1, // Scroll one card at a time
-    autoplay: true, // Enable autoplay
-    autoplaySpeed: 3000, // Slide after 3 seconds (adjust speed here)
-    arrows: false, // Remove left and right arrows
-    centerMode: true, // Enable center mode for better spacing
-    centerPadding: "50px", // Increase padding to add space between cards
-    focusOnSelect: true, // Focus on select to make sure center mode works
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,  // Default for large screens
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: false,
+    centerMode: true,
+    centerPadding: "50px",
+    focusOnSelect: true,
+    responsive: [
+      {
+        breakpoint: 1024, // Tablets
+        settings: {
+          slidesToShow: 2,
+          centerPadding: "20px", // Adjust padding for medium screens
+        },
+      },
+      {
+        breakpoint: 768, // Mobile devices
+        settings: {
+          slidesToShow: 1,
+          centerPadding: "10px", // Adjust padding for smaller screens
+        },
+      },
+    ],
   };
   
 
   return (
-    <div className="bg-red-100 flex flex-col items-center py-32 px-6">
+    <div id="reviews" className="bg-red-100 flex flex-col items-center py-32 px-6">
       {/* Section Heading */}
       <h1 className="text-5xl font-bold text-black mb-12 text-center">
         Google Reviews
@@ -71,15 +87,14 @@ const ReviewsSection = () => {
       <div className="w-full max-w-6xl">
         <Slider {...settings}>
           {reviews.map((review, index) => (
-           <div
-           key={index}
-           className="bg-white p-12 rounded-lg shadow-lg flex flex-col items-start space-y-6 mx-6" // Changed mx-4 to mx-6 for more spacing
-         >
-         
+            <div
+              key={index}
+              className="bg-white p-12 rounded-lg shadow-lg flex flex-col items-start space-y-6 mx-6"
+            >
               {/* Name and Icon */}
               <div className="flex items-center space-x-2">
                 <Google className="text-red-600" />
-                <h2 className="text-2xl font-semibold text-gray-800"> {/* Increased text size */}
+                <h2 className="text-2xl font-semibold text-gray-800">
                   {review.name}
                 </h2>
               </div>

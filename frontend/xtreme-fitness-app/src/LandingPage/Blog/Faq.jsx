@@ -53,6 +53,7 @@ const FAQSection = () => {
 
   return (
     <div
+    id="faq"
       className="relative h-screen bg-cover bg-center flex items-center justify-center mt-9"
       style={{ backgroundImage: `url(${bgImage})` }}
     >

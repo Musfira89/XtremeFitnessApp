@@ -37,7 +37,14 @@ const Login = () => {
   
         toast.success("Login successful!");
   
-        navigate(user.hasCompletedQuestionnaire ? `/dashboard/${user.id}` : `/questions/${user.id}`);
+        // Check if the user has responses
+        if (user.hasResponses) {
+          // If responses exist, go to the dashboard
+          navigate(`/dashboard/${user.id}`);
+        } else {
+          // If no responses, navigate to questions page
+          navigate(`/questions/${user.id}`);
+        }
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed. Please try again.");

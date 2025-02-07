@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify"; // Import toast
 import Bg from "../assets/LandingPageImg/service1.png";
-import { useAuth } from "../context/AuthContext";
 
 const categories = [
   "Demographics",
@@ -12,10 +11,10 @@ const categories = [
   "Diet and Nutrition",
   "Health and Medical",
   "Fitness Goals",
-]; 
+];
 
 const Questionnaire = () => {
-  const { auth } = useAuth(); // Retrieve user auth context
+  const { userId } = useParams();
   const [currentCategory, setCurrentCategory] = useState(0); // Track current category
   const [currentQuestion, setCurrentQuestion] = useState(0); // Track current question
   const [questionsData, setQuestionsData] = useState([]); // Questions of the current category
@@ -48,6 +47,7 @@ const Questionnaire = () => {
 
   const handleNext = async () => {
     const currentQuestionData = questionsData[currentQuestion];
+    console.log("User ID before submitting:", userId);
   
     const answer =
       currentQuestionData.inputType === "text"
@@ -56,38 +56,47 @@ const Questionnaire = () => {
   
     const updatedAnswers = [
       ...answers,
-      { questionId: currentQuestionData._id, answer },
+      {
+        questionId: currentQuestionData._id,
+        questionText: currentQuestionData.questionText, // Include question text
+        answer,
+      },
     ];
     setAnswers(updatedAnswers);
   
-    if (currentQuestion === questionsData.length - 1 && currentCategory === categories.length - 1) {
+    if (currentQuestion === questionsData.length - 1) {
       try {
         const payload = {
-          userId: auth.userId,
+          userId: userId, // Replaced auth.userId with userId
           category: categories[currentCategory],
-          answers: updatedAnswers,
+          answers: updatedAnswers, // Now includes question text
         };
   
         await axios.post("http://localhost:5000/api/response/save", payload);
   
-        // Mark the questionnaire as completed
-        await axios.put(`http://localhost:5000/api/auth/mark-complete/${auth.userId}`);
+        if (currentCategory < categories.length - 1) {
+          setCurrentCategory((prev) => prev + 1);
+          setAnswers([]); // Reset answers before moving to the next category
+        } else {
+          await axios.put(
+            `http://localhost:5000/api/auth/mark-complete/${userId}`
+          );
   
-        toast.success("Responses saved successfully!");
-        navigate(`/payment/${auth.userId}`);
+          toast.success("Responses saved successfully!");
+          navigate(`/planpage/${userId}`);
+        }
       } catch (error) {
         console.error("Error saving responses:", error.response || error.message);
         toast.error("Failed to save responses. Please try again.");
       }
     } else {
-      if (currentQuestion < questionsData.length - 1) {
-        setCurrentQuestion((prev) => prev + 1);
-      } else if (currentCategory < categories.length - 1) {
-        setCurrentCategory((prev) => prev + 1);
-        setAnswers([]);
-      }
+      setCurrentQuestion((prev) => prev + 1);
     }
   };
+  
+  
+
+  
 
   const handleBack = () => {
     if (currentQuestion > 0) {

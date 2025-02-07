@@ -15,6 +15,7 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
+        image: String, // Added image field
       },
       lunch: {
         name: String,
@@ -22,6 +23,7 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
+        image: String, // Added image field
       },
       dinner: {
         name: String,
@@ -29,6 +31,7 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
+        image: String, // Added image field
       },
       snacks: {
         name: String,
@@ -36,13 +39,13 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
-      }
-    }
+        image: String, // Added image field
+      },
+    },
   ],
   createdAt: { type: Date, default: Date.now },
   lastUpdated: { type: Date, default: Date.now },
 });
-
 
 const WeeklyMealPlan = mongoose.model("WeeklyMeal", mealPlanSchema);
 

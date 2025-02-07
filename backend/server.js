@@ -10,6 +10,10 @@ import responseRoutes from "./routes/response.js";
 import adminRoutes from './routes/admin.js';
 import meetingRoutes from "./routes/meetingRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import workoutPlanRoutes from "./routes/workoutplan.js";
+import planRoutes from "./routes/plan.js";
+import subscriptionRoutes from "./routes/subscription.js"
+
 
 dotenv.config();
 
@@ -28,11 +32,14 @@ connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use("/api/question", questionRoutes); // For questions
-app.use("/api/response", responseRoutes); // For responses
+app.use("/api/question", questionRoutes);
+app.use("/api/response", responseRoutes); 
 app.use('/api/admin', adminRoutes);
 app.use("/api/meeting", meetingRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api", workoutPlanRoutes);
+app.use("/api/plans", planRoutes);
+app.use("/api", subscriptionRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

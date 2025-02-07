@@ -71,7 +71,7 @@ const PricingPlans = () => {
   ];
 
   return (
-    <div className="flex flex-col justify-center items-center w-full px-4 md:px-10 py-10 mt-16 mb-28">
+    <div  id="pricing" className="flex flex-col justify-center items-center w-full px-4 md:px-10 py-10 mt-16 mb-28">
       {/* Heading */}
       <div className="text-center mb-28">
         <h1 className="text-4xl font-bold text-black">OUR PRICING PLAN</h1>
