@@ -101,7 +101,7 @@ const Signup = () => {
       {/* Right Section */}
       <div className="md:w-1/2 w-full flex justify-center items-center bg-gray-100 p-6 md:p-20">
         <motion.div
-          className="w-full max-w-md p-8 md:p-12 bg-white rounded-2xl shadow-2xl"
+          className="w-full max-w-xl p-8 md:p-12 bg-white rounded-2xl shadow-2xl"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}

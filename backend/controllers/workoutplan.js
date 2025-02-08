@@ -1,82 +1,97 @@
 import dotenv from "dotenv";
 import WorkoutPlan from "../models/workout.js";
-import Response from "../models/Response.js";  // Importing the Response model
+import Response from "../models/Response.js";
 import fetch from "node-fetch";
 
 dotenv.config();
 
 const API_KEY = process.env.OPENAI_API_KEY;
-
+ 
 export const generateWorkoutPlan = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    // Step 1: Fetch user responses from the database
-    const responses = await Response.find({ userId });
+    // **Check if a workout plan already exists for this user**
+    const existingPlan = await WorkoutPlan.findOne({ userId });
+    if (existingPlan) {
+      return res.status(200).json({ 
+        message: "Workout plan already exists", 
+        workoutPlan: existingPlan 
+      });
+    }
 
+    // **Fetch user responses**
+    const responses = await Response.find({ userId });
     if (!responses.length) {
       return res.status(404).json({ message: "No responses found for this user" });
     }
 
-    // Extract user preferences from the responses
-    let fitnessGoal = "Weight loss"; // Default goal
-    let experienceLevel = "Beginner"; // Default experience level
-    let equipment = ["Bodyweight"]; // Default equipment (assuming no gym access)
-    let physicalLimitations = []; // No limitations by default
+    // **Extract user details**
+    let fitnessGoal = "General Fitness";
+    let experienceLevel = "Beginner";
+    let equipment = [];
+    let physicalLimitations = [];
+    let dietType = "Balanced";
+    let dailyExerciseDuration = "30-60 minutes";
 
     responses.forEach((response) => {
-      // Parse fitness goals
-      if (response.category === "Fitness Goals") {
-        fitnessGoal = response.answers.find(a => a.questionId.toString() === "goal")?.answer || fitnessGoal;
-      }
-      // Parse physical activity level
-      if (response.category === "Physical Activity") {
-        experienceLevel = response.answers.find(a => a.questionId.toString() === "experienceLevel")?.answer || experienceLevel;
-      }
-      // Parse equipment preferences
-      if (response.category === "Diet and Nutrition") {
-        equipment = response.answers.find(a => a.questionId.toString() === "equipment")?.answer || equipment;
-      }
-      // Parse physical limitations
-      if (response.category === "Health and Medical") {
-        physicalLimitations = response.answers.find(a => a.questionId.toString() === "limitations")?.answer || physicalLimitations;
-      }
+      response.answers.forEach((answer) => {
+        if (response.category === "Fitness Goals" && answer.questionText.toLowerCase().includes("goal")) {
+          fitnessGoal = answer.answer;
+        }
+        if (response.category === "Physical Activity" && answer.questionText.toLowerCase().includes("experience")) {
+          experienceLevel = answer.answer;
+        }
+        if (response.category === "Diet and Nutrition" && answer.questionText.toLowerCase().includes("diet")) {
+          dietType = answer.answer;
+        }
+        if (response.category === "Diet and Nutrition" && answer.questionText.toLowerCase().includes("equipment")) {
+          equipment = answer.answer.split(",").map((e) => e.trim());
+        }
+        if (response.category === "Health and Medical" && answer.questionText.toLowerCase().includes("limitations")) {
+          physicalLimitations = answer.answer.split(",").map((e) => e.trim());
+        }
+        if (response.category === "Physical Activity" && answer.questionText.toLowerCase().includes("exercise duration")) {
+          dailyExerciseDuration = answer.answer;
+        }
+      });
     });
 
-    // Check if necessary data is provided, otherwise fallback to defaults
-    if (!fitnessGoal || !experienceLevel) {
-      return res.status(400).json({ message: "Missing required user data" });
-    }
-
-    // Step 2: Generate workout plan using AI (OpenAI API)
-    let workoutSplit = "3 Day Split"; // Default to 3-day split if not specified
-    let cardioFrequency = "Daily"; // Default to daily cardio if not specified
-    let cardioDuration = "30 minutes"; // Default cardio duration
-
-    if (fitnessGoal === "Weight loss") {
-      cardioFrequency = "Daily";
-      cardioDuration = "30 minutes";
-    } else if (fitnessGoal === "Maintain") {
-      cardioFrequency = "3-4 times per week";
-      cardioDuration = "25-30 minutes";
-    } else if (fitnessGoal === "Weight gain") {
-      cardioFrequency = "3 times per week";
-      cardioDuration = "15-20 minutes";
-    } else if (fitnessGoal === "Muscle gain") {
-      cardioFrequency = "3 times per week";
-      cardioDuration = "20 minutes";
-    }
-
+    // **Prepare AI prompt**
     const prompt = `
-      Generate a ${workoutSplit} workout plan for a ${experienceLevel} with the following details:
+      Based on the user's fitness assessment, generate a structured weekly workout plan in JSON format:
       - Fitness Goal: ${fitnessGoal}
-      - Cardio Frequency: ${cardioFrequency} (${cardioDuration} each session)
-      - Equipment available: ${equipment.join(", ")}
-      - Physical Limitations: ${physicalLimitations.join(", ")}
-      - Include exercise names, descriptions, and instructional video links for each day.
-      The plan should focus on exercises suited to the user's fitness level and available equipment.
+      - Experience Level: ${experienceLevel}
+      - Available Equipment: ${equipment.length ? equipment.join(", ") : "None"}
+      - Physical Limitations: ${physicalLimitations.length ? physicalLimitations.join(", ") : "None"}
+      - Diet Type: ${dietType}
+      - Daily Exercise Duration: ${dailyExerciseDuration}
+
+      Provide a structured plan including:
+      - A weekly split (Monday-Sunday)
+      - Exercises per day
+      - Required equipment
+      - Descriptions
+      - Targeted muscle groups
+      - Recommended sets & reps
+
+      Format:
+      {
+        "Monday": [
+          {
+            "exercise": "Exercise Name",
+            "equipment": "Required Equipment",
+            "description": "Short description",
+            "muscleGroup": "Targeted muscle group",
+            "setsReps": "3 sets of 10 reps"
+          }
+        ],
+        "Tuesday": [...],
+        ...
+      }
     `;
-    
+
+    // **Fetch AI-generated workout plan**
     const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -95,69 +110,66 @@ export const generateWorkoutPlan = async (req, res) => {
     }
 
     const aiData = await aiResponse.json();
-    const workoutPlanText = aiData.choices?.[0]?.message?.content?.trim();
+    const workoutPlanJson = aiData.choices?.[0]?.message?.content?.trim();
 
-    if (!workoutPlanText) {
-      return res.status(500).json({ message: "Invalid workout plan response from AI" });
+    // **Ensure valid JSON**
+    if (!workoutPlanJson.startsWith("{")) {
+      return res.status(500).json({ message: "Invalid AI response format" });
     }
 
-    // Step 3: Parse the workout plan text
-    const workoutPlan = parseWorkoutPlan(workoutPlanText);
+    let workoutPlan;
+    try {
+      workoutPlan = JSON.parse(workoutPlanJson);
+    } catch (error) {
+      console.error("Error parsing AI workout plan JSON:", error);
+      return res.status(500).json({ message: "Invalid workout plan format from AI" });
+    }
 
-    // Step 4: Fetch video links for each exercise (YouTube API or another source)
-    for (let dayPlan of workoutPlan) {
-      for (let exercise of dayPlan.exercises) {
-        const videoLink = await fetchExerciseVideo(exercise.name);
-        exercise.videoLink = videoLink || "default-video-url"; // Default video URL if not found
+    // **Fetch video links**
+    for (const day in workoutPlan) {
+      for (let exercise of workoutPlan[day]) {
+        exercise.videoLink = await fetchExerciseVideo(exercise.exercise) || null;
       }
     }
 
-    // Step 5: Save workout plan to DB
-    const workoutPlanDb = await WorkoutPlan.insertMany(workoutPlan);
+    // **Save workout plan to DB**
+    const workoutDocument = new WorkoutPlan({ userId, weeklyWorkoutPlan: workoutPlan });
+    await workoutDocument.save();
 
-    res.status(200).json({ message: "Workout plan generated successfully", workoutPlan: workoutPlanDb });
+    res.status(200).json({ 
+      message: "Workout plan generated successfully", 
+      workoutPlan: workoutDocument 
+    });
+
   } catch (error) {
     console.error("Error generating workout plan:", error);
     res.status(500).json({ message: "Failed to generate workout plan" });
   }
 };
 
-
-// Helper function to parse the workout plan text
-const parseWorkoutPlan = (workoutPlanText) => {
-  const workoutPlan = [];
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-  const exercises = workoutPlanText.split("\n");
-
-  let currentDay = "";
-
-  exercises.forEach((line) => {
-    if (days.includes(line.trim())) {
-      currentDay = line.trim();
-      workoutPlan.push({ day: currentDay, exercises: [] });
-    } else if (currentDay) {
-      workoutPlan[workoutPlan.length - 1].exercises.push({ name: line.trim() });
-    }
-  });
-
-  return workoutPlan;
-};
-
-// Helper function to fetch exercise video (YouTube or other services)
+// **Fetch Exercise Video Function**
 const fetchExerciseVideo = async (exerciseName) => {
   try {
-    // Using YouTube API or similar to fetch video URL based on exercise name
-    const youtubeAPIKey = process.env.YOUTUBE_API_KEY;
-    const youtubeResponse = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${exerciseName}&key=${youtubeAPIKey}`);
-    const youtubeData = await youtubeResponse.json();
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+      exerciseName + " workout"
+    )}&type=video&maxResults=1&key=${apiKey}`;
 
-    if (youtubeData.items && youtubeData.items.length > 0) {
-      return `https://www.youtube.com/watch?v=${youtubeData.items[0].id.videoId}`;
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    console.log("YouTube API Response:", data); // Debugging output
+
+    if (!data.items || data.items.length === 0) {
+      console.warn(`No YouTube video found for ${exerciseName}`);
+      return null;
     }
 
-    return null;
+    return `https://www.youtube.com/watch?v=${data.items[0].id.videoId}`;
   } catch (error) {
-    console.error("Error fetching exercise video:", error);
+    console.error(`Error fetching video for ${exerciseName}:`, error);
     return null;
   }
 };
+
+

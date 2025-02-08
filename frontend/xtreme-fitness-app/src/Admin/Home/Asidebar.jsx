@@ -1,10 +1,18 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaHome, FaCreditCard, FaDumbbell, FaCogs } from "react-icons/fa";
+import React, { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { Home, MenuBook, VideoCall, AccountCircle } from "@mui/icons-material";
 import logo from "../../../public/Logo.png";
 import profileImage from "../../assets/Xavier.jpg"; // Importing image from assets
 
 const Sidebar = () => {
+  const [activePath, setActivePath] = useState(""); // State to track active path
+  const location = useLocation();
+
+  // Update activePath on page load or route change
+  React.useEffect(() => {
+    setActivePath(location.pathname);
+  }, [location]);
+
   return (
     <aside className="w-72 bg-gray-50 shadow-lg flex flex-col font-sans">
       {/* Logo Section */}
@@ -23,44 +31,49 @@ const Sidebar = () => {
       </div>
 
       {/* Navigation Menu */}
-      <nav className="px-6 py-6 flex-grow">
-        <ul className="space-y-3">
-          <li>
-            <Link
-              to="/admin"
-              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg bg-gray-100 text-gray-800 font-semibold transition"
-            >
-              <FaHome className="text-red-700 text-[20px]" />
-              <span>HOME</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/questionaire"
-              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
-            >
-              <FaCreditCard className="text-red-700 text-[20px]" />
-              <span>QUESTION RESPONSE</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/meeting"
-              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
-            >
-              <FaDumbbell className="text-red-700 text-[20px]" />
-              <span>MEETINGS + CHATS</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/admin/profilepage"
-              className="flex items-center space-x-4 text-sm px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-800 font-semibold transition"
-            >
-              <FaCogs className="text-red-700 text-[20px]" />
-              <span>ADMIN PROFILE</span>
-            </Link>
-          </li>
+      <nav className="px-6 py-2 flex-grow">
+        <ul className="space-y-2">
+          {[
+            { to: `/admin`, icon: <Home />, label: "Home" },
+            {
+              to: `/admin/questionaire`,
+              icon: <MenuBook />,
+              label: "Question Responses",
+            },
+            {
+              to: `/admin/meeting`,
+              icon: <VideoCall />,
+              label: "Meeting + chats",
+            },
+            {
+              to: `/admin/profilepage`,
+              icon: <AccountCircle />,
+              label: "Profile",
+            },
+          ].map(({ to, icon, label }) => (
+            <li key={to}>
+              <NavLink
+                to={to}
+                onClick={() => setActivePath(to)} // Update active path on click
+                className={`flex items-center space-x-4 text-sm px-4 py-2 transition ${
+                  activePath === to
+                    ? "text-red-700 font-semibold"
+                    : "text-gray-700 hover:text-gray-800"
+                }`}
+              >
+                <span className="text-xl">{icon}</span>
+                <span className="relative ">
+                  {label}
+                  {/* Underline for active link */}
+                  <span
+                    className={`absolute left-0 bottom-0 h-[2px] bg-red-500 transition-all duration-300 ${
+                      activePath === to ? "w-full opacity-100" : "w-0 opacity-0"
+                    }`}
+                  ></span>
+                </span>
+              </NavLink>
+            </li>
+          ))}
         </ul>
       </nav>
     </aside>

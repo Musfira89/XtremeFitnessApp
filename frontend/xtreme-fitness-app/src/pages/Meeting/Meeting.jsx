@@ -12,13 +12,16 @@ const ZoomMeetings = () => {
     const fetchMeetings = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/meeting/user/${userId}`);
-        setMeetings(response.data);
+        const uniqueMeetings = Array.from(new Set(response.data.map(m => m.id)))
+          .map(id => response.data.find(m => m.id === id)); 
+        setMeetings(uniqueMeetings);
       } catch (error) {
         console.error("Error fetching meetings:", error);
       }
     };
     fetchMeetings();
   }, [userId]);
+  
 
   return (
     <div className="p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-lg w-full">

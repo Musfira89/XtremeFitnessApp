@@ -7,6 +7,19 @@ import proPlanImage from "../../assets/pro.png";
 const PricingPlans = () => {
   const plans = [
     {
+      name: "Free plan",
+      price: "$0/month",
+      priceDetails: "Access to limited workouts and basic meal guides",
+      image: freePlanImage,
+      features: [
+        "Basic Workout Plan",
+        "Limited Meal Guides",
+        "Meeting and chats",
+        "No Coaching Support",
+
+      ],
+    },
+    {
       name: "Xtreme Silver",
       price: "$899.99/",
       priceDetails: "Billed monthly until cancelled",

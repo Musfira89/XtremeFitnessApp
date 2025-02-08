@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { FaBell, FaUserCircle } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext"; // Import Auth Context
+import { Link } from "react-router-dom";
 
-const Topbar = () => {
+const Topbar = ({ userId }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [subscriptionStatus, setSubscriptionStatus] = useState("inactive"); // 'inactive', 'pending', or 'active' status
+  const { auth } = useAuth(); // Get auth state from context
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -28,11 +31,15 @@ const Topbar = () => {
     <header className="flex justify-between items-center px-8 py-4 bg-gradient-to-r from-red-700 to-red-800 shadow-md text-white">
       {/* Logo/Title Section */}
       <div>
-        <h1 className="text-3xl font-bold tracking-wide uppercase">Dashboard</h1>
-        {/* Zoom Alert Section */}
-        <p className="mt-1 text-sm underline text-gray-200 cursor-pointer hover:text-gray-100">
-          Join Zoom Meeting
-        </p>
+        <h1 className="text-3xl font-bold tracking-wide uppercase">
+          Dashboard
+        </h1>
+        <a
+          href={`/dashboard/${userId}/meeting`}
+          className="mt-1 text-md underline text-gray-200 cursor-pointer hover:text-gray-100"
+        >
+          Join Meeting
+        </a>
       </div>
 
       {/* Right Section: Notification + Profile + Plan Status */}
@@ -53,9 +60,11 @@ const Topbar = () => {
 
           {/* Call to Action for Upgrading Plan */}
           {subscriptionStatus === "inactive" && (
-            <p className="text-sm text-gray-100 cursor-pointer hover:text-white">
-              <span className="underline">Upgrade to Paid Plan</span>
-            </p>
+            <Link to={`/planpage/${userId}`}>
+              <p className="text-sm text-gray-100 cursor-pointer hover:text-white">
+                <span className="underline">Upgrade to Paid Plan</span>
+              </p>
+            </Link>
           )}
         </div>
 
@@ -82,25 +91,20 @@ const Topbar = () => {
             >
               <div className="px-4 py-2 border-b">
                 <p className="text-sm text-gray-600">Welcome,</p>
-                <p className="font-semibold text-gray-900">John Doe</p>
+                <p className="font-semibold text-gray-900">
+                  {auth.user?.fullName || "Guest User"}
+                </p>
               </div>
               <ul>
                 <li>
                   <a
-                    href="#profile"
+                    href="/dashboard/${userId}/profilepage"
                     className="block px-4 py-3 hover:bg-gray-100 text-gray-800 font-medium"
                   >
                     Profile
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="#settings"
-                    className="block px-4 py-3 hover:bg-gray-100 text-gray-800 font-medium"
-                  >
-                    Settings
-                  </a>
-                </li>
+
                 <li>
                   <a
                     href="/"

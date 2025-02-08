@@ -2,15 +2,16 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 const FinalCard = () => {
-  const { userId } = useParams();  // Assuming you have userId from route params
+  const { userId } = useParams();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Meal Plan Card */}
-      <div className="bg-white rounded-lg shadow-xl p-6 hover:shadow-2xl transform hover:scale-105 transition-all">
+      <div className="relative bg-white border border-gray-300 rounded-xl shadow-lg p-6 hover:shadow-2xl transform hover:-translate-y-1 transition-all">
+        {/* Header */}
         <div className="flex items-center space-x-4">
           {/* Icon */}
-          <div className="bg-red-600 text-white rounded-full p-4 shadow-lg">
+          <div className="bg-red-700 text-white rounded-xl p-3 shadow-md">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -26,15 +27,19 @@ const FinalCard = () => {
               />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-red-600">Meal Plan</h3>
+          <h3 className="text-2xl font-semibold text-black">Meal Plan</h3>
         </div>
-        <p className="text-red-600 mt-4 text-lg">
-          Receive your customized meal plan designed for your needs.
+
+        {/* Content */}
+        <p className="text-gray-700 mt-3 text-lg">
+          Receive a personalized meal plan tailored to your needs.
         </p>
+
+        {/* Action Button */}
         <div className="mt-6">
           <a
             href={`/dashboard/${userId}/mealPlan`}
-            className="bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-500 transition-all text-lg font-semibold"
+            className="block text-center bg-red-700 text-white px-5 py-3 rounded-lg hover:bg-red-600 transition-all font-medium shadow-md"
           >
             View Weekly Plan
           </a>
@@ -42,10 +47,11 @@ const FinalCard = () => {
       </div>
 
       {/* Workout Plan Card */}
-      <div className="bg-gradient-to-r from-red-400 to-red-600 rounded-lg shadow-xl p-6 hover:shadow-2xl transform hover:scale-105 transition-all">
+      <div className="relative bg-gradient-to-b from-red-600 to-red-800 border border-gray-700 rounded-xl shadow-xl p-6 hover:shadow-2xl transform hover:-translate-y-1 transition-all">
+        {/* Header */}
         <div className="flex items-center space-x-4">
           {/* Icon */}
-          <div className="bg-white text-red-600 rounded-full p-4 shadow-lg">
+          <div className="bg-white text-red-700 rounded-xl p-3 shadow-md">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -61,15 +67,19 @@ const FinalCard = () => {
               />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-white">Workout Plan</h3>
+          <h3 className="text-2xl font-semibold text-white">Workout Plan</h3>
         </div>
-        <p className="text-white mt-4 text-lg">
-          Get access to a tailored workout plan to achieve your fitness goals.
+
+        {/* Content */}
+        <p className="text-gray-200 mt-3 text-lg">
+          Follow a structured workout plan designed for your fitness goals.
         </p>
+
+        {/* Action Button */}
         <div className="mt-6">
           <a
             href={`/dashboard/${userId}/workoutPlan`}
-            className="bg-white text-red-600 px-6 py-3 rounded-full hover:bg-red-100 transition-all text-lg font-semibold"
+            className="block text-center bg-white text-red-700 px-5 py-3 rounded-lg hover:bg-gray-100 transition-all font-medium shadow-md"
           >
             Start Today's Workout
           </a>

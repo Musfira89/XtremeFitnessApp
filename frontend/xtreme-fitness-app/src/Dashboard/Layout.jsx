@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
+import ChatBot from "../Dashboard/ChatBot"; // Import the ChatBot
 
 const Layout = () => {
   const { userId } = useParams(); // Access the userId from the route parameter
@@ -31,6 +32,8 @@ const Layout = () => {
         <div className="flex-1 p-4 bg-gray-100 overflow-y-auto">
           <Outlet />
         </div>
+          {/* Global Chatbot (Visible on Every Page) */}
+      <ChatBot />
       </div>
     </div>
   );

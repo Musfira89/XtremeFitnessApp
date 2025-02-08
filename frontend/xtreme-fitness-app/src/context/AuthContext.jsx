@@ -20,26 +20,21 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const updateAuth = (data) => {
-    setAuth((prevAuth) => ({ ...prevAuth, ...data })); // Merge new data with existing auth state
-
+    setAuth((prevAuth) => ({ ...prevAuth, ...data })); // Merge new data
+  
     if (data.token) {
       localStorage.setItem("token", data.token);
     } else {
       localStorage.removeItem("token");
     }
-
-    if (data.adminId) {
-      localStorage.setItem("adminId", data.adminId);
-    } else {
-      localStorage.removeItem("adminId");
-    }
-
+  
     if (data.user) {
-      localStorage.setItem("user", JSON.stringify(data.user)); // Store user data as JSON
+      localStorage.setItem("user", JSON.stringify(data.user)); // Store full user object
     } else {
       localStorage.removeItem("user");
     }
   };
+  
 
   return (
     <AuthContext.Provider value={{ auth, updateAuth }}>

@@ -3,7 +3,7 @@ import { FaClipboardCheck } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import Message from "./Message"
 const AdminZoomMeetings = () => {
   const [meetingLink, setMeetingLink] = useState(null);
   const [meetingHistory, setMeetingHistory] = useState([]);
@@ -159,6 +159,10 @@ const AdminZoomMeetings = () => {
             </ul>
           )}
         </div>
+      </div>
+        {/* Coach Communication */}
+        <div className="mt-10 w-full">
+        <Message />
       </div>
     </div>
   );

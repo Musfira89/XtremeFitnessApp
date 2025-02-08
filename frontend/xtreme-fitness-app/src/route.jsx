@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Layout from "./Dashboard/Layout";
 
 import Home from "./pages/Home";
-import ProgressTracking from "./pages/Tracking";
+import ProgressTracking from "./pages/Progress/Progress";
 import Meal from "./pages/MealPlan";
 import Workout from "./pages/WorkoutPlan";
 import ProfilePage from "./pages/ProfilePage";
