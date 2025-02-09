@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import logo from "../../../public/LogoWhite.png";
+import { HashLink as Link } from "react-router-hash-link";
 
 const Footer = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -40,10 +41,42 @@ const Footer = () => {
           <div className="w-1/2 sm:w-1/3">
             <h4 className="font-semibold text-lg mb-3">Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="/about" className="text-gray-400 hover:text-white">About Us</a></li>
-              <li><a href="/products" className="text-gray-400 hover:text-white">Features</a></li>
-              <li><a href="/faq" className="text-gray-400 hover:text-white">FAQs</a></li>
-              <li><a href="/contact" className="text-gray-400 hover:text-white">Contact Us</a></li>
+              <li>
+                <Link
+                  smooth
+                  to="/#about-us"
+                  className="text-gray-400 hover:text-white cursor-pointer"
+                >
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  smooth
+                  to="/#services"
+                  className="text-gray-400 hover:text-white cursor-pointer"
+                >
+                  Services
+                </Link>
+              </li>
+              <li>
+                <Link
+                  smooth
+                  to="/#faq"
+                  className="text-gray-400 hover:text-white cursor-pointer"
+                >
+                  FAQs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  smooth
+                  to="/#contact-us"
+                  className="text-gray-400 hover:text-white cursor-pointer"
+                >
+                  Contact Us
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -51,20 +84,56 @@ const Footer = () => {
           <div className="w-1/2 sm:w-1/3">
             <h4 className="font-semibold text-lg mb-3">Policies</h4>
             <ul className="space-y-2">
-              <li><button onClick={() => handleOpenModal("No Refund Policy")} className="text-gray-400 hover:text-white">No Refund Policy</button></li>
-              <li><button onClick={() => handleOpenModal("Terms & Conditions")} className="text-gray-400 hover:text-white">Terms & Conditions</button></li>
-              <li><button onClick={() => handleOpenModal("Privacy Policy")} className="text-gray-400 hover:text-white">Privacy Policy</button></li>
-              <li><button onClick={() => handleOpenModal("Disclaimer")} className="text-gray-400 hover:text-white">Disclaimer</button></li>
+              <li>
+                <button
+                  onClick={() => handleOpenModal("No Refund Policy")}
+                  className="text-gray-400 hover:text-white"
+                >
+                  No Refund Policy
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleOpenModal("Terms & Conditions")}
+                  className="text-gray-400 hover:text-white"
+                >
+                  Terms & Conditions
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleOpenModal("Privacy Policy")}
+                  className="text-gray-400 hover:text-white"
+                >
+                  Privacy Policy
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => handleOpenModal("Disclaimer")}
+                  className="text-gray-400 hover:text-white"
+                >
+                  Disclaimer
+                </button>
+              </li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div className="w-full sm:w-1/3 mt-6 sm:mt-0">
             <h4 className="font-semibold text-lg mb-3">Contact Us</h4>
-            <p className="text-gray-400 text-sm">Phone: <span className="text-white">(800) 383-0689</span></p>
-            <p className="text-gray-400 text-sm">Email: <span className="text-white">support@xtremeft.com</span></p>
+            <p className="text-gray-400 text-sm">
+              Phone: <span className="text-white">(800) 383-0689</span>
+            </p>
+            <p className="text-gray-400 text-sm">
+              Email: <span className="text-white">support@xtremeft.com</span>
+            </p>
             <div className="flex justify-left sm:justify-start space-x-4 mt-3">
-              <a href="https://www.instagram.com/xtreme_fitness/" target="_blank" rel="noreferrer">
+              <a
+                href="https://www.instagram.com/xtreme_fitness/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <Instagram className="text-gray-400 hover:text-white w-6 h-6" />
               </a>
             </div>
@@ -253,6 +322,48 @@ const Footer = () => {
               <p>
                 If you have any questions about this Privacy Policy, please
                 contact us at support@xtremeft.com.
+              </p>
+            </div>
+          )}
+          {modalContent === "Disclaimer" && (
+            <div className="p-4 text-sm">
+              <p className="mb-4">
+                By participating in any online fitness training program hosted
+                by Xtreme Fitness Training LLC, you acknowledge that you have
+                read and agree to the following disclaimer:
+                <br />
+                <br />
+                <strong>1.</strong> You are participating in the program
+                voluntarily and at your own risk, and you assume all
+                responsibility for any injuries or damages that may occur as a
+                result of participating in the program.
+                <br />
+                <br />
+                <strong>2.</strong> You are responsible for your own safety and
+                well-being, and should follow all safety guidelines and
+                protocols provided in the program.
+                <br />
+                <br />
+                <strong>3.</strong> You should consult a physician before
+                beginning any physical activity, and should not participate in
+                the program if you are suffering from a physical or mental
+                illness.
+                <br />
+                <br />
+                <strong>4.</strong> The online fitness training programs are not
+                intended to diagnose, treat, cure, or prevent any medical
+                condition, and no advice or information provided should be used
+                as a substitute for medical advice.
+                <br />
+                <br />
+                <strong>5.</strong> .Xtreme Fitness Training LLC is not
+                responsible for any damages or injuries that may result from
+                your participation in the program.
+                <br />
+                <br />
+                By participating in this program, you agree to these terms and
+                conditions, and acknowledge that you are doing so at your own
+                risk.
               </p>
             </div>
           )}
