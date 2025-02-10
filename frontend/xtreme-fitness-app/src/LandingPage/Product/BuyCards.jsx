@@ -40,10 +40,7 @@ const BuyCards = () => {
               className="relative bg-white shadow-lg rounded-lg overflow-hidden flex flex-col items-center transition-all transform hover:scale-105 hover:shadow-2xl"
               style={{ width: "100%", maxWidth: "340px", height: "auto", paddingBottom: "16px" }}
             >
-              {/* Affiliate Tag */}
-              <div className="absolute top-3 right-3 bg-red-600 text-white text-xs px-3 py-1 rounded-md">
-                Affiliate
-              </div>
+            
 
               {/* Product Image */}
               <div className="relative h-48 sm:h-72 w-full overflow-hidden rounded-md flex justify-center items-center">
@@ -59,9 +56,7 @@ const BuyCards = () => {
                 <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-2">
                   {product.name}
                 </h3>
-                <p className="text-lg sm:text-xl font-bold text-red-600 mb-4">
-                  {product.price}
-                </p>
+   
                 <a
                   href={product.affiliateLink}
                   target="_blank"

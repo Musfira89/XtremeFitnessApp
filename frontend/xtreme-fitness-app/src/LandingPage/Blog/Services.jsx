@@ -44,7 +44,7 @@ const Services = () => {
             className="w-full h-64 object-cover"
           />
           <div className="bg-red-700 text-white text-center py-6">
-            <span className="text-lg md:text-xl font-bold">Automated Workout Plans</span>
+            <span className="text-lg md:text-xl font-bold">Customized Workout Plans</span>
           </div>
         </motion.div>
 
@@ -62,7 +62,7 @@ const Services = () => {
             className="w-full h-64 object-cover"
           />
           <div className="bg-red-700 text-white text-center py-6">
-            <span className="text-lg md:text-xl font-bold">Automated Meal Plans</span>
+            <span className="text-lg md:text-xl font-bold">Customized Meal Plans</span>
           </div>
         </motion.div>
 

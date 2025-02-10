@@ -43,7 +43,7 @@ const FAQSection = () => {
     {
       question: "How to contact someone if I need assistance?",
       answer:
-        "Call us at 800 383 0689 during our operating hours for immediate assistance. For non-urgent inquiries or detailed questions, you can email us at support@xtremeft.com and info@xtremeft.com. We aim to respond within 24 hours.",
+        "Call us at 800 383 0689 during our operating hours for immediate assistance. For non-urgent inquiries or detailed questions, We aim to respond within 24 hours.",
     },
   ];
 

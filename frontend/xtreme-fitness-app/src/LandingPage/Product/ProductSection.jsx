@@ -52,10 +52,7 @@ const ProductSection = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }} // Trigger animation when in view
           >
-            {/* Affiliate Tag */}
-            <div className="absolute top-3 right-3 bg-red-600 text-white text-xs px-3 py-1 rounded-md">
-              Affiliate
-            </div>
+           
 
             {/* Product Image */}
             <div className="relative h-60 sm:h-72 w-full overflow-hidden rounded-md flex justify-center items-center">

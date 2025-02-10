@@ -9,7 +9,7 @@ const PricingPlans = () => {
   
     {
       name: "Xtreme Silver",
-      price: "$899.99/",
+      price: "$899.99/month",
       priceDetails: "Billed monthly until cancelled",
       image: freePlanImage,
       features: [
@@ -25,7 +25,7 @@ const PricingPlans = () => {
     },
     {
       name: "Xtreme Platinum",
-      price: "$499.99/",
+      price: "$499.99/month",
       priceDetails: (
         <div className="text-gray-600  ">
           <p className="text-red-500"> $1499.99 / 3 months</p>
@@ -48,7 +48,7 @@ const PricingPlans = () => {
     },
     {
       name: "Xtreme Gold",
-      price: "$699.99/",
+      price: "$699.99/month",
       priceDetails: (
         <div className="text-gray-600 ">
           <p className="text-red-500"> $1399.99 / 2 months</p>
@@ -75,7 +75,7 @@ const PricingPlans = () => {
     <div  id="pricing" className="flex flex-col justify-center items-center w-full px-4 md:px-10 py-10 mt-16 mb-28">
       {/* Heading */}
       <div className="text-center mb-28">
-        <h1 className="text-4xl font-bold text-black">OUR PRICING PLAN</h1>
+        <h1 className="text-4xl font-bold text-black">OUR PRICING PLANS</h1>
         <div className="mt-2 h-1 w-24 bg-red-700 mx-auto"></div>
       </div>
   

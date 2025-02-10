@@ -21,7 +21,6 @@ export const Home = () => {
       <Card />
       <About />
       <Services />
-      <Video />
 
       <PricingPlans />
       <FaqSection />

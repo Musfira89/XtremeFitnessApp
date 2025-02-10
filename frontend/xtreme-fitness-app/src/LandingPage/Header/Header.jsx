@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import BgImg from "../../assets/LandingPageImg/headerNew.jpg"; // Replace with your hero image path
 import logo from "../../../public/Logo.png"; // Replace with your logo path
 import { HashLink as Link } from "react-router-hash-link";
+import { FaPlay, FaTimes } from "react-icons/fa";
 
 // Keyframes for vibration effect
 const buttonVibrate = `
@@ -16,6 +17,8 @@ const buttonVibrate = `
 `;
 
 const HeroSection = () => {
+  const [showModal, setShowModal] = useState(false);
+
   return (
     <div
       id="home"
@@ -25,7 +28,7 @@ const HeroSection = () => {
       }}
     >
       {/* Red Overlay */}
-      <div className="absolute inset-0 bg-red-900/30"></div>
+      <div className="absolute inset-0 bg-red-800/60"></div>
 
       {/* Logo */}
       <div className="absolute top-6 left-10 z-10">
@@ -133,35 +136,72 @@ const HeroSection = () => {
       {/* Hero Text */}
       <div
         className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 z-20"
-        style={{ marginTop: "190px" }}
+        style={{ marginTop: "180px" }}
       >
         <motion.h1
-          className="text-5xl md:text-6xl font-bold leading-snug tracking-widest font-poppins"
+          className="text-5xl md:text-7xl font-extrabold leading-tight tracking-wider font-poppins drop-shadow-lg"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          WELCOME TO XTREMEFT
-          <br /> Fitness Training
+          WELCOME TO <span className="text-red-700">XTREME</span>
+          <br /> FITNESS TRAINING
         </motion.h1>
-        <p className="mt-6 text-lg md:text-xl max-w-lg leading-relaxed">
-          At Xtreme Fitness Training, we are dedicated to helping you achieve
-          your fitness and wellness goals through personalized and innovative
-          online coaching.
+
+        <p className="mt-6 text-lg md:text-xl max-w-2xl leading-relaxed opacity-90">
+          At Xtreme Fitness Training, we help you achieve your fitness and
+          wellness goals through personalized and innovative online coaching.
         </p>
-        {/* Button with Vibration Animation */}
-        <style>{buttonVibrate}</style>
-        <Link to="/signup">
+
+        {/* Buttons Container */}
+        <div className="flex items-center gap-6 mt-10">
+  
+ 
+          <Link to="/signup">
+            <button className="px-10 py-4 bg-red-700 hover:bg-red-600 text-white text-lg font-semibold rounded-md shadow-lg transition-transform transform hover:scale-105">
+              Get Started Today
+            </button>
+          </Link>
+
+          {/* Watch Training Video Button (Now works correctly) */}
           <button
-            className="mt-10 px-14 py-4 border-2 border-white text-white uppercase font-semibold tracking-wide animate-vibrate"
-            style={{
-              animation: "vibrate 1s ease-out",
-            }}
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-3 text-white text-lg font-semibold hover:opacity-80 transition"
           >
-            Get Started Today
+            <div className="w-14 h-14 flex items-center justify-center bg-red-700 hover:bg-red-600 text-white rounded-full shadow-md transition-transform transform hover:scale-110">
+              <FaPlay size={18} />
+            </div>
+            Watch Training Video
           </button>
-        </Link>
+        </div>
       </div>
+
+      {showModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-md z-50 px-4">
+    
+    {/* Close Button */}
+    <button
+      onClick={() => setShowModal(false)}
+      className="absolute top-8 right-8 bg-red-600 hover:bg-red-700 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg transition-all"
+    >
+      <FaTimes size={24} />
+    </button>
+
+    {/* Embedded Video */}
+    <div className="relative">
+      <iframe
+        className="w-[90vw] max-w-4xl h-[60vh] md:h-[70vh] rounded-lg shadow-xl"
+        src="https://www.youtube.com/embed/i89fWv7g5Bg?autoplay=1"
+        title="Training Video"
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+      ></iframe>
+    </div>
+
+  </div>
+)}
+
     </div>
   );
 };

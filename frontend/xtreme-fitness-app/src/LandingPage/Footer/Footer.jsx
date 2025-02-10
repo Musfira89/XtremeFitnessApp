@@ -86,10 +86,10 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <button
-                  onClick={() => handleOpenModal("No Refund Policy")}
+                  onClick={() => handleOpenModal("Refund Policy")}
                   className="text-gray-400 hover:text-white"
                 >
-                  No Refund Policy
+                  Refund Policy
                 </button>
               </li>
               <li>
@@ -119,7 +119,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact Info */}
+          {/* Contact Info & Hours of Operation */}
           <div className="w-full sm:w-1/3 mt-6 sm:mt-0">
             <h4 className="font-semibold text-lg mb-3">Contact Us</h4>
             <p className="text-gray-400 text-sm">
@@ -136,6 +136,16 @@ const Footer = () => {
               >
                 <Instagram className="text-gray-400 hover:text-white w-6 h-6" />
               </a>
+            </div>
+
+            {/* Hours of Operation */}
+            <div className="mt-6">
+              <h4 className="font-semibold text-lg mb-2">Hours of Operation</h4>
+              <p className="text-gray-400 text-sm">
+                Monday - Friday: 6am - 6pm
+              </p>
+              <p className="text-gray-400 text-sm">Saturday: 9am - 3pm</p>
+              <p className="text-gray-400 text-sm">Sunday: Closed</p>
             </div>
           </div>
         </div>
@@ -155,64 +165,43 @@ const Footer = () => {
       >
         <DialogTitle className="text-lg font-bold">{modalContent}</DialogTitle>
         <DialogContent>
-          {modalContent === "No Refund Policy" && (
-            <div className="p-4 text-sm">
-              <p className="mb-4">
-                All purchases made for our training programs are{" "}
-                <strong>non-refundable</strong>. Once payment is processed,
-                there will be <strong>no refunds</strong> issued for any reason.
-                We strive to provide the best possible training experience for
-                our clients and are committed to delivering high-quality
-                services. If you have any concerns or issues with your training
-                program, please feel free to contact us, and we will do our best
-                to address them promptly.
-              </p>
-              <p className="mb-4">
-                By proceeding with the purchase of our training programs, you
-                acknowledge and agree to our
-                <strong> no refund policy</strong>. Thank you for your
-                understanding and cooperation.
-              </p>
-              <p className="mt-6 font-semibold mb-6">
-                Sincerely, <br></br>Xtreme Fitness Training
-              </p>
+          {modalContent === "Refund Policy" && (
+            <div className="p-4 text-sm text-red-600 font-semibold">
               <p className="mb-4">
                 Xtreme Fitness Training offers a <strong>3-day trial</strong> of
-                our training programs so that you can experience the benefits
-                firsthand. During this trial period, you will have access to our
+                our training programs to experience the benefits firsthand.
+                During this trial period, you will have access to our
                 personalized plan and dashboard to help you kickstart your
                 fitness journey.
               </p>
 
               <p className="mb-4">
-                Please note that the 3-day trial offer is a{" "}
-                <strong>one-time opportunity</strong> for new clients only. At
-                the end of the trial period, you will have the option to
-                continue with our training programs by purchasing a program.
+                Please note that the <strong>3-day trial offer</strong> is a{" "}
+                <strong>one-time opportunity</strong>
+                for new clients only. At the end of the trial period, you will
+                have the option to continue with our training programs by
+                purchasing a program.
               </p>
 
               <p className="mb-4">
                 It is important to understand that all purchases made for our
-                training programs, following the trial period, are
-                non-refundable. Once payment is processed, there will be{" "}
-                <strong>no refunds</strong> issued for any reason.
+                training programs, following the trial period, are{" "}
+                <strong>non-refundable</strong>. Once payment is processed,
+                there will be <strong>no refunds</strong> issued for any reason.
               </p>
 
               <p className="mb-4">
                 We are dedicated to providing you with the best fitness
                 experience possible and are committed to helping you achieve
-                your goals.If you have any questions or concerns, please do not
+                your goals. If you have any questions or concerns, please do not
                 hesitate to contact us.
               </p>
 
               <p className="mb-4">
-                By participating in the 3-day trial offer and purchasing our
-                training programs, you acknowledge and agree to our{" "}
-                <strong>no refund policy</strong>. Thank you for choosing Xtreme
-                Fitness Training.
-              </p>
-              <p className="mt-6 font-semibold">
-                Sincerely, <br></br>Xtreme Fitness Training
+                By participating in the <strong>3-day trial offer</strong> and
+                purchasing our training programs, you acknowledge and agree to
+                our <strong>no refund policy</strong>. Thank you for choosing
+                Xtreme Fitness Training.
               </p>
             </div>
           )}
