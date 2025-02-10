@@ -6,13 +6,13 @@ const router = express.Router();
 // Handle form submission
 router.post("/", async (req, res) => {
   try {
-    const { name, email, phone, source } = req.body;
+    const { name, email, phone, source, message } = req.body;
 
-    if (!name || !email || !phone || !source) {
+    if (!name || !email || !phone || !source || !message) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const newContact = new Contact({ name, email, phone, source });
+    const newContact = new Contact({ name, email, phone, source, message });
     await newContact.save();
 
     res.status(201).json({ message: "Your message has been received!" });

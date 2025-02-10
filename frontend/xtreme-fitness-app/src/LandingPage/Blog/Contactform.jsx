@@ -10,6 +10,7 @@ const ContactForm = () => {
     email: "",
     phone: "",
     source: "",
+    message: "",
   });
 
   const handleChange = (e) => {
@@ -32,7 +33,7 @@ const ContactForm = () => {
         style: { backgroundColor: "black", color: "white" },
       });
 
-      setFormData({ name: "", email: "", phone: "", source: "" });
+      setFormData({ name: "", email: "", phone: "", source: "", message: "" });
     } catch (error) {
       toast.error("Something went wrong. Please try again.", {
         position: "top-right",
@@ -96,6 +97,16 @@ const ContactForm = () => {
             <option value="friend">Friend/Family</option>
             <option value="other">Other</option>
           </select>
+
+          <textarea
+            name="message"
+            placeholder="Your Message"
+            value={formData.message}
+            onChange={handleChange}
+            rows="5"
+            className="w-full px-5 py-4 bg-white text-gray-700 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+            required
+          ></textarea>
 
           <button type="submit" className="w-full px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-md hover:bg-red-700 transition duration-300">
             Submit

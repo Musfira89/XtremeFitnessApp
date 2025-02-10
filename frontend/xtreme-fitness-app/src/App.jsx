@@ -15,6 +15,7 @@ import Adminroutes from "./Admin/Adminroutes";
 import AdminSignup from "./Admin/AdminLogin/AdminSignup";
 import PlanPage from "./Auth/PlanPage";
 import PaymentPage from "./Auth/PaymentPage";
+import Journey from "./LandingPage/Blog/Journey";
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           {/* Landing Page Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/buycards" element={<BuyCards />} />
+          <Route path="/sucess" element={<Journey />} />
 
           {/* User Panel Routes */}
           <Route path="/login" element={<Login />} />

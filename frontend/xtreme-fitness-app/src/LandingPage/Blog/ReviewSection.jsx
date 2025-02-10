@@ -7,16 +7,16 @@ import "slick-carousel/slick/slick-theme.css";
 const ReviewsSection = () => {
   const reviews = [
     {
-      name: "John Doe",
+      name: "Jimmy Yim",
       rating: 5,
       daysAgo: "2 days ago",
-      review: "Amazing service and top-notch quality. Highly recommended!",
+      review: " “Joining this fitness app has been a game-changer for me! The personalized meal plans and workout “",
     },
     {
-      name: "Jane Smith",
-      rating: 4,
-      daysAgo: "5 days ago",
-      review: "Great experience overall! Will definitely come back.",
+      name: "Peter Parker",
+      rating: 5,
+      daysAgo: "2 days ago",
+      review: "Joining this fitness app has been a game-changer for me! The personalized meal plans and workout “",
     },
     {
       name: "Michael Brown",
@@ -25,23 +25,12 @@ const ReviewsSection = () => {
       review: "The team was very professional and helpful throughout the process.",
     },
     {
-      name: "Sarah Johnson",
+      name: "Maclaren",
       rating: 5,
-      daysAgo: "2 weeks ago",
-      review: "Fantastic experience from start to finish!",
+      daysAgo: "2 days ago",
+      review: "Joining this fitness app has been a game-changer for me! The personalized meal plans and workout “",
     },
-    {
-      name: "Chris Lee",
-      rating: 4,
-      daysAgo: "3 days ago",
-      review: "Very good service, I would recommend it.",
-    },
-    {
-      name: "Emily Davis",
-      rating: 5,
-      daysAgo: "1 month ago",
-      review: "A truly excellent experience! Highly satisfied!",
-    },
+   
   ];
 
   // Slider settings
