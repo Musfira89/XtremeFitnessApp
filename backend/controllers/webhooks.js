@@ -1,28 +1,56 @@
 import stripe from "../stripe.js";
 import User from "../models/auth.js";
 
-export const stripeWebhook = async (req, res) => {
-  let event;
+export const handleStripeWebhook = async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
   try {
-    const sig = req.headers["stripe-signature"];
-    event = stripe.webhooks.constructEvent(req.rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET);
-  } catch (err) {
-    console.error("Webhook Error:", err);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    const event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      const { userId, planId } = session.metadata;
+    
+      try {
+        await User.findByIdAndUpdate(userId, { plan: planId, subscriptionStatus: "active" });
+        console.log(`User ${userId} subscription activated!`);
+      } catch (dbError) {
+        console.error("Database Update Error:", dbError);
+      }
+    }
+    
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Webhook Error:", error);
+    res.sendStatus(400);
   }
+};
+export const checkPaymentStatus = async (req, res) => {
+  try {
+    const { session_id } = req.params;
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    const userId = session.metadata.userId;
-    const planId = session.metadata.planId;
+    // Retrieve the session from Stripe
+    const session = await stripe.checkout.sessions.retrieve(session_id);
 
-    await User.findByIdAndUpdate(userId, {
-      plan: planId,
-      subscriptionStatus: "active",
-    });
+    if (session.payment_status === "paid") {
+      // Retrieve user from metadata
+      const { userId, planId } = session.metadata;
 
-    console.log("User subscription activated:", userId);
+      // Update user subscription status in DB
+      const user = await User.findById(userId);
+      if (user) {
+        user.plan = planId;
+        user.subscriptionStatus = "active";
+        await user.save();
+      }
+
+      return res.status(200).json({ message: "Payment successful", user });
+    } else {
+      return res.status(400).json({ message: "Payment not completed" });
+    }
+  } catch (error) {
+    console.error("Error checking payment status:", error);
+    res.status(500).json({ message: "Server error" });
   }
-
-  res.json({ received: true });
 };

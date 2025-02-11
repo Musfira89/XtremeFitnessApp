@@ -15,7 +15,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["active", "canceled", "pending", "inactive"], 
       default: "inactive"
-    }
+    },
+    trialExpiryDate: { type: Date, default: null } 
+
   },
   { timestamps: true }
 );

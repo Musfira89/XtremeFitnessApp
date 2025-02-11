@@ -14,9 +14,8 @@ import AdminLogin from "./Admin/AdminLogin/AdminLogin";
 import Adminroutes from "./Admin/Adminroutes";
 import AdminSignup from "./Admin/AdminLogin/AdminSignup";
 import PlanPage from "./Auth/PlanPage";
-import PaymentPage from "./Auth/PaymentPage";
-import Journey from "./LandingPage/Blog/Journey";
-
+import Journey from "./LandingPage/Journey/Journey";
+import PaymentSuccess from "./Auth/SucessPage";
 
 function App() {
   return (
@@ -27,14 +26,14 @@ function App() {
           {/* Landing Page Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/buycards" element={<BuyCards />} />
-          <Route path="/sucess" element={<Journey />} />
+          <Route path="/success-stories" element={<Journey />} />
 
           {/* User Panel Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/questions/:userId" element={<Questionnaire />} />
           <Route path="/planpage/:userId" element={<PlanPage />} />
-          <Route path="/payment/:userId" element={<PaymentPage />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
 
           <Route path="/dashboard/:userId/*" element={<AppRoutes />} />
 

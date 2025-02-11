@@ -1,10 +1,15 @@
 import React from "react";
 import products from "./productData"; // Products array with affiliate links
 import bgImage from "../../assets/LandingPageImg/service3.png"; // Background image for hero section
+import Navbar from "../Header/Navbar"
+import Footer from "../Footer/Footer";
 
 const BuyCards = () => {
   return (
-    <div className="bg-gray-50 bg-gradient-to-r from-gray-50 to-red-50">
+    <>
+      <Navbar/>
+
+    <div className="bg-gray-50 bg-gradient-to-r from-gray-50 to-red-50 mb-32">
       {/* Hero Section */}
       <div
         className="relative bg-cover bg-center h-[300px] sm:h-[400px] flex items-center justify-center text-center text-white"
@@ -71,6 +76,8 @@ const BuyCards = () => {
         </div>
       </div>
     </div>
+    <Footer/>
+    </>
   );
 };
 

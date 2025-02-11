@@ -40,10 +40,10 @@ const PricingPlans = () => {
         "Supplement Recommendations",
         "Weekly Email Check ins",
         "Progress Tracking",
+        "1 Video meeting (20 -30 minutes)",
         "Ongoing Support & Communication",
         "Referral Discounts",
         "Renewal Discounts",
-        "1 Video meeting (20 -30 minutes)",
       ],
     },
     {

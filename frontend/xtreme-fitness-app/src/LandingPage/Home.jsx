@@ -11,11 +11,11 @@ import Services from "./Blog/Services";
 import PricingPlans from "./Pricing/PricingPlan";
 import Contactform from "./Blog/Contactform";
 import Support from "./Blog/Support";
-import Newsbar from "./Header/Newbar";
+import Navbar from "./Header/Navbar";
 export const Home = () => {
   return (
     <>
-      <Newsbar />
+      <Navbar/>
       <Header />
 
       <Card />

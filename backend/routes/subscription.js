@@ -1,16 +1,14 @@
 import express from "express";
-import { subscribeUser, changeSubscription ,createCheckoutSession ,checkPaymentStatus} from "../controllers/subscriptionController.js";
+import { subscribeUser ,startFreeTrial, createCheckoutSession} from "../controllers/subscriptionController.js";
+import { handleStripeWebhook, checkPaymentStatus } from "../controllers/webhooks.js";
 
 const router = express.Router();
 
 // User subscribes to a plan
 router.post("/subscribe", subscribeUser);
-
-// User changes plan (upgrade/downgrade)
-router.post("/change", changeSubscription);
-
-
+router.post("/start-trial", startFreeTrial);
 router.post("/checkout-session", createCheckoutSession);
-router.get("/payment-status/:sessionId", checkPaymentStatus); // New endpoint to check payment status
+router.post("/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
+router.get("/payment-status/:session_id", checkPaymentStatus);
 
 export default router;
