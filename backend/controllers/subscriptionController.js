@@ -7,8 +7,6 @@ dotenv.config();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 
-
-
 export const subscribeUser = async (req, res) => {
   try {
     const { userId, planId } = req.body;
@@ -100,7 +98,7 @@ export const createCheckoutSession = async (req, res) => {
           quantity: 1,
         },
       ],
-      success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}&userId=${userId}`,
       cancel_url: `http://localhost:5173/plans`,
       metadata: { userId, planId },
     });
@@ -109,5 +107,26 @@ export const createCheckoutSession = async (req, res) => {
   } catch (error) {
     console.error("Stripe Checkout Error:", error);
     res.status(500).json({ message: "Payment initiation failed" });
+  }
+};
+
+
+
+export const checkActivePlan = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const currentDate = new Date();
+    if (user.planId && user.planExpiry > currentDate) {
+      return res.json({ activePlanId: user.planId, planExpiry: user.planExpiry });
+    }
+
+    res.json({ activePlanId: null });
+  } catch (error) {
+    console.error("Error checking active plan:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };

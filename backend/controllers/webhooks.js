@@ -29,16 +29,16 @@ export const handleStripeWebhook = async (req, res) => {
 export const checkPaymentStatus = async (req, res) => {
   try {
     const { session_id } = req.params;
-
-    // Retrieve the session from Stripe
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
-    if (session.payment_status === "paid") {
-      // Retrieve user from metadata
-      const { userId, planId } = session.metadata;
+    if (!session.metadata || !session.metadata.userId) {
+      return res.status(400).json({ message: "User ID missing in metadata" });
+    }
 
-      // Update user subscription status in DB
+    if (session.payment_status === "paid") {
+      const { userId, planId } = session.metadata;
       const user = await User.findById(userId);
+
       if (user) {
         user.plan = planId;
         user.subscriptionStatus = "active";

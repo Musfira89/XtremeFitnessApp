@@ -4,11 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
 import axios from "axios";
 import fitnessBackground from "../assets/LandingPageImg/service1.png";
+import { toast } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 
 const PlanPage = () => {
   const { userId } = useParams();
-  const [plans, setPlans] = useState([]);
   const navigate = useNavigate();
+  const [plans, setPlans] = useState([]);
+  const [activePlan, setActivePlan] = useState(null);
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -19,27 +22,54 @@ const PlanPage = () => {
         console.error("Error fetching plans:", error);
       }
     };
+
+    const fetchActivePlan = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/user/active-plan/${userId}`);
+        setActivePlan(response.data); // Updating state with active plan
+      } catch (error) {
+        console.error("Error fetching active plan:", error);
+      }
+    };
+    
+
     fetchPlans();
-  }, []);
+    fetchActivePlan();
+  }, [userId,plans]);
 
   const handleTrialEnable = async () => {
     try {
-      await axios.post("http://localhost:5000/api/start-trial", {
-        userId: userId,
-        isTrial: true,
+      await axios.post("http://localhost:5000/api/user/start-trial", { userId });
+
+      toast.success("Free trial activated! Redirecting...", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "dark",
       });
-      navigate(`/dashboard/${userId}`);
+
+      setTimeout(() => navigate(`/dashboard/${userId}`), 3000);
     } catch (error) {
       console.error("Error enabling free trial:", error);
     }
   };
 
   const handlePlanSelection = async (plan) => {
+    // Ensure activePlan is loaded before checking
+    if (activePlan && activePlan.activePlanId === plan._id) {
+      toast.error(`You already have this plan! It expires on ${new Date(activePlan.planExpiry).toLocaleDateString()}`, {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "dark",
+      });
+      return;
+    }
+  
     try {
       const response = await axios.post("http://localhost:5000/api/checkout-session", {
         userId,
         planId: plan._id,
       });
+  
       if (response.data.url) {
         window.location.href = response.data.url; // Redirect to Stripe Checkout
       }

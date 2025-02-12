@@ -41,6 +41,11 @@ const Sidebar = () => {
               label: "Question Responses",
             },
             {
+              to: `/admin/userlist`,
+              icon: <VideoCall />,
+              label: "User List",
+            },
+            {
               to: `/admin/meeting`,
               icon: <VideoCall />,
               label: "Meeting + chats",
