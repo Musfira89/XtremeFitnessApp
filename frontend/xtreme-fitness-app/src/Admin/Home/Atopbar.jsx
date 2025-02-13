@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { FaBell, FaUserCircle } from "react-icons/fa";
+import { useAdminAuth } from "../../context/AdminAuthContext";
+import axios from "axios";
+
 
 const Topbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [admin, setAdmin] = useState({ name: "Admin", contact: "N/A" });
+  const { adminAuth } = useAdminAuth();
+  const [adminData, setAdminData] = useState(null);
 
   useEffect(() => {
-    const storedAdmin = JSON.parse(localStorage.getItem("admin"));
-    if (storedAdmin) {
-      setAdmin(storedAdmin);
-    }
-  }, []);
+    const fetchAdminData = async () => {
+      try {
+        if (!adminAuth.adminId) return;
+        const response = await axios.get(`http://localhost:5000/api/admin/${adminAuth.adminId}`);
+        setAdminData(response.data);
+      } catch (error) {
+        console.error("Error fetching admin data:", error);
+      }
+    };
+
+    fetchAdminData();
+  }, [adminAuth.adminId]);
+
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -51,15 +63,14 @@ const Topbar = () => {
               {/* Admin Info */}
               <div className="px-4 py-3 border-b">
                 <p className="text-gray-500 text-sm">Welcome,</p>
-                <p className="font-bold text-gray-900 text-lg">{admin.name}</p>
-                <p className="text-gray-600 text-sm">{admin.contact}</p>
+                <p className="font-bold text-gray-900 text-lg">{adminData?.fullName || "Loading..."}</p>
               </div>
 
               {/* Dropdown Links */}
               <ul>
                 <li>
                   <a
-                    href="/admin/profile"
+                    href="/admin/profilepage"
                     className="block px-4 py-3 text-gray-800 text-lg font-medium hover:bg-gray-100"
                   >
                     Profile

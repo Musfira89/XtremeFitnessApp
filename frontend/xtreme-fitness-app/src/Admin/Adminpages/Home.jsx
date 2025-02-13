@@ -1,6 +1,6 @@
 import React from "react";
-import Cards from "../Home/Card"; // You may need to modify this for admin
 import SalesCard from "../Home/SalesCard"; // Assuming Analytics is the admin-related data or reports
+import AnalyticsSection from "../Home/AnalyticsSection"; // Import new analytics component
 
 const Home = () => {
   return (
@@ -11,7 +11,8 @@ const Home = () => {
       </div>
 
       <div className="w-full">
-        <Cards />
+      <AnalyticsSection />
+
       </div>
     </div>
   );

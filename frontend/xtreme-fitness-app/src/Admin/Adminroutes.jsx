@@ -6,6 +6,7 @@ import QuestionResponse from "./Adminpages/QuestionResponse";
 import Meeting from "./Adminpages/Meeting";
 import AdminProfile from "./Adminpages/AdminProfile";
 import User from "./Adminpages/User"
+import Settings from "./Adminpages/Settings"
 const AdminRoutes = () => (
   <Routes>
     {/* Parent Layout with Sidebar and Topbar */}
@@ -15,6 +16,8 @@ const AdminRoutes = () => (
       <Route path="questionaire" element={<QuestionResponse />} />
       <Route path="meeting" element={<Meeting />} />
       <Route path="profilepage" element={<AdminProfile />} />
+      <Route path="settings" element={<Settings />} />
+
     </Route>
   </Routes>
 );

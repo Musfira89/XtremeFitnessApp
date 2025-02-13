@@ -78,10 +78,12 @@ const Sidebar = ({ userId }) => {
                     }`}
                   ></span>
                 </span>
+                
               </NavLink>
             </li>
           ))}
         </ul>
+        
       </nav>
     </aside>
   );

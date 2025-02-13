@@ -30,8 +30,10 @@ const Login = () => {
   
         updateAuth({
           token,
-          user, // Store full user object
+          user,
         });
+  
+        localStorage.setItem("token", token); // Store token in localStorage
   
         toast.success("Login successful!");
   

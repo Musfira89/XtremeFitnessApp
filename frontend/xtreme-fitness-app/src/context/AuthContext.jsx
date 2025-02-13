@@ -7,18 +7,16 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    const storedAdminId = localStorage.getItem("adminId");
     const storedUser = localStorage.getItem("user");
-
+  
     setAuth({
       token: storedToken || null,
-      adminId: storedAdminId || null,
-      user: storedUser ? JSON.parse(storedUser) : null, // Parse user object if available
+      user: storedUser ? JSON.parse(storedUser) : null,
     });
-
-    console.log("Auth Loaded from LocalStorage:", { storedToken, storedAdminId, storedUser });
+  
+    console.log("Auth Loaded from LocalStorage:", { storedToken, storedUser });
   }, []);
-
+  
   const updateAuth = (data) => {
     setAuth((prevAuth) => ({ ...prevAuth, ...data })); // Merge new data
   

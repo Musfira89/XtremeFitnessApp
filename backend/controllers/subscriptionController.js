@@ -130,3 +130,43 @@ export const checkActivePlan = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const getNewSubscriptions = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const lastMonth = new Date();
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+
+    const twoMonthsAgo = new Date();
+    twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+    // Count new subscriptions for the current month
+    const currentMonthSubscriptions = await User.countDocuments({
+      subscriptionStatus: "active",
+      updatedAt: { $gte: lastMonth, $lt: currentDate }
+    });
+
+    // Count new subscriptions for the previous month
+    const previousMonthSubscriptions = await User.countDocuments({
+      subscriptionStatus: "active",
+      updatedAt: { $gte: twoMonthsAgo, $lt: lastMonth }
+    });
+
+    // Calculate percentage change
+    let percentageChange = 0;
+    if (previousMonthSubscriptions > 0) {
+      percentageChange = ((currentMonthSubscriptions - previousMonthSubscriptions) / previousMonthSubscriptions) * 100;
+    } else if (currentMonthSubscriptions > 0) {
+      percentageChange = 100; // If last month had no subscriptions, it's a 100% increase
+    }
+
+    res.status(200).json({ 
+      newSubscriptions: currentMonthSubscriptions,
+      change: percentageChange.toFixed(2) // Limit to 2 decimal places
+    });
+
+  } catch (error) {
+    console.error("Error fetching new subscriptions:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

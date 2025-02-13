@@ -35,7 +35,7 @@ const HeroSection = () => {
         {/* Buttons Container */}
         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
           <Link to="/signup">
-            <button className="px-6 sm:px-10 py-3 bg-red-700 hover:bg-red-600 text-white text-lg font-semibold rounded-md shadow-lg transition-transform transform hover:scale-105">
+            <button className="px-6 sm:px-10 py-4 bg-red-700 hover:bg-red-600 text-white text-lg font-semibold rounded-md shadow-lg transition-transform transform hover:scale-105">
               Get Free Trial Today
             </button>
           </Link>

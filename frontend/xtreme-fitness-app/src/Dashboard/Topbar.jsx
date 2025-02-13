@@ -1,12 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBell, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext"; // Import Auth Context
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const Topbar = ({ userId }) => {
+const Topbar = () => {
+  const { userId } = useParams();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState("inactive"); // 'inactive', 'pending', or 'active' status
-  const { auth } = useAuth(); // Get auth state from context
+  const [planName, setPlanName] = useState("Free Plan");
+  const { auth } = useAuth();
+
+  useEffect(() => {
+    const fetchPlanName = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5000/api/auth/${userId}/plan`
+        );
+        console.log("API Response:", response.data); 
+        setPlanName(response.data.planName);
+      } catch (error) {
+        console.error("Error fetching plan:", error);
+      }
+    };
+
+    if (userId) {
+      fetchPlanName();
+    }
+  }, [userId]);
 
   const toggleDropdown = () => {
     setDropdownOpen(!dropdownOpen);
@@ -14,17 +35,6 @@ const Topbar = ({ userId }) => {
 
   const closeDropdown = () => {
     setDropdownOpen(false);
-  };
-
-  // Determine the plan text based on subscription status
-  const getPlanText = () => {
-    if (subscriptionStatus === "active") {
-      return "Paid Plan";
-    } else if (subscriptionStatus === "pending") {
-      return "Pending Plan";
-    } else {
-      return "Free Plan";
-    }
   };
 
   return (
@@ -45,27 +55,16 @@ const Topbar = ({ userId }) => {
       {/* Right Section: Notification + Profile + Plan Status */}
       <div className="flex items-center space-x-8">
         {/* Plan Status */}
-        <div className="flex items-center space-x-2">
-          <div
-            className={`text-sm py-1 px-3 rounded-full ${
-              subscriptionStatus === "active"
-                ? "bg-green-500 text-white"
-                : subscriptionStatus === "pending"
-                ? "bg-yellow-500 text-gray-800"
-                : "bg-gray-100 text-gray-800"
-            }`}
-          >
-            {getPlanText()}
+        <div className="flex items-center space-x-4">
+          <div className="text-sm py-1 px-3 rounded-full bg-gray-100 text-gray-800">
+            {planName || "Fetching..."}
           </div>
 
-          {/* Call to Action for Upgrading Plan */}
-          {subscriptionStatus === "inactive" && (
-            <Link to={`/planpage/${userId}`}>
-              <p className="text-sm text-gray-100 cursor-pointer hover:text-white">
-                <span className="underline">Upgrade to Paid Plan</span>
-              </p>
-            </Link>
-          )}
+          <Link to={`/planpage/${userId}`}>
+            <p className="text-sm text-gray-100 cursor-pointer hover:text-white">
+              <span className="underline">Upgrade Plan</span>
+            </p>
+          </Link>
         </div>
 
         {/* Notification Icon with Badge */}
