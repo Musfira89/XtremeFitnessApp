@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaBell, FaUserCircle } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext"; // Import Auth Context
+import { FaBell, FaUserCircle, FaBars } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import NotificationsDropdown from "./Noti";
 
-const Topbar = () => {
+const Topbar = ({ toggleMobileMenu }) => {
   const { userId } = useParams();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [planName, setPlanName] = useState("Free Plan");
@@ -17,7 +18,7 @@ const Topbar = () => {
         const response = await axios.get(
           `http://localhost:5000/api/auth/${userId}/plan`
         );
-        console.log("API Response:", response.data); 
+        console.log("API Response:", response.data);
         setPlanName(response.data.planName);
       } catch (error) {
         console.error("Error fetching plan:", error);
@@ -33,33 +34,39 @@ const Topbar = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const closeDropdown = () => {
-    setDropdownOpen(false);
-  };
-
   return (
-    <header className="flex justify-between items-center px-8 py-4 bg-gradient-to-r from-red-700 to-red-800 shadow-md text-white">
-      {/* Logo/Title Section */}
-      <div>
-        <h1 className="text-3xl font-bold tracking-wide uppercase">
-          Dashboard
-        </h1>
-        <a
-          href={`/dashboard/${userId}/meeting`}
-          className="mt-1 text-md underline text-gray-200 cursor-pointer hover:text-gray-100"
+    <header className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-red-700 to-red-800 shadow-md text-white">
+      {/* Left Side - Logo & Mobile Menu Button */}
+      <div className="flex items-center space-x-4">
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden text-white text-2xl"
+          onClick={toggleMobileMenu}
         >
-          Join Meeting
-        </a>
+          <FaBars />
+        </button>
+
+        {/* Dashboard Title */}
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-wide uppercase">
+            Dashboard
+          </h1>
+          <a
+            href={`/dashboard/${userId}/meeting`}
+            className="mt-1 text-sm underline text-gray-200 cursor-pointer hover:text-gray-100"
+          >
+            Join Meeting
+          </a>
+        </div>
       </div>
 
-      {/* Right Section: Notification + Profile + Plan Status */}
-      <div className="flex items-center space-x-8">
-        {/* Plan Status */}
-        <div className="flex items-center space-x-4">
+      {/* Right Side - Plan, Notifications, Profile */}
+      <div className="flex items-center space-x-4 md:space-x-8">
+        {/* Plan Status - Hidden on Small Screens */}
+        <div className="hidden md:flex items-center space-x-4">
           <div className="text-sm py-1 px-3 rounded-full bg-gray-100 text-gray-800">
             {planName || "Fetching..."}
           </div>
-
           <Link to={`/planpage/${userId}`}>
             <p className="text-sm text-gray-100 cursor-pointer hover:text-white">
               <span className="underline">Upgrade Plan</span>
@@ -67,10 +74,9 @@ const Topbar = () => {
           </Link>
         </div>
 
-        {/* Notification Icon with Badge */}
+        {/* Notification Icon */}
         <button className="relative text-white hover:text-gray-200 transition duration-300 ease-in-out">
-          <FaBell className="text-2xl" />
-          <span className="absolute top-1 right-1 w-3.5 h-3.5 bg-red-300 rounded-full border-2 border-white"></span>
+          <NotificationsDropdown />
         </button>
 
         {/* Profile Dropdown */}
@@ -86,7 +92,6 @@ const Topbar = () => {
           {dropdownOpen && (
             <div
               className="absolute right-0 mt-3 w-52 bg-white rounded-lg shadow-lg py-3 z-20 border border-gray-200"
-              onMouseLeave={closeDropdown}
             >
               <div className="px-4 py-2 border-b">
                 <p className="text-sm text-gray-600">Welcome,</p>
@@ -96,21 +101,20 @@ const Topbar = () => {
               </div>
               <ul>
                 <li>
-                  <a
-                    href="/dashboard/${userId}/profilepage"
+                  <Link
+                    to={`/dashboard/${userId}/profilepage`}
                     className="block px-4 py-3 hover:bg-gray-100 text-gray-800 font-medium"
                   >
                     Profile
-                  </a>
+                  </Link>
                 </li>
-
                 <li>
-                  <a
-                    href="/"
+                  <Link
+                    to="/"
                     className="block px-4 py-3 hover:bg-red-100 text-red-600 font-medium"
                   >
                     Logout
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>

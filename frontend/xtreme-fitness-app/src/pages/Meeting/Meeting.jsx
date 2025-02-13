@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaClipboardList } from "react-icons/fa";
+import { FaClipboardList, FaClock, FaVideo } from "react-icons/fa";
 import axios from "axios";
 import Message from "./Message";
 import { useParams } from "react-router-dom";
@@ -21,10 +21,9 @@ const ZoomMeetings = () => {
     };
     fetchMeetings();
   }, [userId]);
-  
 
   return (
-    <div className="p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-lg w-full">
+    <div className="p-8 bg-white dark:bg-gray-900 rounded-3xl shadow-lg w-full font-['Roboto','Segoe_UI']">
       {/* Info Section */}
       <div className="bg-yellow-100 dark:bg-yellow-700 border-l-4 border-yellow-500 p-4 rounded-lg text-gray-900 dark:text-gray-100 mb-8 shadow-sm">
         <p className="text-base font-semibold">
@@ -32,47 +31,59 @@ const ZoomMeetings = () => {
         </p>
       </div>
 
-      {/* Display Meetings */}
-      {meetings.length > 0 ? (
-        <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl shadow-md w-full">
-          <h3 className="text-2xl font-bold text-red-600 dark:text-red-400 flex items-center mb-4">
+      <div className="grid grid-cols-2 gap-6">
+        {/* Upcoming Meetings Section */}
+        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md w-full">
+          <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-300 flex items-center mb-4">
             <FaClipboardList className="mr-2" /> Upcoming Meetings
           </h3>
 
-          <div className="space-y-4">
-            {meetings.map((meeting, index) => (
-              <div
-                key={index}
-                className="p-5 bg-white dark:bg-gray-700 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 flex"
-              >
-                <div className="w-1/3 pr-4">
-                  <h4 className="text-lg font-bold text-red-600 dark:text-red-400">Topic Name:</h4>
-                  <h4 className="text-lg font-bold text-red-600 dark:text-red-400 mt-2">Date:</h4>
-                  <h4 className="text-lg font-bold text-red-600 dark:text-red-400 mt-2">Meeting Link:</h4>
-                </div>
-                <div className="w-2/3">
-                  <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold">{meeting.topic}</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 font-semibold mt-2">{new Date(meeting.expirationTime).toLocaleString()}</p>
-                  <p className="mt-2">
-                    <a
-                      href={meeting.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 dark:text-blue-400 font-semibold hover:underline"
-                    >
-                      Join Meeting
-                    </a>
+          <ul className="space-y-3 divide-y divide-gray-300 dark:divide-gray-700">
+            {meetings.filter(meeting => new Date(meeting.expirationTime) > new Date()).map((meeting, index) => (
+              <li key={index} className="py-4 flex justify-between items-center">
+                <div>
+                  <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">{meeting.topic}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center mt-1">
+                    <FaClock className="mr-2 text-gray-500" /> {new Date(meeting.expirationTime).toLocaleString()}
                   </p>
                 </div>
-              </div>
+                <a
+                  href={meeting.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded-lg flex items-center shadow-sm transition-all"
+                >
+                  <FaVideo className="mr-2" /> Join Meeting
+                </a>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
-      ) : (
-        <p className="text-lg text-gray-600 dark:text-gray-300 font-semibold text-center w-full mt-4">
-          🚀 No upcoming meetings at the moment.
-        </p>
-      )}
+
+        {/* Meeting History Section */}
+        <div className="bg-gray-100 dark:bg-gray-800 p-6 rounded-2xl shadow-md w-full">
+          <h3 className="text-2xl font-bold text-gray-700 dark:text-gray-300 flex items-center mb-4">
+            <FaClipboardList className="mr-2" /> Meeting History
+          </h3>
+
+          <ul className="space-y-3 divide-y divide-gray-300 dark:divide-gray-700">
+            {meetings.filter(meeting => new Date(meeting.expirationTime) <= new Date()).length > 0 ? (
+              meetings.filter(meeting => new Date(meeting.expirationTime) <= new Date()).map((meeting, index) => (
+                <li key={index} className="py-4">
+                  <p className="text-lg font-semibold text-gray-700 dark:text-gray-300">{meeting.topic}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center mt-1">
+                    <FaClock className="mr-2 text-gray-500" /> {new Date(meeting.expirationTime).toLocaleString()}
+                  </p>
+                </li>
+              ))
+            ) : (
+              <p className="text-lg text-gray-600 dark:text-gray-300 font-semibold text-center w-full mt-4">
+                📜 No past meetings found.
+              </p>
+            )}
+          </ul>
+        </div>
+      </div>
 
       {/* Coach Communication */}
       <div className="mt-10 w-full">

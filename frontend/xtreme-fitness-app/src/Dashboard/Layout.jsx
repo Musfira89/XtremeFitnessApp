@@ -1,39 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
-import ChatBot from "../Dashboard/ChatBot"; // Import the ChatBot
+import ChatBot from "../Dashboard/ChatBot";
+import ResponsiveNav from "./Mobile/ResponsiveNav"; // Import ResponsiveNav
 
 const Layout = () => {
   const { userId } = useParams(); // Access the userId from the route parameter
-  const [isSidebarOpen] = useState(true); // Sidebar remains open
 
   useEffect(() => {
-    // Optionally, you can fetch user data based on the userId here
     console.log("Current userId:", userId);
   }, [userId]);
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      {/* Sidebar */}
-      <Sidebar userId={userId} />
+    <div className="h-screen overflow-hidden">
+      {/* Mobile Navigation */}
+      <div className="md:hidden">
+        <ResponsiveNav userId={userId} />
+      </div>
 
-      {/* Main Content Area */}
-      <div
-        className="flex-1 flex flex-col ml-72"
-        style={{
-          transition: "margin-left 0.3s",
-        }}
-      >
-        {/* Topbar */}
-        <Topbar />
-
-        {/* Content Area */}
-        <div className="flex-1 p-4 bg-gray-100 overflow-y-auto">
-          <Outlet />
+      <div className="flex h-screen">
+        {/* Sidebar for Larger Screens */}
+        <div className="hidden md:block">
+          <Sidebar userId={userId} />
         </div>
-          {/* Global Chatbot (Visible on Every Page) */}
-      <ChatBot />
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col md:ml-72 transition-all">
+          {/* Topbar */}
+          <Topbar />
+
+          {/* Content Area */}
+          <div className="flex-1 p-4 bg-gray-100 overflow-y-auto">
+            <Outlet />
+          </div>
+
+          {/* ChatBot */}
+          <ChatBot />
+        </div>
       </div>
     </div>
   );
