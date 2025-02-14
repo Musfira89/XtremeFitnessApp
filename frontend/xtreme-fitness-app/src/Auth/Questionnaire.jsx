@@ -45,6 +45,14 @@ const Questionnaire = () => {
     fetchQuestions();
   }, [currentCategory]);
 
+
+  Date.prototype.getWeekNumber = function () {
+    const startOfYear = new Date(this.getFullYear(), 0, 1);
+    const pastDays = (this - startOfYear) / 86400000;
+    return Math.ceil((pastDays + startOfYear.getDay() + 1) / 7);
+  };
+
+
   const handleNext = async () => {
     const currentQuestionData = questionsData[currentQuestion];
     console.log("User ID before submitting:", userId);
@@ -58,7 +66,7 @@ const Questionnaire = () => {
       ...answers,
       {
         questionId: currentQuestionData._id,
-        questionText: currentQuestionData.questionText, // Include question text
+        questionText: currentQuestionData.questionText,
         answer,
       },
     ];
@@ -67,9 +75,10 @@ const Questionnaire = () => {
     if (currentQuestion === questionsData.length - 1) {
       try {
         const payload = {
-          userId: userId, // Replaced auth.userId with userId
+          userId: userId,
           category: categories[currentCategory],
-          answers: updatedAnswers, // Now includes question text
+          answers: updatedAnswers,
+          weekNumber: new Date().getWeekNumber(), // Add week number dynamically
         };
   
         await axios.post("http://localhost:5000/api/response/save", payload);
@@ -93,10 +102,7 @@ const Questionnaire = () => {
       setCurrentQuestion((prev) => prev + 1);
     }
   };
-  
-  
 
-  
 
   const handleBack = () => {
     if (currentQuestion > 0) {

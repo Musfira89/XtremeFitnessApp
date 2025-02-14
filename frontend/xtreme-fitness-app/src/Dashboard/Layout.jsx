@@ -31,7 +31,7 @@ const Layout = () => {
           <Topbar />
 
           {/* Content Area */}
-          <div className="flex-1 p-4 bg-gray-100 overflow-y-auto">
+          <div className="flex-1 p-4 bg-gray-50 overflow-y-auto">
             <Outlet />
           </div>
 

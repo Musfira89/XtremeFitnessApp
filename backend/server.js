@@ -14,8 +14,8 @@ import workoutPlanRoutes from "./routes/workoutplan.js";
 import planRoutes from "./routes/plan.js";
 import subscriptionRoutes from "./routes/subscription.js"
 import contactRoutes from "./routes/contactRoutes.js";  // Added
-
-
+import progressRoutes from "./routes/progress.js"
+import supplementRoutes from "./routes/supplement.js"
 dotenv.config();
 
 const app = express();
@@ -43,6 +43,9 @@ app.use("/api", workoutPlanRoutes);
 app.use("/api/plans", planRoutes);
 app.use("/api", subscriptionRoutes);
 app.use("/api/contact", contactRoutes);  // Added
+app.use("/api", supplementRoutes);
+
+app.use("/api", progressRoutes);  // Added
 
 // Start server
 const PORT = process.env.PORT || 5000;

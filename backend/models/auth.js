@@ -5,6 +5,8 @@ const userSchema = new mongoose.Schema(
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
+    location: { type: String, default: "" }, // Added location field
+    contact: { type: String, default: "" }, 
     lastLogin: { type: Date, default: null }, // Track last login
     hasCompletedQuestionnaire: { type: Boolean, default: false },
     plan: { 

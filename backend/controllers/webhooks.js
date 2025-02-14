@@ -11,21 +11,32 @@ export const handleStripeWebhook = async (req, res) => {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
       const { userId, planId } = session.metadata;
-    
+
       try {
-        await User.findByIdAndUpdate(userId, { plan: planId, subscriptionStatus: "active" });
-        console.log(`User ${userId} subscription activated!`);
+        // Set plan expiry date (1 month from now)
+        const planExpiryDate = new Date();
+        planExpiryDate.setMonth(planExpiryDate.getMonth() + 1);
+
+        // Update user subscription details
+        await User.findByIdAndUpdate(userId, { 
+          plan: planId, 
+          subscriptionStatus: "active",
+          planExpiry: planExpiryDate
+        });
+
+        console.log(`User ${userId} subscription activated until ${planExpiryDate}!`);
       } catch (dbError) {
         console.error("Database Update Error:", dbError);
       }
     }
-    
+
     res.sendStatus(200);
   } catch (error) {
     console.error("Webhook Error:", error);
     res.sendStatus(400);
   }
 };
+
 export const checkPaymentStatus = async (req, res) => {
   try {
     const { session_id } = req.params;

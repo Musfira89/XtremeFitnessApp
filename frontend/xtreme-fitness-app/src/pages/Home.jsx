@@ -1,6 +1,6 @@
 import React from "react";
 import Cards from "../Dashboard/Cards";
-import Graph from "../Dashboard/Graph";
+import Graph from "../Dashboard/Progress";
 import Bot from "../Dashboard/ChatBot";
 import Calendar from "../Dashboard/Calender";
 

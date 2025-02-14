@@ -57,6 +57,8 @@ const Sidebar = ({ userId }) => {
             { to: `/dashboard/${userId}/progress-tracking`, icon: <ShowChart />, label: "Progress Tracking" },
             { to: `/dashboard/${userId}/meeting`, icon: <VideoCall />, label: "Meetings/chats" },
             { to: `/dashboard/${userId}/profilepage`, icon: <AccountCircle />, label: "Profile" },
+            { to: `/dashboard/${userId}/settingspage`, icon: <AccountCircle />, label: "Settings" },
+
           ].map(({ to, icon, label }) => (
             <li key={to}>
               <NavLink

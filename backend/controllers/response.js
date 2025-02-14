@@ -206,13 +206,12 @@ const fetchMealImages = async (mealPlan) => {
 };
 
 
-// Fetch responses for a user
 export const getUserResponses = async (req, res) => {
   try {
-    const { userId, category } = req.params;
+    const { userId, category, weekNumber } = req.params; // Include weekNumber
 
-    // Find responses for the given user and category
-    const responses = await Response.find({ userId, category });
+    // Find responses for the given user, category, and week
+    const responses = await Response.find({ userId, category, weekNumber });
 
     // Fetch all questions related to this category
     const questions = await Question.find({ category }).select("_id questionText");
@@ -230,7 +229,6 @@ export const getUserResponses = async (req, res) => {
           : "No Response",
       };
     });
-    
 
     res.json(formattedResponses);
   } catch (error) {
@@ -240,19 +238,25 @@ export const getUserResponses = async (req, res) => {
 };
 
 
+
 export const saveResponses = async (req, res) => {
   try {
-    console.log("Incoming request body:", req.body); 
+    console.log("Incoming request body:", req.body);
 
-    const { userId, category, answers } = req.body;
+    const { userId, category, answers, weekNumber } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: "User ID is required." });
     }
 
+    if (!weekNumber) {
+      return res.status(400).json({ error: "Week number is required." });
+    }
+
     const newResponse = new Response({
       userId,
       category,
+      weekNumber,  // Add this field
       answers,
     });
 

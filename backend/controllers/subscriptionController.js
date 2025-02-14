@@ -19,9 +19,15 @@ export const subscribeUser = async (req, res) => {
     const plan = await Plan.findById(planId);
     if (!plan) return res.status(404).json({ message: "Plan not found" });
 
-    // Update user's subscription status
+    // Set plan expiry (assuming it's a monthly plan)
+    const planExpiryDate = new Date();
+    planExpiryDate.setMonth(planExpiryDate.getMonth() + 1); // Set expiry for 1 month later
+
+    // Update user's subscription details
     user.plan = plan._id;
     user.subscriptionStatus = "pending"; // Awaiting payment
+    user.planExpiry = planExpiryDate; // Set expiry date
+
     await user.save();
 
     res.status(200).json({ message: "Subscription pending payment", user });
@@ -31,6 +37,7 @@ export const subscribeUser = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const startFreeTrial = async (req, res) => {
   try {
