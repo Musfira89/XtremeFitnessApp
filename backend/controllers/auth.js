@@ -10,18 +10,19 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 // Register User
 export const registerUser = async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, acceptTerms } = req.body;
 
   try {
+    if (!acceptTerms) {
+      return res.status(400).json({ message: "You must accept the terms and conditions." });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
     const newUser = new User({ fullName, email, password: hashedPassword });
 
     await newUser.save();
@@ -31,6 +32,7 @@ export const registerUser = async (req, res) => {
     res.status(500).json({ message: "Error registering user", error });
   }
 };
+
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;

@@ -11,6 +11,7 @@ const Signup = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,15 +19,24 @@ const Signup = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!acceptTerms) {
+      setError("You must accept the Terms & Conditions and Privacy Policy.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/signup", {
-        fullName,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/signup",
+        {
+          fullName,
+          email,
+          password,
+          acceptTerms,
+        }
+      );
 
       // Show success toast
       toast.success("User registered successfully!");
@@ -36,18 +46,15 @@ const Signup = () => {
     } catch (err) {
       setLoading(false);
       if (err.response && err.response.data) {
-        setError(err.response.data.message); // Set error message
+        setError(err.response.data.message);
       } else {
-        setError("Something went wrong. Please try again."); // General error message
+        setError("Something went wrong. Please try again.");
       }
     } finally {
       setLoading(false);
     }
   };
-  
-  
 
-  
   return (
     <div className="flex flex-col md:flex-row h-screen font-sans">
       {/* Left Section */}
@@ -61,7 +68,7 @@ const Signup = () => {
       >
         {/* Logo */}
         <motion.img
-          src={Logo} // Replace with your logo image path
+          src={Logo}
           alt="Logo"
           className="h-12 md:h-16 self-start"
           initial={{ opacity: 0, y: -20 }}
@@ -130,6 +137,7 @@ const Signup = () => {
                 className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-500"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+                required
               />
             </motion.div>
 
@@ -142,6 +150,7 @@ const Signup = () => {
                 className="w-full pl-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
 
@@ -154,7 +163,40 @@ const Signup = () => {
                 className="w-full pl-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:outline-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
+            </div>
+
+            {/* Terms & Conditions Checkbox */}
+            <div className="flex items-center mt-3">
+              <input
+                type="checkbox"
+                id="terms"
+                className="mr-2 w-5 h-5"
+                checked={acceptTerms}
+                onChange={(e) => setAcceptTerms(e.target.checked)}
+              />
+              <label htmlFor="terms" className="text-gray-600 text-sm">
+                I agree to the{" "}
+                <a
+                  href="/terms&conditions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 font-semibold hover:underline"
+                >
+                  Terms & Conditions
+                </a>{" "}
+                and{" "}
+                <a
+                  href="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-red-500 font-semibold hover:underline"
+                >
+                  Privacy Policy
+                </a>
+                .
+              </label>
             </div>
 
             {/* Display Error */}
@@ -163,8 +205,12 @@ const Signup = () => {
             {/* Sign Up Button */}
             <motion.button
               type="submit"
-              className="w-full bg-gradient-to-r from-red-600 to-red-500 text-white py-3 rounded-lg shadow-lg hover:scale-105 transition-transform"
-              disabled={loading}
+              className={`w-full py-3 rounded-lg shadow-lg transition-transform ${
+                acceptTerms
+                  ? "bg-red-500 hover:scale-105 text-white"
+                  : "bg-gray-400 text-gray-700 cursor-not-allowed"
+              }`}
+              disabled={!acceptTerms || loading}
             >
               {loading ? "Signing Up..." : "Sign Up"}
             </motion.button>

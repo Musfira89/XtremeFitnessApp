@@ -76,7 +76,7 @@ const products = [
       name: "Night-time Fat Burner",
       image: nighttimeFatBurner,
       price: "$149.99",
-      affiliateLink: "https://www.amazon.com/dp/affiliate-link-11", // Replace with your actual link
+      affiliateLink: "https://amzn.to/41gNbrj", // Replace with your actual link
     },
     {
       name: "Treadmill",
