@@ -5,6 +5,7 @@ import Footer from "../Footer/Footer";
 import Journey from "./Transformation";
 import Mission from "./Mission"
 import { motion } from "framer-motion";
+import { HashLink as Link } from "react-router-hash-link"; // Import for smooth scrolling
 
 const AboutUs = () => {
   return (
@@ -71,13 +72,16 @@ const AboutUs = () => {
             </p>
 
             {/* Contact Button */}
-            <motion.button 
-              whileHover={{ scale: 1.05 }} 
-              whileTap={{ scale: 0.95 }} 
-              className="mt-4 px-8 py-3 bg-red-800 text-white font-semibold rounded-md"
-            >
-              Contact Now
-            </motion.button>
+{/* Contact Now Button with Link */}
+<motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-4 px-8 py-3 bg-red-800 text-white font-semibold rounded-md"
+          >
+            <Link smooth to="/#contact-us" className="hover:text-red-300">
+              CONTACT US
+            </Link>
+          </motion.button>
           </motion.div>
         </div>
       </section>

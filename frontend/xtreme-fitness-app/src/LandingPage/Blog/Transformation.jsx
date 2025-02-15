@@ -13,8 +13,8 @@ const FitnessJourney = () => {
       className="bg-pink-100 flex flex-col items-center py-12 px-6 text-center mb-32"
     >
       {/* Image Section */}
-      <div className="flex justify-center gap-8 mb-8">
-        <div className="relative w-1/4 bg-gray-100 p-2 rounded-lg shadow-lg">
+      <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-8 mb-8 w-full px-4">
+        <div className="relative w-full sm:w-1/3 md:w-1/4 bg-gray-100 p-2 rounded-lg shadow-lg">
           <img
             src={before}
             alt="Before"
@@ -25,7 +25,7 @@ const FitnessJourney = () => {
           </p>
         </div>
 
-        <div className="relative w-1/4 bg-gray-50 p-2 rounded-lg shadow-lg">
+        <div className="relative w-full sm:w-1/3 md:w-1/4 bg-gray-50 p-2 rounded-lg shadow-lg">
           <img
             src={after}
             alt="After"
@@ -38,29 +38,33 @@ const FitnessJourney = () => {
       </div>
 
       {/* Content Section */}
-      <h2 className="text-4xl font-bold mt-10 text-gray-800">
+      <h2 className="text-3xl sm:text-4xl font-bold mt-6 text-gray-800">
         My Fitness Journey
       </h2>
-      <p className="max-w-3xl mt-5 text-lg text-gray-700 leading-relaxed">
+      <p className="max-w-3xl mt-5 text-base sm:text-lg text-gray-700 leading-relaxed px-4">
         In 2006, Xavier weighed a whopping 285 lbs. His poor diet and lifestyle
-        led to depression, low self-esteem, and major health challenges—
-        including the risk of diabetes, low energy, and lack of strength. He had
-        two choices: continue down an unhealthy path or take charge of his life.
-        Today, Xavier lives a balanced and healthy lifestyle. He enjoys
-        traveling and constantly explores new destinations. Through{" "}
+        led to depression, low self-esteem, and major health challenges— including
+        the risk of diabetes, low energy, and lack of strength. He had two choices:
+        continue down an unhealthy path or take charge of his life.
+      </p>
+      <p className="max-w-3xl mt-4 text-base sm:text-lg text-gray-700 leading-relaxed px-4">
+        Today, Xavier lives a balanced and healthy lifestyle. He enjoys traveling
+        and constantly explores new destinations. Through{" "}
         <span className="font-bold text-red-500">Xtreme Fitness Training</span>,
         he now helps people worldwide achieve their fitness goals in a fun and
         supportive environment.
       </p>
 
       {/* Call-to-Action Button */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="px-6 py-3 bg-red-800 text-white font-semibold rounded-md shadow-md mt-6"
-      >
-        <Link to="/signup">Register Now With Us</Link>
-      </motion.button>
+      <Link to="/signup">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="px-6 py-3 bg-red-800 text-white font-semibold rounded-md shadow-md mt-6"
+        >
+          Register Now With Us
+        </motion.button>
+      </Link>
     </motion.div>
   );
 };
