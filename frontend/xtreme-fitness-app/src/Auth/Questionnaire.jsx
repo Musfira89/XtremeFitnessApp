@@ -45,23 +45,26 @@ const Questionnaire = () => {
     fetchQuestions();
   }, [currentCategory]);
 
-
   Date.prototype.getWeekNumber = function () {
     const startOfYear = new Date(this.getFullYear(), 0, 1);
     const pastDays = (this - startOfYear) / 86400000;
     return Math.ceil((pastDays + startOfYear.getDay() + 1) / 7);
   };
 
-
   const handleNext = async () => {
     const currentQuestionData = questionsData[currentQuestion];
-    console.log("User ID before submitting:", userId);
-  
+
+    // Validate selection
     const answer =
       currentQuestionData.inputType === "text"
         ? document.getElementById(`question-${currentQuestion}`)?.value
         : selectedOption;
-  
+
+    if (!answer) {
+      toast.error("Please select an option before proceeding.");
+      return;
+    }
+
     const updatedAnswers = [
       ...answers,
       {
@@ -71,38 +74,41 @@ const Questionnaire = () => {
       },
     ];
     setAnswers(updatedAnswers);
-  
+
     if (currentQuestion === questionsData.length - 1) {
       try {
         const payload = {
           userId: userId,
           category: categories[currentCategory],
           answers: updatedAnswers,
-          weekNumber: new Date().getWeekNumber(), // Add week number dynamically
+          weekNumber: new Date().getWeekNumber(),
         };
-  
+
         await axios.post("http://localhost:5000/api/response/save", payload);
-  
+
         if (currentCategory < categories.length - 1) {
           setCurrentCategory((prev) => prev + 1);
-          setAnswers([]); // Reset answers before moving to the next category
+          setAnswers([]);
+          setSelectedOption(""); // Reset selected option for new category
         } else {
           await axios.put(
             `http://localhost:5000/api/auth/mark-complete/${userId}`
           );
-  
           toast.success("Responses saved successfully!");
           navigate(`/planpage/${userId}`);
         }
       } catch (error) {
-        console.error("Error saving responses:", error.response || error.message);
+        console.error(
+          "Error saving responses:",
+          error.response || error.message
+        );
         toast.error("Failed to save responses. Please try again.");
       }
     } else {
       setCurrentQuestion((prev) => prev + 1);
+      setSelectedOption(""); // Reset selected option for the next question
     }
   };
-
 
   const handleBack = () => {
     if (currentQuestion > 0) {
@@ -123,17 +129,18 @@ const Questionnaire = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-sm z-0"></div>
+      <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-md z-0"></div>
 
-      <div className="relative z-10 w-full max-w-3xl px-6 py-10 bg-white bg-opacity-95 shadow-2xl rounded-xl">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 text-center mb-4">
+      <div className="relative z-10 w-full max-w-3xl px-8 py-12 bg-white bg-opacity-90 shadow-2xl rounded-2xl">
+        <div className="mb-10">
+          <h1 className="text-3xl font-black text-gray-800 text-center mb-6 tracking-wide leading-tight drop-shadow-md">
             Category {currentCategory + 1}/{categories.length}:{" "}
             {categories[currentCategory]}
           </h1>
-          <div className="relative w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+
+          <div className="relative w-full h-4 bg-gray-300 rounded-md overflow-hidden">
             <motion.div
-              className="absolute h-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full"
+              className="absolute h-4 bg-gradient-to-r from-red-600 to-pink-700 rounded-full"
               style={{
                 width: `${((currentCategory + 1) / categories.length) * 100}%`,
               }}
@@ -147,10 +154,12 @@ const Questionnaire = () => {
         </div>
 
         {loading ? (
-          <div className="text-center text-gray-500">Loading questions...</div>
+          <div className="text-center text-gray-500 text-lg">
+            Loading questions...
+          </div>
         ) : (
           <motion.div
-            className="bg-gray-50 rounded-xl p-8 shadow-lg"
+            className="bg-gray-100 rounded-2xl p-8 shadow-lg"
             key={currentQuestion}
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -158,46 +167,41 @@ const Questionnaire = () => {
           >
             {questionsData.length ? (
               <>
-                <h2 className="text-xl font-semibold text-gray-900 mb-6 text-center">
+                <h2 className="text-lg font-semibold text-gray-800 mb-3 text-left">
                   {questionsData[currentQuestion]?.questionText ||
                     "No question available"}
                 </h2>
 
-                {/* Show Guide if available */}
                 {questionsData[currentQuestion]?.guide && (
-                  <p className="text-gray-700 mb-4">
+                  <p className="text-gray-700 mb-6 text-left">
                     {questionsData[currentQuestion].guide}
                   </p>
                 )}
 
-                {/* Show Options if available */}
-                {questionsData[currentQuestion]?.options &&
-                  questionsData[currentQuestion].options.length > 0 && (
-                    <div className="space-y-5">
-                      {questionsData[currentQuestion].options.map(
-                        (option, index) => (
-                          <motion.label
-                            key={index}
-                            className="flex items-center space-x-4 cursor-pointer bg-white p-4 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-red-500 transition"
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                          >
-                            <input
-                              type="radio"
-                              name={`question-${questionsData[currentQuestion]._id}`}
-                              className="w-5 h-5 text-red-500 focus:ring-red-500"
-                              onChange={() => setSelectedOption(option.text)}
-                            />
-                            <span className="text-gray-800 font-medium">
-                              {option.text}
-                            </span>
-                          </motion.label>
-                        )
-                      )}
-                    </div>
-                  )}
+                {questionsData[currentQuestion]?.options?.length > 0 && (
+                  <div className="space-y-4 max-h-[300px] overflow-y-auto">
+                    {questionsData[currentQuestion].options.map(
+                      (option, index) => (
+                        <motion.label
+                          key={index}
+                          className="flex items-center space-x-4 cursor-pointer bg-white p-5 rounded-xl shadow-lg border border-gray-200 transition hover:shadow-xl hover:border-red-300"
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <input
+                            type="radio"
+                            name={`question-${questionsData[currentQuestion]._id}`}
+                            className="w-5 h-5 text-red-500 focus:ring-red-500"
+                            onChange={() => setSelectedOption(option.text)}
+                          />
+                          <span className="text-gray-800 font-medium">
+                            {option.text}
+                          </span>
+                        </motion.label>
+                      )
+                    )}
+                  </div>
+                )}
 
-                {/* Show Free Text if inputType is 'text' */}
                 {questionsData[currentQuestion]?.inputType === "text" && (
                   <div className="mt-4">
                     <label className="block text-gray-700 font-medium mb-2">
@@ -206,30 +210,30 @@ const Questionnaire = () => {
                     <input
                       type="text"
                       id={`question-${currentQuestion}`}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                      className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                     />
                   </div>
                 )}
               </>
             ) : (
-              <div className="text-center text-gray-500">
+              <div className="text-center text-gray-500 text-lg">
                 No questions found.
               </div>
             )}
           </motion.div>
         )}
 
-        <div className="flex justify-between mt-8">
+        <div className="flex justify-between mt-10">
           <button
             onClick={handleBack}
             disabled={currentCategory === 0 && currentQuestion === 0}
-            className="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg shadow-md hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            className="bg-gray-100 text-gray-800 px-6 py-3 rounded-lg shadow-md transition hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Back
           </button>
           <button
             onClick={handleNext}
-            className="bg-gradient-to-r from-red-600 to-red-800 text-white px-8 py-3 rounded-lg shadow-md hover:from-red-600 hover:to-pink-600 transition"
+            className="bg-gradient-to-r from-red-600 to-red-700 text-white px-10 py-3 rounded-lg shadow-lg hover:from-red-500 hover:to-pink-500 transition"
           >
             {currentCategory === categories.length - 1 &&
             currentQuestion === questionsData.length - 1

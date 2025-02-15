@@ -268,3 +268,23 @@ export const saveResponses = async (req, res) => {
   }
 };
 
+export const getWeeksForUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    console.log("Received userId:", userId);
+
+    // Find all responses for debugging
+    const allResponses = await Response.find();
+    console.log("All Responses in DB:", allResponses);
+
+    // Find distinct weeks for the given user
+    const weeks = await Response.distinct("weekNumber", { userId });
+    console.log("Weeks Found:", weeks);
+
+    res.json({ weeks });
+  } catch (error) {
+    console.error("Error fetching weeks:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+

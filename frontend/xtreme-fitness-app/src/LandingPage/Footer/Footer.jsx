@@ -166,42 +166,42 @@ const Footer = () => {
         <DialogTitle className="text-lg font-bold">{modalContent}</DialogTitle>
         <DialogContent>
           {modalContent === "Refund Policy" && (
-            <div className="p-4 text-sm text-red-600 font-semibold">
+            <div className="p-4 text-sm text-black font-semibold">
               <p className="mb-4">
-                Xtreme Fitness Training offers a <strong>3-day trial</strong> of
-                our training programs to experience the benefits firsthand.
-                During this trial period, you will have access to our
-                personalized plan and dashboard to help you kickstart your
-                fitness journey.
+                At <strong>Xtreme Fitness Training</strong>, we offer a{" "}
+                <strong>3-day trial</strong> for new clients to explore our
+                training programs and experience the benefits firsthand. During
+                this period, you will have full access to a personalized plan
+                and dashboard designed to support your fitness journey.
               </p>
 
               <p className="mb-4">
                 Please note that the <strong>3-day trial offer</strong> is a{" "}
-                <strong>one-time opportunity</strong>
-                for new clients only. At the end of the trial period, you will
-                have the option to continue with our training programs by
-                purchasing a program.
+                <strong>one-time opportunity</strong> available exclusively to
+                new clients. After the trial period ends, you may continue with
+                our training programs by purchasing a plan of your choice.
               </p>
 
               <p className="mb-4">
-                It is important to understand that all purchases made for our
-                training programs, following the trial period, are{" "}
-                <strong>non-refundable</strong>. Once payment is processed,
-                there will be <strong>no refunds</strong> issued for any reason.
+                All purchases made after the trial period are{" "}
+                <strong>final and non-refundable</strong>. Once a payment has
+                been processed, <strong>no refunds</strong> will be issued under
+                any circumstances.
               </p>
 
               <p className="mb-4">
-                We are dedicated to providing you with the best fitness
-                experience possible and are committed to helping you achieve
-                your goals. If you have any questions or concerns, please do not
-                hesitate to contact us.
+                We are committed to providing an exceptional fitness experience
+                and helping you achieve your goals. If you have any questions or
+                require assistance, please feel free to contact our support
+                team.
               </p>
 
               <p className="mb-4">
                 By participating in the <strong>3-day trial offer</strong> and
-                purchasing our training programs, you acknowledge and agree to
-                our <strong>no refund policy</strong>. Thank you for choosing
-                Xtreme Fitness Training.
+                enrolling in our training programs, you acknowledge and accept
+                our <strong>no-refund policy</strong>. Thank you for choosing
+                Xtreme Fitness Training—we look forward to supporting your
+                fitness journey!
               </p>
             </div>
           )}

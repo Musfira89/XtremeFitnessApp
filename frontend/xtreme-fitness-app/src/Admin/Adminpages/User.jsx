@@ -94,16 +94,7 @@ const UserList = () => {
                 </span>
               </td>
               <td className="px-6 py-4 text-sm font-bold flex items-center space-x-3">
-                <button
-                  onClick={() => handleToggleActivation(user._id)}
-                  className={`py-2 px-4 rounded-md font-medium text-white transition-all duration-200 shadow-md ${
-                    user.isActive
-                      ? "bg-red-600 hover:bg-red-500"
-                      : "bg-red-600 hover:bg-red-500"
-                  }`}
-                >
-                  {user.isActive ? "Deactivate" : "Activate"}
-                </button>
+
                 <button
                   onClick={() => handleDeleteUser(user._id)}
                   className="py-2 px-6 rounded-md font-medium text-red-600 border border-red-600 bg-white hover:bg-red-100 transition-all duration-200 shadow-md"

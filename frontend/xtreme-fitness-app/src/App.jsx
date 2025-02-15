@@ -16,6 +16,7 @@ import AdminSignup from "./Admin/AdminLogin/AdminSignup";
 import PlanPage from "./Auth/PlanPage";
 import Journey from "./LandingPage/Journey/Journey";
 import PaymentSuccess from "./Auth/SucessPage";
+import Trainer from "./LandingPage/Blog/Trainer";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/buycards" element={<BuyCards />} />
           <Route path="/success-stories" element={<Journey />} />
+          <Route path="/trainer" element={<Trainer />} />
 
           {/* User Panel Routes */}
           <Route path="/login" element={<Login />} />

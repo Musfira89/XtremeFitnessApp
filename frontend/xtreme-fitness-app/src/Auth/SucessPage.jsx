@@ -52,13 +52,13 @@ const PaymentSuccess = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-white text-center px-6">
-      <div className="relative bg-white/10 backdrop-blur-lg p-10 rounded-3xl shadow-2xl border border-gray-700 max-w-lg w-full">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white text-gray-900 text-center px-6">
+      <div className="relative bg-white p-10 rounded-3xl shadow-2xl border border-gray-300 max-w-lg w-full">
         <div className="w-24 h-24 mx-auto">
           <Lottie animationData={successAnimation} loop={false} />
         </div>
-        <h2 className="text-4xl font-extrabold text-white mt-6">Payment Successful!</h2>
-        <p className="mt-3 text-lg text-gray-300">Click the button below to go to your dashboard.</p>
+        <h2 className="text-4xl font-extrabold mt-6">Payment Successful!</h2>
+        <p className="mt-3 text-lg text-gray-700">Click the button below to go to your dashboard.</p>
         <div className="mt-6">
           <button
             onClick={handleGoToDashboard}
