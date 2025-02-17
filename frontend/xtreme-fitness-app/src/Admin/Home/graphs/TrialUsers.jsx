@@ -24,13 +24,21 @@ const TrialUsersGraph = () => {
     const fetchTrialData = async () => {
       try {
         const response = await axios.get("http://localhost:5000/api/trial-users");
-
-        let formattedData = response.data.map((item, index) => ({
+    
+        console.log("API Response:", response.data); // Debugging
+    
+        const trialUsersArray = Array.isArray(response.data) ? response.data : [];
+    
+        if (trialUsersArray.length === 0) {
+          console.log("No trial users found!");
+        }
+    
+        let formattedData = trialUsersArray.map((item, index) => ({
           date: item._id,
           count: item.count,
           animationDelay: index * 0.1,
         }));
-
+    
         setTrialData(formattedData);
       } catch (error) {
         console.error("Error fetching trial users data:", error);
@@ -38,10 +46,11 @@ const TrialUsersGraph = () => {
         setLoading(false);
       }
     };
-
+    
+    
+    
     fetchTrialData();
   }, []);
-
   return (
     <motion.div
       className="p-6 bg-white shadow-lg rounded-2xl border border-gray-200 backdrop-blur-xl"

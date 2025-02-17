@@ -6,7 +6,7 @@ export const getUserProgress = async (req, res) => {
 
     // Fetch all responses for Demographics category
     const responses = await Response.find({ userId, category: "Demographics" })
-      .select("answers"); // Removed createdAt
+      .select("answers");
 
     // Extract relevant data
     const progressData = responses.map((response) => {
@@ -15,6 +15,7 @@ export const getUserProgress = async (req, res) => {
           weight: null,
           hips: null,
           chest: null,
+          waist: null,
         };
       }
 
@@ -32,10 +33,15 @@ export const getUserProgress = async (req, res) => {
         ans.questionText?.trim().toLowerCase().includes("chest")
       );
 
+      const waistAnswer = response.answers.find((ans) =>
+        ans.questionText?.trim().toLowerCase().includes("waist")
+      );
+
       return {
         weight: weightAnswer ? parseFloat(weightAnswer.answer) || null : null,
         hips: hipsAnswer ? parseFloat(hipsAnswer.answer) || null : null,
         chest: chestAnswer ? parseFloat(chestAnswer.answer) || null : null,
+        waist: waistAnswer ? parseFloat(waistAnswer.answer) || null : null,
       };
     });
 

@@ -19,6 +19,7 @@ import PaymentSuccess from "./Auth/SucessPage";
 import Trainer from "./LandingPage/Blog/Trainer";
 import Policy from "./Auth/Policy";
 import Terms from "./Auth/Terms";
+import Feedback from "./pages/Feedback/Feedback";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/questions/:userId" element={<Questionnaire />} />
           <Route path="/planpage/:userId" element={<PlanPage />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/feedback/:userId" element={<Feedback />} />
 
           <Route path="/dashboard/:userId/*" element={<AppRoutes />} />
 

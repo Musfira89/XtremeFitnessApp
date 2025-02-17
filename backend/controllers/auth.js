@@ -94,13 +94,43 @@ export const markQuestionnaireComplete = async (req, res) => {
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().populate("plan", "name"); // Fetch all users
-    res.status(200).json(users);
+    const users = await User.find().populate("plan", "name"); // Fetch all users with plan name
+
+    const formattedUsers = users.map(user => {
+      let expiryDate = "N/A";
+
+      if (user.planExpiry) {
+        // If user has a paid plan, show planExpiry
+        expiryDate = new Date(user.planExpiry).toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        });
+      } else if (user.subscriptionStatus === "active" && user.trialExpiryDate) {
+        // If user is on free trial, show trialExpiryDate
+        expiryDate = new Date(user.trialExpiryDate).toLocaleDateString("en-US", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric"
+        });
+      }
+
+      return {
+        ...user.toObject(),
+        formattedExpiryDate: expiryDate,
+        planName: user.plan ? user.plan.name : (user.subscriptionStatus === "active" ? "Free Trial" : "Free User")
+      };
+    });
+
+    res.status(200).json(formattedUsers);
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ message: "Error fetching users", error });
   }
 };
+
 
 export const getTotalUsers = async (req, res) => {
   try {
@@ -138,18 +168,86 @@ export const getTotalUsers = async (req, res) => {
   }
 };
 
+
 export const getUserPlan = async (req, res) => {
   try {
     const { userId } = req.params;
-    const user = await User.findById(userId).populate("plan", "name"); // Fetch user with plan name
+    const user = await User.findById(userId).populate("plan", "name"); // Only populate the plan name
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ planName: user.plan ? user.plan.name : "Free Plan" });
+    res.status(200).json({ 
+      planName: user.plan ? user.plan.name : "3 Days Free Trail", 
+      planExpiry: user.planExpiry, // Include the paid plan expiry
+      trialExpiryDate: user.trialExpiryDate // Include the trial expiry date
+    });
   } catch (error) {
     console.error("Error fetching user plan:", error);
     res.status(500).json({ message: "Error fetching plan", error });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findByIdAndDelete(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Error deleting user", error });
+  }
+};
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    const user = await User.findById(userId).populate("plan", "name");
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      id: user._id,
+      fullName: user.fullName,
+      email: user.email,
+      contact: user.contact,
+      location: user.location,
+      hasCompletedQuestionnaire: user.hasCompletedQuestionnaire,
+      plan: user.plan ? user.plan.name : "No Plan",
+      subscriptionStatus: user.subscriptionStatus,
+    });
+  } catch (error) {
+    console.error("Error fetching user profile:", error);
+    res.status(500).json({ message: "Error fetching user profile", error });
+  }
+};
+
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { fullName, email, contact, location, password } = req.body;
+
+    const updateFields = { fullName, email, contact, location };
+
+    if (password) {
+      updateFields.password = bcrypt.hashSync(password, 10); // Hash password if changed
+    }
+
+    await User.findByIdAndUpdate(userId, updateFields, { new: true });
+
+    res.json({ message: "Profile updated successfully" });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ error: "Error updating profile" });
   }
 };

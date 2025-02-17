@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export const subscribeUser = async (req, res) => {
   try {
-    const { userId, planId } = req.body;
+    const { userId, planId, paymentStatus } = req.body;
 
     // Find user
     const user = await User.findById(userId);
@@ -19,24 +19,51 @@ export const subscribeUser = async (req, res) => {
     const plan = await Plan.findById(planId);
     if (!plan) return res.status(404).json({ message: "Plan not found" });
 
-    // Set plan expiry (assuming it's a monthly plan)
-    const planExpiryDate = new Date();
-    planExpiryDate.setMonth(planExpiryDate.getMonth() + 1); // Set expiry for 1 month later
+    // Determine plan duration (weeks)
+    let planDuration;
+    switch (plan.name) {
+      case "Xtreme Silver":
+        planDuration = 4;
+        break;
+      case "Xtreme Platinum":
+        planDuration = 8;
+        break;
+      case "Xtreme Gold":
+        planDuration = 12;
+        break;
+      default:
+        return res.status(400).json({ message: "Invalid plan name" });
+    }
 
-    // Update user's subscription details
-    user.plan = plan._id;
-    user.subscriptionStatus = "pending"; // Awaiting payment
-    user.planExpiry = planExpiryDate; // Set expiry date
+    // Only activate subscription if payment is confirmed
+    if (paymentStatus === "paid") {
+      const subscriptionStartDate = new Date();
+      const planExpiryDate = new Date(subscriptionStartDate);
+      planExpiryDate.setDate(planExpiryDate.getDate() + planDuration * 7); // Add weeks based on plan
 
-    await user.save();
+      // Update user details
+      user.plan = plan._id;
+      user.subscriptionStatus = "active"; // Subscription is active upon payment
+      user.subscriptionStartDate = subscriptionStartDate;
+      user.planExpiry = planExpiryDate;
 
-    res.status(200).json({ message: "Subscription pending payment", user });
+      await user.save();
 
+      return res.status(200).json({ message: "Subscription activated successfully", user });
+    } else {
+      user.plan = plan._id;
+      user.subscriptionStatus = "pending"; // Awaiting payment
+s
+      await user.save();
+
+      return res.status(200).json({ message: "Subscription pending payment", user });
+    }
   } catch (error) {
     console.error("Subscription Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 
 export const startFreeTrial = async (req, res) => {
@@ -47,25 +74,20 @@ export const startFreeTrial = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
+    // Prevent multiple trials
+    if (user.trialExpiryDate && user.trialExpiryDate > new Date()) {
+      return res.status(400).json({ message: "Trial already active" });
+    }
+
     // Start 3-day trial
     const trialEndDate = new Date();
-    trialEndDate.setDate(trialEndDate.getDate() + 3); // Add 3 days
-    
-    user.plan = null;  
-    user.subscriptionStatus = "active";  
-    user.trialExpiryDate = trialEndDate;
-    
-    await user.save();
-    
+    trialEndDate.setDate(trialEndDate.getDate() + 3);
 
-    // Set a timeout to deactivate trial after 3 days
-    setTimeout(async () => {
-      const updatedUser = await User.findById(userId);
-      if (updatedUser && updatedUser.plan === null) {
-        updatedUser.subscriptionStatus = "inactive"; // Expire the trial
-        await updatedUser.save();
-      }
-    }, 3 * 24 * 60 * 60 * 1000); // 3 days in milliseconds
+    user.plan = null;
+    user.subscriptionStatus = "active";
+    user.trialExpiryDate = trialEndDate;
+
+    await user.save();
 
     res.status(200).json({ message: "Free trial activated for 3 days", user });
 
@@ -74,6 +96,7 @@ export const startFreeTrial = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 export const createCheckoutSession = async (req, res) => {
   try {

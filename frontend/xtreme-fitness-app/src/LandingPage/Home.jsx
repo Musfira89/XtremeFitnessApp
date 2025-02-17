@@ -4,7 +4,6 @@ import Card from "./Product/ProductSection";
 import Footer from "./Footer/Footer";
 
 import Video from "./Blog/Video";
-import ReviewSection from "./Blog/ReviewSection";
 import FaqSection from "./Blog/Faq";
 import About from "./Blog/About";
 import Services from "./Blog/Services";
@@ -24,7 +23,7 @@ export const Home = () => {
 
       <PricingPlans />
       <FaqSection />
-      <ReviewSection />
+
       <Support />
       <Contactform />
       <Footer />

@@ -16,7 +16,12 @@ import subscriptionRoutes from "./routes/subscription.js"
 import contactRoutes from "./routes/contactRoutes.js";  // Added
 import progressRoutes from "./routes/progress.js"
 import supplementRoutes from "./routes/supplement.js"
+import feedbackRoutes from './routes/feedbackRoutes.js';
+import "./cron.js";  // Runs cron jobs
+
 dotenv.config();
+console.log("Email User:", process.env.EMAIL_USER);
+console.log("Email Pass:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
 
 const app = express();
 
@@ -24,7 +29,10 @@ const app = express();
 app.use(cors({
   origin: "http://localhost:5173", // Your frontend's URL
   methods: ["GET", "POST"],
+  credentials: true 
 }));
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static("uploads"));
@@ -46,6 +54,12 @@ app.use("/api/contact", contactRoutes);  // Added
 app.use("/api", supplementRoutes);
 
 app.use("/api", progressRoutes);  // Added
+app.use('/feedback', feedbackRoutes);
+
+// // Run email scheduler once (remove in production)
+// sendWeeklyEmails();
+// console.log("Cron jobs and email scheduler initialized.");
+
 
 // Start server
 const PORT = process.env.PORT || 5000;

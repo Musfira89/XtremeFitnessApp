@@ -18,6 +18,7 @@ const Graph = ({ progressData }) => {
     weight: "#EF4444", // Red
     hips: "#DC2626", // Dark Red
     chest: "#B91C1C", // Deep Red
+    waist: "#7F1D1D", // Maroon
   };
 
   const weeks = progressData.map((_, index) => `Week ${index + 1}`);
@@ -48,6 +49,15 @@ const Graph = ({ progressData }) => {
         data: progressData.map((entry) => entry.chest ?? null),
         borderColor: colors.chest,
         backgroundColor: colors.chest,
+        pointRadius: 4,
+        borderWidth: 2,
+        tension: 0.3,
+      },
+      {
+        label: "Waist (cm)",
+        data: progressData.map((entry) => entry.waist ?? null),
+        borderColor: colors.waist,
+        backgroundColor: colors.waist,
         pointRadius: 4,
         borderWidth: 2,
         tension: 0.3,

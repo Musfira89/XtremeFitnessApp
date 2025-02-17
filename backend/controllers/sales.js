@@ -158,29 +158,42 @@ export const getNewSubscriptions = async (req, res) => {
     }
   };
   
-  export const getTrialUsersGrowth = async (req, res) => {
+  const getTrialUsersGrowth = async (req, res) => {
     try {
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() - 30); // Get last 30 days data
+      const startDate = new Date(); // Aaj ki date
+      startDate.setDate(startDate.getDate() - 30); // Pichlay 30 din ka data
+  
+      console.log("Start Date:", startDate.toISOString());
   
       const trialUsers = await User.aggregate([
         {
           $match: {
-            trialExpiryDate: { $gte: startDate } // Users who had a trial in the last 30 days
+            trialExpiryDate: { $gte: startDate } // Yeh filter trialExpiryDate kaam nahi kar raha ho sakta hai
+          }
+        },
+        {
+          $addFields: {
+            trialStartDate: {
+              $subtract: ["$trialExpiryDate", 3 * 24 * 60 * 60 * 1000] // Trial start date nikal raha hai
+            }
           }
         },
         {
           $group: {
-            _id: { $dateToString: { format: "%Y-%m-%d", date: "$trialExpiryDate" } },
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$trialStartDate" } },
             count: { $sum: 1 }
           }
         },
-        { $sort: { _id: 1 } } // Sort by date ascending
+        { $sort: { _id: 1 } }
       ]);
   
-      res.status(200).json(trialUsers);
+      console.log("Backend Response:", trialUsers); // Debugging
+  
+      res.status(200).json(trialUsers); // Ensure an array is sent
     } catch (error) {
       console.error("Error fetching trial users growth:", error);
       res.status(500).json({ message: "Server error" });
     }
   };
+  
+  

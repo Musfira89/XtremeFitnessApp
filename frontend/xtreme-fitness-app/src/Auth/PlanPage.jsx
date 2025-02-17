@@ -23,35 +23,33 @@ const PlanPage = () => {
       }
     };
 
-    const fetchActivePlan = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/user/active-plan/${userId}`);
-        setActivePlan(response.data); // Updating state with active plan
-      } catch (error) {
-        console.error("Error fetching active plan:", error);
-      }
-    };
-    
-
     fetchPlans();
-    fetchActivePlan();
   }, [userId,plans]);
 
   const handleTrialEnable = async () => {
+    console.log("User ID:", userId); // Debugging
+    
     try {
-      await axios.post("http://localhost:5000/api/user/start-trial", { userId });
-
+      const response = await axios.post("http://localhost:5000/api/start-trial", { userId });
+      console.log("Trial Response:", response.data); // Debugging
+  
       toast.success("Free trial activated! Redirecting...", {
         position: "top-right",
         autoClose: 3000,
         theme: "dark",
       });
-
+  
       setTimeout(() => navigate(`/dashboard/${userId}`), 3000);
     } catch (error) {
-      console.error("Error enabling free trial:", error);
+      console.error("Axios Error:", error); // Full error logging
+      toast.error(error.response?.data?.message || "Error enabling free trial", {
+        position: "top-right",
+        autoClose: 3000,
+        theme: "dark",
+      });
     }
   };
+  
 
   const handlePlanSelection = async (plan) => {
     // Ensure activePlan is loaded before checking

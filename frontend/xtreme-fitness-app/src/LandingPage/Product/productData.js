@@ -64,13 +64,13 @@ const products = [
       name: "Weighted Jump Rope",
       image: weightedjumprope,
       price: "$59.99",
-      affiliateLink: "https://www.amazon.com/dp/affiliate-link-9", // Replace with your actual link
+      affiliateLink: "https://amzn.to/40yyvly", // Replace with your actual link
     },
     {
       name: "Barbell",
       image: barbell,
       price: "$19.99",
-      affiliateLink: "https://www.amazon.com/dp/affiliate-link-10", // Replace with your actual link
+      affiliateLink: "https://amzn.to/40xvj9x", // Replace with your actual link
     },
     {
       name: "Night-time Fat Burner",
@@ -82,7 +82,7 @@ const products = [
       name: "Treadmill",
       image: treadmill,
       price: "$399.99",
-      affiliateLink: "https://www.amazon.com/dp/affiliate-link-12", // Replace with your actual link
+      affiliateLink: "https://amzn.to/4gckj7w", // Replace with your actual link
     },
   ];
   

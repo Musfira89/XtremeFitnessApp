@@ -1,3 +1,4 @@
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
@@ -22,12 +23,10 @@ const userSchema = new mongoose.Schema(
     },
     trialExpiryDate: { type: Date, default: null },
     referrerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-    
-    acceptTerms: { type: Boolean, required: true, default: false }, // New field added
+    acceptTerms: { type: Boolean, required: true, default: false },
 
   },
   { timestamps: true }
 );
-
 const User = mongoose.model("User", userSchema);
 export default User;

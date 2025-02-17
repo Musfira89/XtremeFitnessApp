@@ -82,6 +82,11 @@ const Sidebar = () => {
               label: "Meeting + chats",
             },
             {
+              to: `/admin/feedback`,
+              icon: <VideoCall />,
+              label: "User feedback",
+            },
+            {
               to: `/admin/profilepage`,
               icon: <AccountCircle />,
               label: "Profile",
