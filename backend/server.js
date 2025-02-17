@@ -41,7 +41,7 @@ app.use(morgan("dev")); // Logs requests in development mode
 const allowedOrigins = [
   "http://localhost:5173", // Frontend dev
   "http://127.0.0.1:5173", 
-  "https://your-production-domain.com"
+  "https://www.xtremeft.com" // Production Frontend
 ];
 
 app.use(

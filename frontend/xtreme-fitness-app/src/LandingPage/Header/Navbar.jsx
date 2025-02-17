@@ -35,7 +35,7 @@ const Navbar = () => {
               SUCCESS STORIES
             </Link>
             <Link to="/trainer" className="hover:text-red-500">
-              TRAINER
+             MEET YOUR TRAINER
             </Link>
             <Link smooth to="/#services" className="hover:text-red-500">
               SERVICES
