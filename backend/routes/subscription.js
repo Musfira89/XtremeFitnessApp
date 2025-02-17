@@ -1,7 +1,8 @@
 import express from "express";
 import { subscribeUser ,startFreeTrial, createCheckoutSession, checkActivePlan} from "../controllers/subscriptionController.js";
-import { handleStripeWebhook, checkPaymentStatus } from "../controllers/webhooks.js";
+import { handleStripeWebhook, checkPaymentStatus,createRenewalCheckoutSession  } from "../controllers/webhooks.js";
 import {getNewSubscriptions,getTotalRevenue,getTopSellingPlan, getActiveUsersCount} from "../controllers/sales.js"
+import User from "../models/auth.js";
 
 const router = express.Router();
 
@@ -18,5 +19,9 @@ router.get("/total-revenue", getTotalRevenue);
 router.get("/top-selling-plan", getTopSellingPlan);
 router.get("/active-users", getActiveUsersCount);
 router.get("/trial-users", getActiveUsersCount);
+
+
+
+  
 
 export default router;

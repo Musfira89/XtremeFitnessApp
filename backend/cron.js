@@ -5,7 +5,9 @@ import path from "path";
 import EmailTemplate from "email-templates";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
+import moment from "moment-timezone";
+import { sendRenewalEmail } from './sendRenewalEmail.js';
+import {createRenewalCheckoutSession  } from "./controllers/webhooks.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -17,69 +19,46 @@ const email = new EmailTemplate({
   },
 });
 
-// ✅ Renewal Email Cron Job (Runs Every Minute)
-cron.schedule("* * * * *", async () => {
-  console.log("✅ Cron job script loaded.");
-
+cron.schedule('* * * * *', async () => {
   try {
-    console.log(`[${new Date().toISOString()}] Cron job started for renewal emails.`);
+    const currentDateTime = moment(); // Current date and time
+    console.log(`Current Date and Time: ${currentDateTime.format()}`);
 
-    // 🔹 Ensure Correct Timestamp Formats
-    const now = new Date();
-    const threeDaysLater = new Date();
-    threeDaysLater.setUTCDate(now.getUTCDate() + 3);
-    threeDaysLater.setUTCHours(23, 59, 59, 999); // End of the day
+    const users = await User.find({
+      subscriptionStatus: 'active',
+      plan: { $exists: true },
+    }).populate('plan');
 
-    console.log("Now (UTC):", now.toISOString());
-    console.log("Three days later (UTC):", threeDaysLater.toISOString());
+    console.log(`Users found: ${users.length}`);
 
-    // 🔹 Debugging: Check Users in DB
-    const debugUsers = await User.find({}, { email: 1, planExpiry: 1 }).limit(5);
-    console.log("Users in DB:", debugUsers);
+    if (users.length > 0) {
+      for (const user of users) {
+        const priceString = user.plan.price.replace(/[^0-9.-]+/g, "");
+        const price = Number(priceString);
+        if (isNaN(price)) {
+          console.error("Invalid price found for user", user.email);
+          continue;
+        }
 
-    // 🔹 Find Users Whose Plan is Expiring Within 3 Days
-    const expiringUsers = await User.find({
-      planExpiry: { $gte: now, $lte: threeDaysLater },
-      subscriptionStatus: "active",
-      isTrialUser: false, // Exclude free trial users
-    }).populate("plan");
+        const discountedPrice = Math.round(price * 0.9 * 100);
 
-    console.log(`[${new Date().toISOString()}] Found ${expiringUsers.length} users whose plan is expiring within 3 days.`);
+        console.log(`Sending renewal email to: ${user.email} (Plan: ${user.plan.name})`);
 
-    if (expiringUsers.length === 0) {
-      console.log("No users found. Skipping email sending.");
-      return;
-    }
+        const checkoutUrl = await createRenewalCheckoutSession(user._id, user.plan._id, discountedPrice);
 
-    for (const user of expiringUsers) {
-      console.log(`Processing user: ${user.email}`);
+        await sendRenewalEmail(user.email, user.fullName, user.plan.name, checkoutUrl.url);
 
-      if (!user.plan) {
-        console.log(`Skipping user ${user.email} - No plan assigned.`);
-        continue;
+        console.log(`Renewal email sent to: ${user.email}`);
       }
-
-      const discountPrice = user.plan.price * 0.9; // 10% discount
-      console.log(`User ${user.email} plan: ${user.plan.name}, Discount Price: ${discountPrice}`);
-
-      try {
-        // Generate Stripe checkout link
-        const renewalSession = await createRenewalCheckoutSession(user._id, user.plan._id, discountPrice);
-        console.log(`Generated Stripe checkout link for ${user.email}: ${renewalSession.url}`);
-
-        // Send renewal email
-        await sendRenewalEmail(user.email, user.fullName, user.plan.name, renewalSession.url);
-        console.log(`✅ Renewal email sent to ${user.email}`);
-      } catch (error) {
-        console.error(`❌ Error processing user ${user.email}:`, error);
-      }
+      console.log(`Renewal emails sent to ${users.length} active users.`);
+    } else {
+      console.log('No active users found for renewal emails.');
     }
-
-    console.log(`[${new Date().toISOString()}] Finished processing renewal emails.`);
   } catch (error) {
-    console.error("Error sending renewal emails:", error);
+    console.error('Error sending renewal emails:', error);
   }
 });
+
 
 
 

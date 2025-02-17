@@ -7,7 +7,9 @@ import successAnimation from "../assets/success.json"; // Lottie animation
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();
-  const session_id = new URLSearchParams(window.location.search).get("session_id");
+  const searchParams = new URLSearchParams(window.location.search);
+  const session_id = searchParams.get("session_id");
+  const renewal = searchParams.get("renewal") === "true"; // Check if it's a renewal
   const [userId, setUserId] = useState(null);
 
   useEffect(() => {
@@ -26,7 +28,15 @@ const PaymentSuccess = () => {
         const response = await axios.get(`http://localhost:5000/api/payment-status/${session_id}`);
 
         if (response.status === 200 && response.data.user?._id) {
-          setUserId(response.data.user._id); // Store user ID for navigation
+          setUserId(response.data.user._id);
+
+          if (renewal) {
+            toast.success("Subscription Renewed Successfully!", {
+              position: "top-right",
+              autoClose: 3000,
+              theme: "dark",
+            });
+          }
         }
       } catch (error) {
         console.error("Error checking payment status:", error);
@@ -34,9 +44,8 @@ const PaymentSuccess = () => {
     };
 
     checkPaymentStatus();
-  }, [session_id, navigate]);
+  }, [session_id, navigate, renewal]);
 
-  // Function to handle "Go to Dashboard" button click
   const handleGoToDashboard = () => {
     toast.success("Welcome to Dashboard!", {
       position: "top-right",
@@ -58,7 +67,9 @@ const PaymentSuccess = () => {
           <Lottie animationData={successAnimation} loop={false} />
         </div>
         <h2 className="text-4xl font-extrabold mt-6">Payment Successful!</h2>
-        <p className="mt-3 text-lg text-gray-700">Click the button below to go to your dashboard.</p>
+        <p className="mt-3 text-lg text-gray-700">
+          {renewal ? "Your subscription has been renewed!" : "Click the button below to go to your dashboard."}
+        </p>
         <div className="mt-6">
           <button
             onClick={handleGoToDashboard}

@@ -20,7 +20,7 @@ import Trainer from "./LandingPage/Blog/Trainer";
 import Policy from "./Auth/Policy";
 import Terms from "./Auth/Terms";
 import Feedback from "./pages/Feedback/Feedback";
-
+import RenewPlan from "./Auth/RenewPlan"
 function App() {
   return (
     <AuthProvider>
@@ -42,6 +42,7 @@ function App() {
           <Route path="/planpage/:userId" element={<PlanPage />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/feedback/:userId" element={<Feedback />} />
+          <Route path="/renew-plan" element={<RenewPlan />} />
 
           <Route path="/dashboard/:userId/*" element={<AppRoutes />} />
 
