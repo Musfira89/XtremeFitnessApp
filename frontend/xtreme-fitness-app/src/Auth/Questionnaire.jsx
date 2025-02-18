@@ -119,7 +119,6 @@ const Questionnaire = () => {
       setCurrentCategory((prev) => prev - 1);
     }
   };
-
   return (
     <div
       className="min-h-screen flex flex-col items-center justify-center relative bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 overflow-hidden"

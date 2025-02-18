@@ -100,14 +100,14 @@ const PlanPage = () => {
 
       {/* Free Trial Enable Button */}
       <button
-        className="mb-8 px-12 py-3 bg-blue-600 text-white font-semibold uppercase rounded-md hover:bg-blue-700 transition"
+        className="mb-8 px-12 py-3 bg-red-800 text-white font-semibold uppercase rounded-md hover:bg-red-700 transition"
         onClick={handleTrialEnable}
       >
         Enable Free Trial
       </button>
 
       {/* Paid Plans */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-8 w-full px-4 md:px-10 py-10 mt-6 mb-28">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-8 w-full px-4 md:px-10 py-10 mt-6 mb-4">
         {plans.map((plan) => (
           <div
             key={plan._id}
@@ -134,8 +134,8 @@ const PlanPage = () => {
         ))}
       </div>
 
-      <div className="mt-8 text-center text-sm text-gray-100">
-        Secure payments with Stripe and PayPal. No hidden fees.
+      <div className=" text-center text-sm text-gray-100">
+        Secure payments with Stripe . No hidden fees.
       </div>
     </div>
   );

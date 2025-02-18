@@ -9,6 +9,7 @@ import moment from "moment-timezone";
 import { sendRenewalEmail } from './sendRenewalEmail.js';
 import {createRenewalCheckoutSession  } from "./controllers/webhooks.js";
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -19,7 +20,7 @@ const email = new EmailTemplate({
   },
 });
 
-cron.schedule('* * * * *', async () => {
+cron.schedule("0 8 * * 1", async () => { 
   try {
     const currentDateTime = moment(); // Current date and time
     console.log(`Current Date and Time: ${currentDateTime.format()}`);
@@ -33,7 +34,13 @@ cron.schedule('* * * * *', async () => {
 
     if (users.length > 0) {
       for (const user of users) {
-        const priceString = user.plan.price.replace(/[^0-9.-]+/g, "");
+        // Check if the user's plan is either Xtreme Platinum or Xtreme Gold
+        if (user.plan.name !== 'Xtreme Platinum' && user.plan.name !== 'Xtreme Gold') {
+          console.log(`Skipping renewal email for ${user.email} (Plan: ${user.plan.name})`);
+          continue; // Skip the user if their plan is not Platinum or Gold
+        }
+
+        const priceString = user.plan.price.match(/[0-9,.]+/)[0]; // Extract numeric part
         const price = Number(priceString);
         if (isNaN(price)) {
           console.error("Invalid price found for user", user.email);
@@ -41,16 +48,18 @@ cron.schedule('* * * * *', async () => {
         }
 
         const discountedPrice = Math.round(price * 0.9 * 100);
+        const durationWeeks = user.plan.durationWeeks; // Get the duration in weeks
 
         console.log(`Sending renewal email to: ${user.email} (Plan: ${user.plan.name})`);
 
-        const checkoutUrl = await createRenewalCheckoutSession(user._id, user.plan._id, discountedPrice);
+        const checkoutUrl = await createRenewalCheckoutSession(user._id, user.plan.name, discountedPrice);
 
-        await sendRenewalEmail(user.email, user.fullName, user.plan.name, checkoutUrl.url);
+        // Send renewal email with the durationWeeks value
+        await sendRenewalEmail(user.email, user.fullName, user.plan.name, checkoutUrl.url, durationWeeks);
 
         console.log(`Renewal email sent to: ${user.email}`);
       }
-      console.log(`Renewal emails sent to ${users.length} active users.`);
+      console.log(`Renewal emails sent to active users with Xtreme Platinum or Gold plans.`);
     } else {
       console.log('No active users found for renewal emails.');
     }

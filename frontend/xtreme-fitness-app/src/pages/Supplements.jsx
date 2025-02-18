@@ -27,40 +27,40 @@ const SupplementRecommendations = () => {
   }, [userId]);
 
   return (
-    <div className="p-8 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-lg">
+    <div className="p-6 md:p-10 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-lg">
       {/* Section Header */}
-      <header className="text-center mb-16 mt-7">
-        <h2 className="text-4xl font-extrabold text-gray-900">
-        Supplement Recommendations
+      <header className="text-center mb-12 mt-6">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">
+          Supplement Recommendations
         </h2>
-        <p className="text-lg text-gray-700 mt-2">
-        Based on your fitness plan, we’ve curated supplements to boost your
-        performance and recovery.
+        <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-2 max-w-2xl mx-auto">
+          Based on your fitness plan, we’ve curated supplements to boost your
+          performance and recovery.
         </p>
-
       </header>
+
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {supplements.map((supplement) => (
           <div
             key={supplement._id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-all overflow-hidden relative border border-gray-200 dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 overflow-hidden border border-gray-200 dark:border-gray-700"
           >
             {/* Image Section */}
             <div className="relative w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
               <img
                 src={supplement.image}
                 alt={supplement.name}
-                className="w-auto h-full object-contain"
+                className="w-full h-full object-cover"
               />
             </div>
 
             {/* Content Section */}
-            <div className="p-6">
-              <h3 className="text-xl font-bold text-red-600">
+            <div className="p-5 md:p-6">
+              <h3 className="text-lg md:text-xl font-bold text-red-600">
                 {supplement.name}
               </h3>
-              <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm">
+              <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mt-2">
                 {supplement.description}
               </p>
 
@@ -71,21 +71,11 @@ const SupplementRecommendations = () => {
                 <strong>Recommended For:</strong> {supplement.recommendedFor}
               </p>
 
-              <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 mt-4">
+              <p className="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-200 mt-4">
                 {supplement.price}
               </p>
 
-              {/* Buy Button */}
-              <div className="mt-4">
-                <a
-                  href={supplement.amazonLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block bg-gradient-to-r from-red-500 to-red-700 text-white text-center px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all"
-                >
-                  Buy on Amazon
-                </a>
-              </div>
+
             </div>
           </div>
         ))}
@@ -93,5 +83,4 @@ const SupplementRecommendations = () => {
     </div>
   );
 };
-
 export default SupplementRecommendations;

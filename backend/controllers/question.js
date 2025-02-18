@@ -1,5 +1,6 @@
 import Question from "../models/question.js";
 
+
 // Add multiple questions at once
 export const addQuestions = async (req, res) => {
   try {
@@ -26,3 +27,4 @@ export const getQuestionsByCategory = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch questions" });
   }
 };
+ 

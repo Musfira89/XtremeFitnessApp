@@ -51,28 +51,28 @@ export const handleStripeWebhook = async (req, res) => {
 
 export const createRenewalCheckoutSession = async (userId, planId, discountedPrice) => {
   try {
-    const user = await User.findById(userId);
-    
-    // Ensure the user exists and is not a free trial user
+    const user = await User.findById(userId).populate('plan');
+
     if (!user || user.isTrialUser) {
       throw new Error("Free trial users are not eligible for renewal discounts.");
     }
 
-    // Ensure the user has an active plan
     if (!user.plan || user.subscriptionStatus !== 'active') {
       throw new Error("User does not have an active subscription.");
     }
 
-    // Convert userId and planId to strings to avoid the hash issue
+    // Ensure that userId and planId are strings
     const stringUserId = userId.toString();
-    const stringPlanId = planId.toString();
+    const stringPlanId = user.plan._id.toString();  // Ensure planId is a string
 
-    // Apply 10% discount on the plan price
-    const priceString = user.plan.price.replace(/[^0-9.-]+/g, ""); // Remove non-numeric characters
-    const originalPrice = Number(priceString);
-    const discountedPriceInCents = Math.round(originalPrice * 0.9 * 100); // 10% discount in cents
+    const plan = user.plan;
+    const planPrice = parseFloat(plan.price.replace(/[^0-9.-]+/g, ""));  // Clean price
+    const discountedPrice = Math.round(planPrice * 0.9 * 100);  // Apply discount
+    const planDurationInMonths = Math.ceil(plan.durationWeeks / 4);  // Convert weeks to months
 
-    // Create Stripe session
+    const planName = plan.name;
+
+    // Create the Stripe session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "subscription",
@@ -80,10 +80,8 @@ export const createRenewalCheckoutSession = async (userId, planId, discountedPri
         {
           price_data: {
             currency: "usd",
-            product_data: { 
-              name: user.plan.name,  // Use plan name instead of plan ID
-            },
-            unit_amount: discountedPriceInCents, // Use the discounted price in cents
+            product_data: { name: `Renewal - ${planName}` },
+            unit_amount: discountedPrice,
             recurring: { interval: "month" },
           },
           quantity: 1,
@@ -91,17 +89,20 @@ export const createRenewalCheckoutSession = async (userId, planId, discountedPri
       ],
       success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}&userId=${stringUserId}&renewal=true`,
       cancel_url: `http://localhost:5173/plans`,
-      metadata: { userId: stringUserId, planId: stringPlanId, renewal: true }, // Metadata with planId
+      metadata: { userId: stringUserId, planId: stringPlanId, renewal: true },  // Ensure metadata values are strings
     });
 
-    // Return the Stripe checkout session URL
-    return { url: session.url };
+    // Return the session URL and plan duration
+    return { url: session.url, planDurationInMonths };
 
   } catch (error) {
     console.error("Error creating renewal checkout session:", error);
     throw error;
   }
 };
+
+
+
 
 
 

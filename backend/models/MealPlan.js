@@ -15,7 +15,8 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
-        image: String, // Added image field
+        image: String, // Meal image
+        video: String, // Added video field
       },
       lunch: {
         name: String,
@@ -23,7 +24,8 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
-        image: String, // Added image field
+        image: String,
+        video: String, // Added video field
       },
       dinner: {
         name: String,
@@ -31,7 +33,8 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
-        image: String, // Added image field
+        image: String,
+        video: String, // Added video field
       },
       snacks: {
         name: String,
@@ -39,7 +42,8 @@ const mealPlanSchema = new mongoose.Schema({
         carbs: Number,
         protein: Number,
         recipe: String,
-        image: String, // Added image field
+        image: String,
+        video: String, // Added video field
       },
     },
   ],

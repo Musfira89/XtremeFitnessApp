@@ -172,6 +172,7 @@ const fetchMealImages = async (mealPlan) => {
       const meal = day[mealType];
 
       try {
+        // Fetch image
         const dalleResponse = await fetch(
           "https://api.openai.com/v1/images/generations",
           {
@@ -190,20 +191,47 @@ const fetchMealImages = async (mealPlan) => {
         );
 
         const dalleData = await dalleResponse.json();
+        meal.image = dalleData.data?.length > 0 ? dalleData.data[0].url : "default-image-url.jpg";
 
-        if (dalleResponse.ok && dalleData.data?.length > 0) {
-          meal.image = dalleData.data[0].url;
-        } else {
-          console.error(`Image generation failed for ${meal.name}`, dalleData);
-          meal.image = "default-image-url.jpg";
-        }
+        // Fetch video
+        meal.video = await fetchMealVideo(meal.name);
       } catch (error) {
-        console.error(`Error generating image for ${meal.name}:`, error);
+        console.error(`Error fetching media for ${meal.name}:`, error);
         meal.image = "default-image-url.jpg";
+        meal.video = null;
       }
     }
   }
 };
+
+
+// **Fetch Meal Video Function**
+const fetchMealVideo = async (mealName) => {
+  try {
+    const apiKey = process.env.YOUTUBE_API_KEY;
+    if (!apiKey) {
+      console.error("YouTube API key is missing");
+      return null;
+    }
+
+    const query = `${mealName} recipe`;
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=1&key=${apiKey}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (!data.items || data.items.length === 0) {
+      console.warn(`No YouTube video found for ${mealName}`);
+      return null;
+    }
+
+    return `https://www.youtube.com/watch?v=${data.items[0].id.videoId}`;
+  } catch (error) {
+    console.error(`Error fetching video for ${mealName}:`, error);
+    return null;
+  }
+};
+
 
 
 export const getUserResponses = async (req, res) => {

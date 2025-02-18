@@ -8,14 +8,17 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const sendRenewalEmail = async (email, name, planName, checkoutUrl) => {
+export const sendRenewalEmail = async (email, name, planName, checkoutUrl, durationWeeks) => {
+  // Calculate duration in months (rounded)
+  const durationMonths = Math.ceil(durationWeeks / 4);
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
     subject: `Renew Your Fitness Coaching Plan for a Discount`,
     html: `
       <p>Dear ${name},</p>
-      <p>We hope you’ve been enjoying your fitness coaching plan and making progress towards your fitness goals. We’re excited to offer you a one-time discounted rate to renew your ${planName} plan for another [length of time].</p>
+      <p>We hope you’ve been enjoying your fitness coaching plan and making progress towards your fitness goals. We’re excited to offer you a one-time discounted rate to renew your ${planName} plan for another ${durationMonths} month${durationMonths > 1 ? 's' : ''}.</p>
       <p>With your renewal, you'll receive:</p>
       <ul>
         <li>Unlimited access to our online training library</li>

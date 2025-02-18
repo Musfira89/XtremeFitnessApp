@@ -87,7 +87,7 @@ const ProgressTracking = () => {
         <button
           onClick={() => navigate(`/questions/${userId}`)}
           disabled={!isEligible}
-          className={`px-6 py-2 rounded-md text-lg font-semibold transition ${
+          className={`w-full sm:w-auto px-6 py-3 rounded-md text-base md:text-sm lg:text-sm font-semibold transition ${
             isEligible
               ? "bg-red-600 hover:bg-red-700 text-white cursor-pointer"
               : "bg-gray-400 text-gray-700 cursor-not-allowed"
@@ -98,17 +98,21 @@ const ProgressTracking = () => {
 
         {!isEligible && (
           <div className="mt-2">
-            <p className="text-red-500 text-sm">You can take the next assessment after one week.</p>
+            <p className="text-red-500 text-sm font-bold">You can take the next assessment after one week.</p>
             <hr className="my-2 border-gray-300" />
           </div>
         )}
       </div>
 
       {/* Full-width Graph */}
-      <Graph progressData={progressData} />
+      <div className="mb-8 w-full">
+        <Graph progressData={progressData} />
+      </div>
 
-      {/* Table with dark red border */}
-      <Table progressData={progressData} />
+      {/* Table with dark red border and horizontal scrolling on small screens */}
+      <div className="overflow-x-auto w-full">
+        <Table progressData={progressData} />
+      </div>
     </div>
   );
 };
