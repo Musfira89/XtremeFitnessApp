@@ -21,12 +21,12 @@ const Layout = () => {
 
       <div className="flex h-screen">
         {/* Sidebar for Larger Screens */}
-        <div className="hidden md:block">
+        <div className="hidden md:block w-72">
           <Sidebar userId={userId} />
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col md:ml-72 transition-all">
+        <div className="flex-1 flex flex-col transition-all w-full md:w-auto">
           {/* Topbar */}
           <Topbar />
 

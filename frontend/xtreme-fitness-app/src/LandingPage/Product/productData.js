@@ -10,6 +10,7 @@ import weightedjumprope from "../../assets/products/weightedjumprope.jpg"
 import barbell from "../../assets/products/barbell.jpg"
 import nighttimeFatBurner from "../../assets/products/nighttimeFatBurner.jpg"
 import treadmill from "../../assets/products/treadmill.jpg"
+import fatmachine from "../../assets/products/fatmachine.jpg"
 
 const products = [
     {
@@ -83,6 +84,12 @@ const products = [
       image: treadmill,
       price: "$399.99",
       affiliateLink: "https://amzn.to/4gckj7w", // Replace with your actual link
+    },
+    {
+      name: "Body fat weight scale",
+      image: fatmachine,
+      price: "$399.99",
+      affiliateLink: "https://amzn.to/3ECLoDL", // Replace with your actual link
     },
   ];
   

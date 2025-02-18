@@ -7,7 +7,7 @@ import Table from "./Table";
 const ProgressTracking = () => {
   const [progressData, setProgressData] = useState([]);
   const [isEligible, setIsEligible] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(""); // Countdown timer
+  const [timeLeft, setTimeLeft] = useState("");
   const { userId } = useParams();
   const navigate = useNavigate();
 
@@ -36,7 +36,7 @@ const ProgressTracking = () => {
 
     fetchProgress();
     checkEligibility();
-  }, [userId]); // Runs only when userId changes
+  }, [userId]);
 
   useEffect(() => {
     let interval;
@@ -71,23 +71,23 @@ const ProgressTracking = () => {
       setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
     };
 
-    updateTimer(); // Run immediately
+    updateTimer();
   };
 
   return (
-    <div className="bg-white min-h-screen p-8">
+    <div className="bg-white min-h-screen p-4 sm:p-8">
       {/* Heading */}
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-gray-800">Progress Tracking</h1>
-        <p className="text-gray-500">Monitor your progress and take weekly assessments.</p>
+      <div className="text-center mb-6 sm:mb-10">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">Progress Tracking</h1>
+        <p className="text-gray-500 text-sm sm:text-base">Monitor your progress and take weekly assessments.</p>
       </div>
 
       {/* Next Week Assessment Button */}
-      <div className="mb-16">
+      <div className="mb-12 sm:mb-16">
         <button
           onClick={() => navigate(`/questions/${userId}`)}
           disabled={!isEligible}
-          className={`w-full sm:w-auto px-6 py-3 rounded-md text-base md:text-sm lg:text-sm font-semibold transition ${
+          className={`w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold transition ${
             isEligible
               ? "bg-red-600 hover:bg-red-700 text-white cursor-pointer"
               : "bg-gray-400 text-gray-700 cursor-not-allowed"
@@ -97,8 +97,8 @@ const ProgressTracking = () => {
         </button>
 
         {!isEligible && (
-          <div className="mt-2">
-            <p className="text-red-500 text-sm font-bold">You can take the next assessment after one week.</p>
+          <div className="mt-2 text-center">
+            <p className="text-red-500 text-xs sm:text-sm font-bold">You can take the next assessment after one week.</p>
             <hr className="my-2 border-gray-300" />
           </div>
         )}
@@ -109,7 +109,7 @@ const ProgressTracking = () => {
         <Graph progressData={progressData} />
       </div>
 
-      {/* Table with dark red border and horizontal scrolling on small screens */}
+      {/* Table with responsive scrolling */}
       <div className="overflow-x-auto w-full">
         <Table progressData={progressData} />
       </div>
