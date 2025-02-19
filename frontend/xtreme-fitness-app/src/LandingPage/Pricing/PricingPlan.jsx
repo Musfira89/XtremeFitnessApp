@@ -82,63 +82,48 @@ const PricingPlans = () => {
     >
       {/* Heading */}
       <div className="text-center mb-24">
-        <h1 className="text-4xl font-bold text-black">OUR PRICING PLANS</h1>
-        <div className="mt-2 h-1 w-24 bg-red-700 mx-auto"></div>
+        <h1 className="text-4xl font-bold text-black">Our Pricing Plans</h1>
+        <div className="mt-3 h-1 w-24 bg-red-700 mx-auto"></div>
       </div>
 
       {/* Pricing Plans */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-6 w-full">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-8 w-full">
         {plans.map((plan, index) => (
           <div
             key={index}
-            className={`w-full md:w-1/4 p-5 flex flex-col items-center text-center rounded-xl border border-gray-300 shadow-md bg-white transition-all duration-300 hover:scale-105 hover:shadow-lg
-              ${
-                index === 1
-                  ? "md:w-1/4 bg-gradient-to-br from-red-600 to-red-800 text-white shadow-xl transform scale-105 border-2 border-red-500"
-                  : ""
-              }`}
+            className={`relative w-full md:w-1/4 p-8 flex flex-col items-center text-center rounded-xl border border-gray-300 shadow-md bg-white transition-all duration-300 hover:scale-105 hover:shadow-lg ${
+              index === 1
+                ? "bg-gradient-to-br from-red-600 to-red-800 text-white shadow-xl transform scale-105 border-2 border-red-500"
+                : ""
+            }`}
           >
+            {/* "Popular" Tag for Middle Plan */}
+            {index === 1 && (
+              <div className="absolute -top-3 right-3 bg-yellow-500 text-white text-xs font-bold px-4 py-1 rounded-md shadow-md">
+               Popular
+              </div>
+            )}
+
             {/* Plan Name */}
-            <h2
-              className={`text-lg font-bold ${
-                index === 1 ? "text-white" : "text-gray-900"
-              }`}
-            >
+            <h2 className={`text-lg font-bold ${index === 1 ? "text-white" : "text-gray-900"}`}>
               {plan.name}
             </h2>
 
             {/* Price */}
-            <p
-              className={`text-2xl font-extrabold mt-2 ${
-                index === 1 ? "text-white" : "text-gray-900"
-              }`}
-            >
+            <p className={`text-2xl font-extrabold mt-2 ${index === 1 ? "text-white" : "text-gray-900"}`}>
               {plan.price}
             </p>
 
             {/* Price Details */}
-            <p
-              className={`text-sm mt-2 ${
-                index === 1 ? "text-white" : "text-red-500"
-              }`}
-            >
+            <p className={`text-sm mt-2 ${index === 1 ? "text-white" : "text-red-500"}`}>
               {plan.priceDetails}
             </p>
 
             {/* Features */}
-            <ul className="mt-4 space-y-2 w-full">
+            <ul className="mt-5 space-y-3 w-full">
               {plan.features.map((feature, i) => (
-                <li
-                  key={i}
-                  className={`flex items-center gap-2 ${
-                    index === 1 ? "text-white" : "text-gray-700"
-                  }`}
-                >
-                  <CheckCircle
-                    className={`${
-                      index === 1 ? "text-white" : "text-gray-500"
-                    } w-4 h-4`}
-                  />
+                <li key={i} className={`flex items-center gap-2 ${index === 1 ? "text-white" : "text-gray-700"}`}>
+                  <CheckCircle className={`${index === 1 ? "text-white" : "text-gray-500"} w-4 h-4`} />
                   <span className="text-sm">{feature}</span>
                 </li>
               ))}
@@ -147,7 +132,7 @@ const PricingPlans = () => {
             {/* Buy Button */}
             <Link to="/signup">
               <button
-                className={`mt-5 px-5 py-2 text-sm font-semibold rounded-md transition ${
+                className={`mt-6 px-6 py-2 text-sm font-semibold rounded-md transition ${
                   index === 1
                     ? "bg-white text-red-700 hover:bg-gray-100"
                     : "bg-red-700 text-white hover:bg-red-800"

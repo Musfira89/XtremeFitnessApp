@@ -90,9 +90,14 @@ const QuestionResponse = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6">
-      <motion.h1 className="text-3xl font-bold text-red-600 mb-4 text-left" initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-        User Health Questionnaire Responses
-      </motion.h1>
+   <motion.h1
+  className="text-xl sm:text-2xl md:text-3xl font-bold text-red-600 mb-4 text-left"
+  initial={{ opacity: 0, y: -50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5 }}
+>
+  User Health Questionnaire Responses
+</motion.h1>
 
       {/* Select User */}
       <motion.div className="mb-6 max-w-md text-left" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>

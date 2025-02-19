@@ -72,8 +72,12 @@ const FAQSection = () => {
                 onClick={() => toggleFAQ(index)}
               >
                 {faq.question}
-                <span className="text-2xl text-gray-500">
-                  {activeIndex === index ? "-" : "+"}
+                <span
+                  className={`text-xl transition-transform duration-300 ${
+                    activeIndex === index ? "rotate-180 text-red-600" : "text-gray-500"
+                  }`}
+                >
+                  +
                 </span>
               </button>
               {activeIndex === index && (

@@ -2,7 +2,6 @@ import React from "react";
 import Header from "./Header/Header";
 import Card from "./Product/ProductSection";
 import Footer from "./Footer/Footer";
-
 import Video from "./Blog/Video";
 import FaqSection from "./Blog/Faq";
 import About from "./Blog/About";
@@ -11,10 +10,12 @@ import PricingPlans from "./Pricing/PricingPlan";
 import Contactform from "./Blog/Contactform";
 import Support from "./Blog/Support";
 import Navbar from "./Header/Navbar";
+import GoogleReviews from "./GoogleReviews";
+
 export const Home = () => {
   return (
     <>
-      <Navbar/>
+      <Navbar />
       <Header />
 
       <Card />
@@ -23,6 +24,7 @@ export const Home = () => {
 
       <PricingPlans />
       <FaqSection />
+      <GoogleReviews email="Xtremefit8@gmail.com" />
 
       <Support />
       <Contactform />

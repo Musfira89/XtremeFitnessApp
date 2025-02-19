@@ -12,7 +12,6 @@ import {
   ExpandMore,
 } from "@mui/icons-material";
 import logo from "../../public/Logo.png";
-import profileImage from "../../public/profile.png";
 import { useAuth } from "../context/AuthContext";
 
 const Sidebar = ({ userId }) => {
@@ -43,6 +42,9 @@ const Sidebar = ({ userId }) => {
             { to: `/dashboard/${userId}/supplements`, icon: <LocalPharmacy />, label: "Supplements" },
             { to: `/dashboard/${userId}/progress-tracking`, icon: <ShowChart />, label: "Progress Tracking" },
             { to: `/dashboard/${userId}/meeting`, icon: <VideoCall />, label: "Meetings/Chats" },
+            { to: `/dashboard/${userId}/progress`, icon: <VideoCall />, label: "Upload Progress" },
+            { to: `/progresstable/${userId}`, icon: <VideoCall />, label: "Monthly Progress" },
+
           ].map(({ to, icon, label }) => (
             <li key={to}>
               <NavLink

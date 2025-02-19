@@ -21,6 +21,8 @@ import Policy from "./Auth/Policy";
 import Terms from "./Auth/Terms";
 import Feedback from "./pages/Feedback/Feedback";
 import RenewPlan from "./Auth/RenewPlan"
+import ProgressTable from "./pages/ProgressTable";
+
 function App() {
   return (
     <AuthProvider>
@@ -43,6 +45,7 @@ function App() {
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/feedback/:userId" element={<Feedback />} />
           <Route path="/renew-plan" element={<RenewPlan />} />
+          <Route path="/progresstable/:userId" element={<ProgressTable />} />
 
           <Route path="/dashboard/:userId/*" element={<AppRoutes />} />
 

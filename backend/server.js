@@ -17,7 +17,9 @@ import contactRoutes from "./routes/contactRoutes.js";  // Added
 import progressRoutes from "./routes/progress.js"
 import supplementRoutes from "./routes/supplement.js"
 import feedbackRoutes from './routes/feedbackRoutes.js';
+import imageProgress from './routes/imageprogress.js'
 import "./cron.js";  // Runs cron jobs
+// import reviewRoutes from "./routes/reviews.js";
 
 dotenv.config();
 console.log("Email User:", process.env.EMAIL_USER);
@@ -55,10 +57,10 @@ app.use("/api", supplementRoutes);
 
 app.use("/api", progressRoutes);  // Added
 app.use('/feedback', feedbackRoutes);
+app.use('/api', imageProgress);
+// app.use("/api/reviews", reviewRoutes);
 
-// // Run email scheduler once (remove in production)
-// sendWeeklyEmails();
-// console.log("Cron jobs and email scheduler initialized.");
+
 
 
 // Start server

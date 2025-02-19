@@ -10,6 +10,8 @@ import ProfilePage from "./pages/ProfilePage";
 import Supplements from "./pages/Supplements";
 import Meeting from "./pages/Meeting/Meeting";
 import Settings from "./pages/Settings"
+import ProgressUpload from "./pages/ProgressUpload";
+import ProgressTable from "./pages/ProgressTable";
 const AppRoutes = () => (
   <Routes>
     {/* Parent Layout with Sidebar and Topbar */}
@@ -25,6 +27,8 @@ const AppRoutes = () => (
       <Route path="profilepage" element={<ProfilePage />} />
       <Route path="settingspage" element={<Settings />} />
       <Route path="meeting" element={<Meeting />} />
+      <Route path="progress" element={<ProgressUpload />} />
+
     </Route>
   </Routes>
 );

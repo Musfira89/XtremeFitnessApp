@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 
@@ -22,14 +21,15 @@ const UserFeedbackList = () => {
   return (
     <div className="w-full bg-gray-100 py-16 px-6">
       {/* Main Heading */}
-      <h2 className="text-5xl font-extrabold text-center text-gray-900">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-center text-gray-900">
         User Feedback
       </h2>
 
       {/* Subheading */}
-      <p className="text-center text-gray-600 text-lg mt-2 mb-10">
-        See what our users have to say about their transformation journey.
-      </p>
+      <p className="text-sm sm:text-base md:text-lg text-center text-gray-600 mt-2 mb-10">
+  See what our users have to say about their transformation journey.
+</p>
+
 
       {/* No Feedback Message */}
       {feedbackList.length === 0 ? (
@@ -54,7 +54,9 @@ const UserFeedbackList = () => {
                     <span
                       key={index}
                       className={`text-yellow-400 text-2xl ${
-                        index < feedback.rating ? "fill-current" : "text-gray-300"
+                        index < feedback.rating
+                          ? "fill-current"
+                          : "text-gray-300"
                       }`}
                     >
                       ★

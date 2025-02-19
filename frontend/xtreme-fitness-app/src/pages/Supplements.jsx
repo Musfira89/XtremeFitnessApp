@@ -30,7 +30,7 @@ const SupplementRecommendations = () => {
     <div className="p-6 md:p-10 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 rounded-lg">
       {/* Section Header */}
       <header className="text-center mb-12 mt-6">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">
+     <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-gray-100">
           Supplement Recommendations
         </h2>
         <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 mt-2 max-w-2xl mx-auto">
