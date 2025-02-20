@@ -1,88 +1,101 @@
-import React from 'react';
-import { motion } from 'framer-motion'; // Importing Framer Motion
-import serviceImage1 from '../../assets/LandingPageImg/service1.png'; // Import images
-import serviceImage2 from '../../assets/LandingPageImg/service2.png';
-import serviceImage3 from '../../assets/LandingPageImg/service3.png';
+import React from "react";
+import { motion } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import serviceImage1 from "../../assets/LandingPageImg/service1.png";
+import serviceImage2 from "../../assets/LandingPageImg/service2.png";
+import serviceImage3 from "../../assets/LandingPageImg/service3.png";
+import serviceImage4 from "../../assets/LandingPageImg/service4.png"; // Fitness Chatbot
+import serviceImage5 from "../../assets/LandingPageImg/service5.jpg"; // Meeting with Clients
+
+const services = [
+  {
+    title: "Automated Workout Plans",
+    image: serviceImage1,
+  },
+  {
+    title: "Automated Meal Plans",
+    image: serviceImage2,
+  },
+  {
+    title: "Supplement Recommendation",
+    image: serviceImage3,
+  },
+  {
+    title: "Fitness Chatbot",
+    image: serviceImage4,
+  },
+  {
+    title: "Personal Coaching Session",
+    image: serviceImage5,
+  },
+];
 
 const Services = () => {
   return (
     <motion.section
       id="services"
       className="bg-red-50 py-16 md:py-24"
-      initial={{ opacity: 0 }} // Start with opacity 0
-      whileInView={{ opacity: 1 }} // Fade in when in view
-      transition={{ duration: 1 }} // Animation duration
-      viewport={{ once: true }} // Trigger the animation once when entering the viewport
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 1 }}
+      viewport={{ once: true }}
     >
       {/* Heading */}
-      <div className="text-center mb-16">
+      <div className="text-center mb-12">
         <motion.h2
           className="text-3xl md:text-5xl font-bold text-black"
-          initial={{ y: -50, opacity: 0 }} // Start from above with no opacity
-          whileInView={{ y: 0, opacity: 1 }} // Animate to original position with full opacity
+          initial={{ y: -50, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8 }}
-          viewport={{ once: true }} // Trigger animation when in view
+          viewport={{ once: true }}
         >
           Our Services
         </motion.h2>
         <div className="mt-3 h-1 w-24 md:w-32 bg-red-700 mx-auto"></div>
       </div>
 
-      {/* Service Cards */}
-      <div className="container mx-auto flex flex-wrap justify-center gap-8 px-4">
-        {/* Card 1 */}
-        <motion.div
-          className="w-full sm:w-1/2 lg:w-1/4 bg-white shadow-lg rounded-lg overflow-hidden"
-          initial={{ opacity: 0, x: -100 }} // Start from the left with no opacity
-          whileInView={{ opacity: 1, x: 0 }} // Animate to the center with full opacity
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
+      {/* Swiper Carousel */}
+      <div className="container mx-auto px-12 relative">
+        <Swiper
+          modules={[Pagination, Autoplay]}
+          spaceBetween={2}
+          slidesPerView={1}
+          breakpoints={{
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
+          pagination={{ clickable: true, el: ".swiper-pagination" }}
+          className="pb-12"
         >
-          <img
-            src={serviceImage1} // Use imported image
-            alt="Service 1"
-            className="w-full h-64 object-cover"
-          />
-          <div className="bg-red-700 text-white text-center py-6">
-            <span className="text-lg md:text-xl font-bold">Customized Workout Plans</span>
-          </div>
-        </motion.div>
-
-        {/* Card 2 */}
-        <motion.div
-          className="w-full sm:w-1/2 lg:w-1/4 bg-white shadow-lg rounded-lg overflow-hidden"
-          initial={{ opacity: 0, x: 100 }} // Start from the right with no opacity
-          whileInView={{ opacity: 1, x: 0 }} // Animate to the center with full opacity
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <img
-            src={serviceImage2} // Use imported image
-            alt="Service 2"
-            className="w-full h-64 object-cover"
-          />
-          <div className="bg-red-700 text-white text-center py-6">
-            <span className="text-lg md:text-xl font-bold">Customized Meal Plans</span>
-          </div>
-        </motion.div>
-
-        {/* Card 3 */}
-        <motion.div
-          className="w-full sm:w-1/2 lg:w-1/4 bg-white shadow-lg rounded-lg overflow-hidden"
-          initial={{ opacity: 0, y: 100 }} // Start from below with no opacity
-          whileInView={{ opacity: 1, y: 0 }} // Animate to the center with full opacity
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <img
-            src={serviceImage3} // Use imported image
-            alt="Service 3"
-            className="w-full h-64 object-cover"
-          />
-          <div className="bg-red-700 text-white text-center py-6">
-            <span className="text-lg md:text-xl font-bold">Supplement Recommendation</span>
-          </div>
-        </motion.div>
+          {services.map((service, index) => (
+            <SwiperSlide key={index}>
+              <motion.div
+                className="w-11/12 mx-auto bg-white shadow-lg rounded-lg overflow-hidden text-center transition-all transform hover:scale-105 hover:shadow-2xl"
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+              >
+                <img
+                  src={service.image}
+                  alt={service.title}
+                  className="w-full h-60 object-cover"
+                />
+                <div className="bg-red-700 text-white py-6">
+                  <span className="text-lg md:text-xl font-bold">{service.title}</span>
+                </div>
+              </motion.div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        
+        {/* Pagination Dots (Placed Below) */}
+        <div className="swiper-pagination mt-4"></div>
       </div>
     </motion.section>
   );
