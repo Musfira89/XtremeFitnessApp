@@ -19,7 +19,7 @@ const AdminSignup = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:5000/api/admin/signup", {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/admin/signup`, {
         fullName, // Sending full name
         email,
         password,
