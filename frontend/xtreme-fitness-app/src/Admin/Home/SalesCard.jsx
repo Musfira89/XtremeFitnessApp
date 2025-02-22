@@ -18,7 +18,7 @@ const DashboardOverview = () => {
     const fetchNewSubscriptions = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/new-subscriptions"
+          `${import.meta.env.VITE_API_BASE_URL}/api/new-subscriptions`
         );
         setNewSubscriptions(response.data.newSubscriptions);
         setChange(response.data.change);
@@ -29,7 +29,7 @@ const DashboardOverview = () => {
 
     const fetchTotalRevenue = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/total-revenue");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/total-revenue`);
         setTotalRevenue(response.data.totalRevenue);
         setRevenueChange(response.data.revenueChange);
 
@@ -40,7 +40,7 @@ const DashboardOverview = () => {
 
     const fetchTopSellingPlan = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/top-selling-plan");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/top-selling-plan`);
         setTopPlan(response.data.topPlan);
         setSubscribers(response.data.subscribers);
       } catch (error) {
@@ -50,7 +50,7 @@ const DashboardOverview = () => {
 
     const fetchActiveUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/active-users");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/active-users`);
         setPreviousUsers(activeUsers); // Store previous count before updating
         setActiveUsers(response.data.activeUsers);
       } catch (error) {

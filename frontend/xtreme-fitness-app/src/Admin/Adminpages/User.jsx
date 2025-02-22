@@ -9,9 +9,7 @@ const UserList = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/users"
-        );
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/users`);
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -33,7 +31,7 @@ const UserList = () => {
 
     try {
       await axios.delete(
-        `http://localhost:5000/api/auth/users/${selectedUserId}`
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/users/${selectedUserId}`
       );
       setUserData((prevUsers) =>
         prevUsers.filter((user) => user._id !== selectedUserId)

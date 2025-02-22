@@ -14,7 +14,7 @@ const AdminZoomMeetings = () => {
   // Fetch users
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/users");
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/users`);
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -54,7 +54,7 @@ const AdminZoomMeetings = () => {
     }
   
     try {
-      const { data } = await axios.post("http://localhost:5000/api/meeting/create", {
+      const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/meeting/create`, {
         userId: selectedUser,
         topic,
       });

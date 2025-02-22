@@ -39,7 +39,7 @@ const CoachSettings = () => {
         if (coachData[key]) formData.append(key, coachData[key]);
       });
 
-      await axios.put(`http://localhost:5000/api/admin/update/${adminAuth.adminId}`, formData, {
+      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/admin/update/${adminAuth.adminId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

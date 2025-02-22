@@ -24,7 +24,7 @@ const Sidebar = () => {
     const fetchAdminData = async () => {
       try {
         if (!adminAuth.adminId) return;
-        const response = await axios.get(`http://localhost:5000/api/admin/${adminAuth.adminId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/admin/${adminAuth.adminId}`);
         setAdminData(response.data);
       } catch (error) {
         console.error("Error fetching admin data:", error);
@@ -36,7 +36,7 @@ const Sidebar = () => {
 
   // Construct profile image URL
   const profileImageUrl = adminData?.profileImage
-    ? `http://localhost:5000/${adminData.profileImage.replace(/\\/g, "/")}`
+    ? `${import.meta.env.VITE_API_BASE_URL}/${adminData.profileImage.replace(/\\/g, "/")}`
     : defaultProfileImage;
 
 

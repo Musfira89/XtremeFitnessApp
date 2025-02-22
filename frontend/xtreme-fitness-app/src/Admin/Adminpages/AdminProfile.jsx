@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Avatar, Grid, Paper, Divider, Button, TextField } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Avatar,
+  Grid,
+  Paper,
+  Divider,
+  Button,
+  TextField,
+} from "@mui/material";
 import axios from "axios";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import defaultProfileImage from "../../assets/progress.jpg"; // Default image if no profile exists
@@ -12,7 +21,9 @@ const CoachProfile = () => {
   useEffect(() => {
     const fetchAdminData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/admin/${adminAuth.adminId}`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/admin/${adminAuth.adminId}`
+        );
         setCoachData(response.data);
       } catch (error) {
         console.error("Error fetching admin data:", error);
@@ -20,34 +31,67 @@ const CoachProfile = () => {
     };
 
     if (adminAuth.adminId) {
-      fetchAdminData(); 
+      fetchAdminData();
     }
   }, [adminAuth.adminId]);
 
   if (!coachData) {
-    return <Typography sx={{ textAlign: "center", mt: 4 }}>Loading coach profile...</Typography>;
+    return (
+      <Typography sx={{ textAlign: "center", mt: 4 }}>
+        Loading coach profile...
+      </Typography>
+    );
   }
 
   // Construct profile image URL
   const profileImageUrl = coachData.profileImage
-    ? `http://localhost:5000/${coachData.profileImage.replace(/\\/g, "/")}` // Convert backslashes to forward slashes
+    ? `${import.meta.env.VITE_API_BASE_URL}/${coachData.profileImage.replace(
+        /\\/g,
+        "/"
+      )}`
     : defaultProfileImage;
 
   return (
-    <Box sx={{ p: 3, maxWidth: 1100, margin: "0 auto", backgroundColor: "#fff" }}>
-      <Typography variant="h4" sx={{ mb: 4, textAlign: "center", fontWeight: "bold", color: "#991b1b" }}>
+    <Box
+      sx={{ p: 3, maxWidth: 1100, margin: "0 auto", backgroundColor: "#fff" }}
+    >
+      <Typography
+        variant="h4"
+        sx={{
+          mb: 4,
+          textAlign: "center",
+          fontWeight: "bold",
+          color: "#991b1b",
+        }}
+      >
         Coach Profile
       </Typography>
       <Grid container spacing={2}>
         {/* Profile Picture Section */}
         <Grid item xs={12} md={4}>
-          <Paper elevation={0} sx={{ p: 4, textAlign: "center", borderRadius: 3, border: "1px solid lightgrey", backgroundColor: "#fff" }}>
-            <Avatar sx={{ width: 150, height: 150, margin: "auto", bgcolor: "grey" }} src={profileImageUrl} alt="Coach Profile" />
-            <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold" }}>{coachData.fullName}</Typography>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 4,
+              textAlign: "center",
+              borderRadius: 3,
+              border: "1px solid lightgrey",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Avatar
+              sx={{ width: 150, height: 150, margin: "auto", bgcolor: "grey" }}
+              src={profileImageUrl}
+              alt="Coach Profile"
+            />
+            <Typography variant="h6" sx={{ mt: 2, fontWeight: "bold" }}>
+              {coachData.fullName}
+            </Typography>
             <Typography color="textSecondary">{coachData.role}</Typography>
             <Divider sx={{ my: 2, borderColor: "lightgrey" }} />
             <Button
-             component={Link} to="/admin/settings" 
+              component={Link}
+              to="/admin/settings"
               variant="contained"
               sx={{
                 mt: 2,
@@ -63,11 +107,23 @@ const CoachProfile = () => {
 
         {/* Coach Information Section */}
         <Grid item xs={12} md={8}>
-          <Paper elevation={0} sx={{ p: 3, borderRadius: 2, border: "1px solid lightgrey", backgroundColor: "#fff" }}>
-            <Typography variant="h6" gutterBottom>Profile Details</Typography>
-            <Typography color="textSecondary" sx={{ mb: 3 }}>Below are the details of the coach.</Typography>
+          <Paper
+            elevation={0}
+            sx={{
+              p: 3,
+              borderRadius: 2,
+              border: "1px solid lightgrey",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Profile Details
+            </Typography>
+            <Typography color="textSecondary" sx={{ mb: 3 }}>
+              Below are the details of the coach.
+            </Typography>
             <Grid container spacing={2}>
-              {[ 
+              {[
                 { label: "Full Name", value: coachData.fullName },
                 { label: "Email", value: coachData.email },
                 { label: "Role", value: coachData.role },
@@ -78,7 +134,12 @@ const CoachProfile = () => {
                 { label: "Location", value: coachData.location },
               ].map((field, index) => (
                 <Grid item xs={12} sm={6} key={index}>
-                  <TextField label={field.label} value={field.value || "N/A"} fullWidth disabled />
+                  <TextField
+                    label={field.label}
+                    value={field.value || "N/A"}
+                    fullWidth
+                    disabled
+                  />
                 </Grid>
               ))}
             </Grid>

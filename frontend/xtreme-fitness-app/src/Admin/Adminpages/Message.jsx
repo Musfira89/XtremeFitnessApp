@@ -14,7 +14,7 @@ const Message = () => {
   // Fetch Users
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/users");
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/users`);
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -24,7 +24,7 @@ const Message = () => {
   // Fetch Messages from the server
   const fetchMessages = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/messages/${userId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/messages/${userId}`);
       setMessages(response.data.data);
       // Store fetched messages in localStorage
       localStorage.setItem('messages', JSON.stringify(response.data.data));
@@ -56,7 +56,7 @@ const Message = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/api/messages/send", {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/messages/send`,{
         senderId: adminId,  // Pass adminId directly as a string
         receiverId: receiver._id,  // Pass receiverId directly as a string
         content: message,
