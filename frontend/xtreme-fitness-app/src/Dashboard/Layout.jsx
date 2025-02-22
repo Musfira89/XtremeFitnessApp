@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
@@ -7,16 +7,22 @@ import ResponsiveNav from "./Mobile/ResponsiveNav"; // Import ResponsiveNav
 
 const Layout = () => {
   const { userId } = useParams(); // Access the userId from the route parameter
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Sidebar state
 
   useEffect(() => {
     console.log("Current userId:", userId);
   }, [userId]);
 
+  // Toggle function to control sidebar visibility
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="h-screen overflow-hidden">
       {/* Mobile Navigation */}
       <div className="md:hidden">
-        <ResponsiveNav userId={userId} />
+        <ResponsiveNav userId={userId} isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       </div>
 
       <div className="flex h-screen">
@@ -27,8 +33,8 @@ const Layout = () => {
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col transition-all w-full md:w-auto">
-          {/* Topbar */}
-          <Topbar />
+          {/* Topbar with toggleSidebar function */}
+          <Topbar toggleSidebar={toggleSidebar} />
 
           {/* Content Area */}
           <div className="flex-1 p-4 bg-gray-50 overflow-y-auto">

@@ -1,25 +1,10 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, Close, ExpandMore } from "@mui/icons-material";
-import {
-  Home,
-  MenuBook,
-  FitnessCenter,
-  LocalPharmacy,
-  ShowChart,
-  VideoCall,
-  AccountCircle,
-  Settings,
-} from "@mui/icons-material";
+import { Close, ExpandMore, Settings, Home, MenuBook, FitnessCenter, LocalPharmacy, ShowChart, VideoCall, CloudUpload, DateRange } from "@mui/icons-material";
 import logo from "../../../public/Logo.png";
 
-const ResponsiveNavbar = ({ userId }) => {
-  const [menuOpen, setMenuOpen] = useState(false);
+const ResponsiveNavbar = ({ userId, isOpen, toggleSidebar }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
-  };
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -27,33 +12,27 @@ const ResponsiveNavbar = ({ userId }) => {
 
   return (
     <>
-      {/* Mobile Navbar */}
-      <nav className="md:hidden bg-red-700 text-white flex justify-between items-center p-4 fixed w-full top-0 z-50">
-        {/* Logo */}
-        <img src={logo} alt="Logo" className="w-20" />
+      {/* Sidebar Overlay */}
+      {isOpen && <div className="fixed inset-0 bg-black opacity-50 md:hidden" onClick={toggleSidebar}></div>}
 
-        {/* Menu Button */}
-        <button onClick={toggleMenu} className="text-white focus:outline-none">
-          {menuOpen ? <Close fontSize="medium" /> : <Menu fontSize="medium" />}
-        </button>
-      </nav>
-
-      {/* Mobile Menu */}
+      {/* Sidebar Drawer */}
       <div
-        className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg transform ${
-          menuOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 ease-in-out z-50`}
+        className={`fixed top-0 left-0 h-full w-64 bg-gray-50 shadow-lg transform transition-transform duration-300 ease-in-out md:hidden z-50 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         {/* Close Button */}
-        <button
-          onClick={toggleMenu}
-          className="absolute top-4 right-4 text-gray-700"
-        >
-          <Close fontSize="medium" />
+        <button className="absolute top-4 right-4 text-gray-700" onClick={toggleSidebar}>
+          <Close fontSize="large" />
         </button>
 
+        {/* Sidebar Header with Logo */}
+        <div className="flex justify-center items-center p-4 border-b">
+          <img src={logo} alt="Logo" className="w-24" />
+        </div>
+
         {/* Navigation Links */}
-        <ul className="mt-16 space-y-3 px-6">
+        <ul className="mt-6 space-y-3 px-6">
           {[
             { to: `/dashboard/${userId}`, icon: <Home />, label: "Home" },
             { to: `/dashboard/${userId}/mealPlan`, icon: <MenuBook />, label: "Meal Plans" },
@@ -61,11 +40,13 @@ const ResponsiveNavbar = ({ userId }) => {
             { to: `/dashboard/${userId}/supplements`, icon: <LocalPharmacy />, label: "Supplements" },
             { to: `/dashboard/${userId}/progress-tracking`, icon: <ShowChart />, label: "Progress Tracking" },
             { to: `/dashboard/${userId}/meeting`, icon: <VideoCall />, label: "Meetings/Chats" },
+            { to: `/dashboard/${userId}/upload-progress`, icon: <CloudUpload />, label: "Upload Progress" },
+            { to: `/dashboard/${userId}/monthly-progress`, icon: <DateRange />, label: "Monthly Progress" },
           ].map(({ to, icon, label }) => (
             <li key={to}>
               <NavLink
                 to={to}
-                onClick={toggleMenu} // Close menu on link click
+                onClick={toggleSidebar} // Close sidebar when navigating
                 className="flex items-center space-x-3 text-sm text-gray-700 hover:text-red-700 transition"
               >
                 <span className="text-base">{icon}</span>
@@ -73,6 +54,9 @@ const ResponsiveNavbar = ({ userId }) => {
               </NavLink>
             </li>
           ))}
+
+          {/* Divider Line */}
+          <hr className="my-4 border-gray-300" />
 
           {/* Settings Dropdown */}
           <li className="relative">
@@ -88,31 +72,19 @@ const ResponsiveNavbar = ({ userId }) => {
             </button>
 
             {isDropdownOpen && (
-              <ul className="bg-gray-white rounded-lg  mt-2 space-y-1 pl-10">
+              <ul className="bg-gray-white rounded-lg mt-2 space-y-1 pl-10">
                 <li>
-                  <NavLink
-                    to={`/dashboard/${userId}/settingspage`}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
-                    onClick={toggleMenu}
-                  >
+                  <NavLink to={`/dashboard/${userId}/settingspage`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" onClick={toggleSidebar}>
                     Settings
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    to={`/dashboard/${userId}/profilepage`}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
-                    onClick={toggleMenu}
-                  >
+                  <NavLink to={`/dashboard/${userId}/profilepage`} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200" onClick={toggleSidebar}>
                     Profile
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    to={`/feedback/${userId}`}
-                    className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100"
-                    onClick={toggleMenu}
-                  >
+                  <NavLink to={`/feedback/${userId}`} className="block px-4 py-2 text-sm text-red-600 hover:bg-red-100" onClick={toggleSidebar}>
                     Feedback
                   </NavLink>
                 </li>

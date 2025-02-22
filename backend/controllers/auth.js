@@ -3,6 +3,10 @@ import User from "../models/auth.js";
 import Response from "../models/Response.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
+
+
 
 dotenv.config();
 
@@ -208,39 +212,34 @@ export const deleteUser = async (req, res) => {
 export const getUserProfile = async (req, res) => {
   try {
     const { userId } = req.params;
-    
     const user = await User.findById(userId).populate("plan", "name");
-    
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({
-      id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      contact: user.contact,
-      location: user.location,
-      hasCompletedQuestionnaire: user.hasCompletedQuestionnaire,
-      plan: user.plan ? user.plan.name : "No Plan",
-      subscriptionStatus: user.subscriptionStatus,
-    });
+    res.status(200).json(user); // Return user object directly
   } catch (error) {
     console.error("Error fetching user profile:", error);
-    res.status(500).json({ message: "Error fetching user profile", error });
+    res.status(500).json({ message: "Error fetching user profile" });
   }
 };
+
+
 
 
 export const updateUserProfile = async (req, res) => {
   try {
     const { userId } = req.params;
     const { fullName, email, contact, location, password } = req.body;
-
     const updateFields = { fullName, email, contact, location };
 
     if (password) {
       updateFields.password = bcrypt.hashSync(password, 10); // Hash password if changed
+    }
+
+    if (req.file) {
+      updateFields.profileImage = `/uploads/${req.file.filename}`; // Store file path
     }
 
     await User.findByIdAndUpdate(userId, updateFields, { new: true });

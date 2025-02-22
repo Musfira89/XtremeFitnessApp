@@ -87,7 +87,7 @@ const UserList = () => {
         <td className="px-6 py-4 text-sm font-bold">{user.formattedExpiryDate}</td>
 
         <td className="px-6 py-4 text-sm font-bold">
-          <span className={`inline-block py-1 px-3 rounded-full text-xs font-semibold ${
+          <span className={`inline-block py-2 px-8 rounded-md text-sm font-semibold ${
             user.subscriptionStatus === "active"
               ? "bg-red-800 text-white"
               : user.subscriptionStatus === "pending"

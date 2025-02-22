@@ -39,7 +39,12 @@ const Table = ({ progressData }) => {
             </tr>
           </thead>
           <tbody>
-            {["weight", "hips", "chest", "waist"].map((key, index) => (
+            {[
+              { key: "weight", label: "Weight (kg)" },
+              { key: "hips", label: "Hips (cm)" },
+              { key: "chest", label: "Chest (cm)" },
+              { key: "waist", label: "Waist (cm)" },
+            ].map(({ key, label }, index) => (
               <tr
                 key={index}
                 className={`border-b transition-all hover:bg-red-100 text-sm sm:text-base ${
@@ -47,7 +52,7 @@ const Table = ({ progressData }) => {
                 }`}
               >
                 <td className="border border-gray-300 px-4 py-3 font-medium text-gray-800">
-                  {key.charAt(0).toUpperCase() + key.slice(1)} (cm)
+                  {label}
                 </td>
                 {latestWeeks.map((weekData, weekIndex) => (
                   <td

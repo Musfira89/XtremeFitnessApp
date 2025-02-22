@@ -72,31 +72,77 @@ export const generateMealPlan = async (req, res) => {
           "calories": 300, 
           "carbs": 30, 
           "protein": 20, 
-          "recipe": "1/2 cup old-fashioned oats cooked with 1 cup 1 percent milk, an apple or banana, and 2 tablespoons chopped walnuts" 
+          "fat": 10, 
+          "recipe": {
+            "ingredients": [
+              "1 cup rolled oats",
+              "2 cups milk (or water for a lighter option)",
+              "1 medium banana, mashed",
+              "1 tbsp honey or maple syrup",
+              "2 tbsp raisins or dried cranberries",
+              "1 tbsp chia seeds or flaxseeds",
+              "1 tbsp peanut butter or almond butter",
+              "½ tsp cinnamon (optional)",
+              "¼ cup chopped nuts (almonds, walnuts, or cashews)",
+              "½ cup fresh fruit (berries, apples, or mango)"
+            ],
+            "instructions": [
+              "In a pot, bring milk (or water) to a simmer over medium heat.",
+              "Add rolled oats and stir occasionally for 5-7 minutes until thickened.",
+              "Mix in the mashed banana, honey, and chia seeds. Cook for another 2 minutes.",
+              "Remove from heat and stir in peanut butter, raisins, and cinnamon.",
+              "Top with fresh fruit and chopped nuts before serving."
+            ],
+            "nutritional_benefits": [
+              "High in complex carbs  (Oats, banana, and dried fruit provide sustained energy.)",
+              "Good source of fiber (Aids digestion and keeps you full longer.)",
+              "Healthy fats & protein (Nuts, seeds, and peanut butter for balanced nutrition.)"
+            ]
+          }
         },
         "lunch": { 
           "name": "Meal Name", 
           "calories": 450, 
           "carbs": 40, 
           "protein": 30, 
-          "recipe": "Steps..." 
+          "fat": 15,
+          "recipe": {
+            "ingredients": ["..."],
+            "instructions": ["..."],
+            "nutritional_benefits": ["..."]
+          }
         },
         "dinner": { 
           "name": "Meal Name", 
           "calories": 500, 
           "carbs": 50, 
           "protein": 40, 
-          "recipe": "Steps..." 
+          "fat": 20,
+          "recipe": {
+            "ingredients": ["..."],
+            "instructions": ["..."],
+            "nutritional_benefits": ["..."]
+          }
         },
         "snacks": { 
           "name": "Snack Name", 
           "calories": 200, 
           "carbs": 15, 
           "protein": 5, 
-          "recipe": "Steps..." 
+          "fat": 5,
+          "recipe": {
+            "ingredients": ["..."],
+            "instructions": ["..."],
+            "nutritional_benefits": ["..."]
+          }
         }
       },
-      { "day": "Day 2", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } }
+      { "day": "Tuesday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
+      { "day": "Wednesday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
+      { "day": "Thursday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
+      { "day": "Friday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
+      { "day": "Saturday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
+      { "day": "Sunday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } }
     ]
     
     ALL WEIGHTLOSS PLANS MUST BE CARB CYCLING UNLESS CLIENT IS A DIABETIC.
@@ -108,6 +154,7 @@ export const generateMealPlan = async (req, res) => {
     Breakfast: 1/2 cup old-fashioned oats cooked with 1 cup 1 percent milk, an apple or banana, and 2 tablespoons chopped walnuts (443 cals, 67 g carbs, 16 g protein, 15 g fat)
     
     Return only JSON, no additional text.`;
+    
 
     const aiResponse = await fetch(
       "https://api.openai.com/v1/chat/completions",
@@ -120,7 +167,7 @@ export const generateMealPlan = async (req, res) => {
         body: JSON.stringify({
           model: "gpt-4-turbo",
           messages: [{ role: "user", content: prompt }],
-          max_tokens: 2000,
+          max_tokens: 4096,
         }),
       }
     );

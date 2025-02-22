@@ -46,16 +46,26 @@ const MealPlan = () => {
     return match ? match[1] : null;
   };
 
-  const extractGroceryList = (recipe) => {
-    if (!recipe) return [];
-
-    return recipe
+  const extractGroceryList = (recipeInstructions) => {
+    if (!recipeInstructions) return [];
+  
+    // Ensure instructions are in string format
+    const instructionsString = Array.isArray(recipeInstructions)
+      ? recipeInstructions.join(" ") // Convert array to a single string
+      : recipeInstructions;
+  
+    if (typeof instructionsString !== "string") {
+      console.warn("Expected string, received:", instructionsString);
+      return [];
+    }
+  
+    return instructionsString
       .split(/[\n,.]/) // Split by new lines, commas, or periods
       .map((line) =>
         line
           .replace(/(\d+[\-\/]?\s?[a-zA-Z]*)|[*()%]/g, "") // Remove numbers but keep units
           .replace(
-            /\b(grill|serve|top|combine|cook|mix|chop|slice|mince|drizzle|sprinkle|bake|roast|boil|sauté|stir|pour|garnish|add|blend|heat|spread|whisk|season|with|into|over|and|or)\b/gi,
+            /\b(grill|serve|top|combine|cook|mix|chop|slice|mince|drizzle|sprinkle|bake|roast|boil|sauté|stir|pour|garnish|add|blend|heat|spread|whisk|season|before|after|during|into|onto|over|under|inside|outside|in|on|at|with|without|from|to|for|by|and|or|while|when|until|till|afterward|prior|serving|as|well)\b/gi,
             ""
           ) // Remove cooking actions and unnecessary words
           .replace(/\s{2,}/g, " ") // Remove extra spaces
@@ -64,6 +74,7 @@ const MealPlan = () => {
       .filter((line) => line.length > 2) // Ignore empty or small words
       .flatMap((line) => line.split(/\s+and\s+/)); // Handle multiple ingredients in a single line
   };
+  
 
   const saveGroceryList = (list) => {
     if (!list.length) {
@@ -123,17 +134,18 @@ const MealPlan = () => {
           {selectedDay !== null && (
             <div className="overflow-x-auto">
               <table className="min-w-full table-auto border-collapse text-xs sm:text-xs shadow-md">
-              <thead>
-  <tr className="bg-red-700 text-white text-xs sm:text-lg">
-    <th className="p-2 sm:p-4">Meal</th>
-    <th className="p-2 sm:p-4">Meal Name</th>
-    <th className="p-2 sm:p-4">Calories</th>
-    <th className="p-2 sm:p-4">Carbs</th> {/* Fixed this line */}
-    <th className="p-2 sm:p-4">Protein</th>
-    <th className="p-2 sm:p-4">Recipe</th>
-    <th className="p-2 sm:p-4">Grocery List</th>
-  </tr>
-</thead>
+                <thead>
+                  <tr className="bg-red-700 text-white text-xs sm:text-lg">
+                    <th className="p-2 sm:p-4">Meal</th>
+                    <th className="p-2 sm:p-4">Meal Name</th>
+                    <th className="p-2 sm:p-4">Calories</th>
+                    <th className="p-2 sm:p-4">Carbs</th>
+                    <th className="p-2 sm:p-4">Fat</th>
+                    <th className="p-2 sm:p-4">Protein</th>
+                    <th className="p-2 sm:p-4">Recipe</th>
+                    <th className="p-2 sm:p-4">Grocery List</th>
+                  </tr>
+                </thead>
 
                 <tbody>
                   {Object.entries(mealPlan[selectedDay])
@@ -169,6 +181,10 @@ const MealPlan = () => {
                           <td className="p-2 sm:p-4 text-xs sm:text-base">
                             {meal.carbs || "N/A"}g
                           </td>
+
+                          <td className="p-2 sm:p-4 text-xs sm:text-base">
+                            {meal.fat || "N/A"}g
+                          </td>
                           <td className="p-2 sm:p-4 text-xs sm:text-base">
                             {meal.protein || "N/A"}g
                           </td>
@@ -200,76 +216,123 @@ const MealPlan = () => {
 
       {/* Recipe Modal */}
       {selectedRecipe && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 sm:p-10">
-          <div className="bg-white dark:bg-gray-900 p-6 sm:p-10 rounded-lg shadow-xl max-w-3xl w-full relative">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white dark:bg-gray-900 p-8 sm:p-12 rounded-2xl shadow-2xl max-w-4xl w-full relative transition-all ease-in-out duration-300 transform scale-100 font-serif">
+            {/* Close Button */}
             <button
-              className="absolute top-3 right-3 text-gray-700 dark:text-white text-lg sm:text-2xl font-bold"
+              className="absolute top-4 right-4 text-gray-700 dark:text-white text-2xl font-semibold hover:text-red-500 transition-transform transform hover:scale-110"
               onClick={() => setSelectedRecipe(null)}
             >
-              ×
+              ✖
             </button>
 
-            <h3 className="text-lg sm:text-xl font-bold text-gray-700 text-center mb-4 sm:mb-6">
+            {/* Title */}
+            <h3 className="text-3xl font-semibold text-red-700 dark:text-white text-center mb-8">
               {selectedRecipe.name} - Recipe
             </h3>
 
-            {selectedRecipe.video ? (
-              <iframe
-                className="w-full h-52 sm:h-80 rounded-lg"
-                src={`https://www.youtube.com/embed/${getYouTubeVideoId(
-                  selectedRecipe.video
-                )}`}
-                title="Recipe Video"
-                frameBorder="0"
-                allowFullScreen
-              ></iframe>
-            ) : (
-              <p className="text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">
-                No video available for this recipe.
-              </p>
-            )}
+            {/* Scrollable Content */}
+            <div className="max-h-[80vh] overflow-y-auto p-2 space-y-8 text-base sm:text-lg leading-relaxed">
+              {/* Video or Placeholder */}
+              {selectedRecipe.video ? (
+                <iframe
+                  className="w-full h-60 sm:h-96 rounded-xl shadow-lg"
+                  src={`https://www.youtube.com/embed/${getYouTubeVideoId(
+                    selectedRecipe.video
+                  )}`}
+                  title="Recipe Video"
+                  frameBorder="0"
+                  allowFullScreen
+                ></iframe>
+              ) : (
+                <div className="w-full h-60 sm:h-96 flex items-center justify-center bg-gray-200 dark:bg-gray-700 text-gray-500 rounded-xl shadow-lg text-lg font-medium">
+                  No Video Available
+                </div>
+              )}
 
-            <h4 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-300 mt-4 sm:mt-6 mb-2">
-              Ingredients & Instructions:
-            </h4>
-            <ul className="list-disc pl-4 sm:pl-6 text-gray-800 dark:text-gray-300 text-sm sm:text-base">
-              {selectedRecipe.recipe
-                ? selectedRecipe.recipe
-                    .split("\n")
-                    .map((line, index) => <li key={index}>{line}</li>)
-                : "No recipe available."}
-            </ul>
+              {/* Ingredients */}
+              <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-300 mb-4 uppercase">
+                  Ingredients
+                </h4>
+                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
+                  {selectedRecipe.recipe?.ingredients?.map(
+                    (ingredient, index) => (
+                      <li key={index} className="ml-4 list-disc">
+                        {ingredient}
+                      </li>
+                    )
+                  ) || <li>No ingredients available.</li>}
+                </ul>
+              </div>
+
+              {/* Instructions */}
+              <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-300 mb-4 uppercase">
+                  Instructions
+                </h4>
+                <ol className="space-y-4 text-gray-700 dark:text-gray-300">
+                  {selectedRecipe.recipe?.instructions?.map(
+                    (instruction, index) => (
+                      <li key={index} className="flex items-start">
+                        <span className="w-8 h-8 flex items-center justify-center bg-gray-900 dark:bg-gray-200 text-white dark:text-gray-900 font-bold rounded-full mr-4">
+                          {index + 1}
+                        </span>
+                        <span>{instruction}</span>
+                      </li>
+                    )
+                  ) || <li>No instructions available.</li>}
+                </ol>
+              </div>
+
+              {/* Nutritional Benefits */}
+              <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
+                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-300 mb-4 uppercase">
+                  Nutritional Benefits
+                </h4>
+                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
+                  {selectedRecipe.recipe?.nutritional_benefits?.map(
+                    (benefit, index) => (
+                      <li key={index} className="ml-4 list-disc">
+                        {benefit}
+                      </li>
+                    )
+                  ) || <li>No nutritional benefits available.</li>}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
+      {/* Grocery List Modal */}
       {selectedGrocery && (
         <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4 transition-opacity duration-300"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-2 transition-opacity duration-300"
           onClick={() => setSelectedGrocery(null)}
         >
           <div
-            className="bg-white p-6 sm:p-10 rounded-xl shadow-lg max-w-lg w-full relative transform transition-all scale-95 hover:scale-100"
+            className="bg-white p-6 sm:p-10 rounded-2xl shadow-2xl max-w-[30%] w-full relative transform transition-all scale-95 hover:scale-100"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
-              className="absolute top-3 right-3 text-red-600 text-sm font-semibold hover:text-red-800 transition-transform transform hover:rotate-90"
+              className="absolute top-3 right-3 text-gray-700 dark:text-white text-xl font-bold hover:text-red-500 transition-transform transform hover:rotate-90"
               onClick={() => setSelectedGrocery(null)}
             >
               ✕
             </button>
 
             {/* Title */}
-            <h3 className="text-md sm:text-md font-semibold text-center mb-8 text-gray-900">
+            <h3 className="text-lg sm:text-xl font-semibold text-center mb-6 text-gray-900 dark:text-white">
               Grocery List for{" "}
               <span className="text-red-600">{selectedGrocery.name}</span>
             </h3>
 
-            {/* Scrollable List */}
-            <div className="max-h-60 overflow-y-auto p-2 border border-gray-300 rounded-md bg-gray-50">
-              <ul className="list-decimal pl-5 text-gray-800 text-xs sm:text-sm space-y-1">
-                {extractGroceryList(selectedGrocery.recipe).map(
+            {/* Scrollable Grocery List */}
+            <div className="max-h-[50vh] overflow-y-auto p-3 border border-gray-300 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-inner">
+              <ul className="list-disc pl-5 text-gray-800 dark:text-gray-300 text-xs sm:text-sm space-y-1">
+                {extractGroceryList(selectedGrocery.recipe.instructions).map(
                   (item, index) => (
                     <li key={index}>{item}</li>
                   )
@@ -278,17 +341,19 @@ const MealPlan = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="flex justify-end gap-3 mt-5">
               <button
-                className="bg-gray-200 text-gray-700 px-4 py-2 text-sm rounded-md hover:bg-gray-300 transition"
+                className="bg-gray-200 text-gray-700 px-4 py-2 text-xs sm:text-sm rounded-md hover:bg-gray-300 transition"
                 onClick={() => setSelectedGrocery(null)}
               >
                 Close
               </button>
               <button
-                className="bg-red-600 text-white px-4 py-2 text-sm rounded-md hover:bg-red-700 transition"
+                className="bg-red-600 text-white px-4 py-2 text-xs sm:text-sm rounded-md hover:bg-red-700 transition"
                 onClick={() =>
-                  saveGroceryList(extractGroceryList(selectedGrocery.recipe))
+                  saveGroceryList(
+                    extractGroceryList(selectedGrocery.recipe.instructions)
+                  )
                 }
               >
                 Save List

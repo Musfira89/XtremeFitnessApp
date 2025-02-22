@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema(
     contact: { type: String, default: "" }, 
     lastLogin: { type: Date, default: null },
     hasCompletedQuestionnaire: { type: Boolean, default: false },
+    profileImage: {
+      type: String, // URL of the uploaded image
+    },
     plan: { 
       type: mongoose.Schema.Types.ObjectId, 
       ref: "Plan",

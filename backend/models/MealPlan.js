@@ -1,5 +1,20 @@
 import mongoose from "mongoose";
 
+const mealSchema = new mongoose.Schema({
+  name: String,
+  calories: Number,
+  carbs: Number,
+  protein: Number,
+  fat: Number,
+  recipe: {
+    ingredients: [String],  // List of ingredients
+    instructions: [String],  // Step-by-step instructions
+    nutritional_benefits: [String] // Key nutritional benefits
+  },
+  image: String,
+  video: String
+});
+
 const mealPlanSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -9,42 +24,10 @@ const mealPlanSchema = new mongoose.Schema({
   meals: [
     {
       day: { type: String, required: true },
-      breakfast: {
-        name: String,
-        calories: Number,
-        carbs: Number,
-        protein: Number,
-        recipe: String,
-        image: String, // Meal image
-        video: String, // Added video field
-      },
-      lunch: {
-        name: String,
-        calories: Number,
-        carbs: Number,
-        protein: Number,
-        recipe: String,
-        image: String,
-        video: String, // Added video field
-      },
-      dinner: {
-        name: String,
-        calories: Number,
-        carbs: Number,
-        protein: Number,
-        recipe: String,
-        image: String,
-        video: String, // Added video field
-      },
-      snacks: {
-        name: String,
-        calories: Number,
-        carbs: Number,
-        protein: Number,
-        recipe: String,
-        image: String,
-        video: String, // Added video field
-      },
+      breakfast: mealSchema,
+      lunch: mealSchema,
+      dinner: mealSchema,
+      snacks: mealSchema
     },
   ],
   createdAt: { type: Date, default: Date.now },
