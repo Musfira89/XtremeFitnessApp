@@ -15,7 +15,7 @@ const UserMessages = () => {
   // Fetch messages
   const fetchMessages = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/messages/${userId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/messages/${userId}`);
       setMessages(response.data.data);
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -28,7 +28,7 @@ const UserMessages = () => {
     if (!newMessage.trim()) return;
 
     try {
-      const response = await axios.post("http://localhost:5000/api/messages/send", {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/messages/send`, {
         senderId: userId,
         receiverId: adminId,
         content: newMessage,

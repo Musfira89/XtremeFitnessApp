@@ -16,7 +16,7 @@ const PlanPage = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/plans/get");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/plans/get`);
         setPlans(response.data);
       } catch (error) {
         console.error("Error fetching plans:", error);
@@ -30,7 +30,7 @@ const PlanPage = () => {
     console.log("User ID:", userId); // Debugging
     
     try {
-      const response = await axios.post("http://localhost:5000/api/start-trial", { userId });
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/start-trial`, { userId });
       console.log("Trial Response:", response.data); // Debugging
   
       toast.success("Free trial activated! Redirecting...", {
@@ -63,7 +63,7 @@ const PlanPage = () => {
     }
   
     try {
-      const response = await axios.post("http://localhost:5000/api/checkout-session", {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/checkout-session`, {
         userId,
         planId: plan._id,
       });

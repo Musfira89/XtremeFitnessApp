@@ -16,7 +16,7 @@ const MealPlan = () => {
     const fetchMealPlan = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/response/${userId}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/response/${userId}`
         );
         if (response.data?.meals) {
           setMealPlan(response.data.meals);

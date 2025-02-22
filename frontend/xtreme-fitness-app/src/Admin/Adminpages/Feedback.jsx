@@ -7,7 +7,7 @@ const UserFeedbackList = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/feedback/all`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/feedback/all`);
         setFeedbacks(response.data);
       } catch (error) {
         console.error("Error fetching feedback:", error);

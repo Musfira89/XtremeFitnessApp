@@ -14,7 +14,7 @@ const ProgressTracking = () => {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/progress/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/progress/${userId}`);
         setProgressData(response.data);
       } catch (error) {
         console.error("Error fetching progress data:", error.response ? error.response.data : error);
@@ -23,7 +23,7 @@ const ProgressTracking = () => {
 
     const checkEligibility = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/eligibility/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/eligibility/${userId}`);
         setIsEligible(response.data.eligible);
 
         if (!response.data.eligible && response.data.lastSubmission) {

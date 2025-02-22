@@ -18,7 +18,7 @@ const WorkoutPlan = () => {
     const fetchWorkoutPlan = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/generate-workout-plan/${userId}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/generate-workout-plan/${userId}`
         );
         setWorkoutPlan(response.data?.workoutPlan || {});
         setActiveDay(

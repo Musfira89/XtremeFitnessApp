@@ -41,7 +41,7 @@ const TotalUsers = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/auth/total-users");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/total-users`);
         const formattedData = response.data.map((item, index) => ({
           date: new Date(item._id + "-01").toLocaleString("default", {
             month: "short",

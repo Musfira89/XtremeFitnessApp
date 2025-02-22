@@ -11,7 +11,7 @@ const SupplementRecommendations = () => {
     const fetchSupplements = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/generate-supplement/${userId}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/generate-supplement/${userId}`
         );
         setSupplements(response.data.supplements);
         setLoading(false);

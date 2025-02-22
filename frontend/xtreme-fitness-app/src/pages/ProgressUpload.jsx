@@ -39,7 +39,7 @@ const ProgressUpload = () => {
     formData.append("image", file);
 
     try {
-      await axios.post("http://localhost:5000/api/upload", formData);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/upload`, formData);
       toast.success("Image uploaded successfully!", {
         position: "top-right",
         autoClose: 3000,

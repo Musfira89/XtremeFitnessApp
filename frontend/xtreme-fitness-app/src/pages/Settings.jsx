@@ -81,7 +81,7 @@ const Settings = () => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/auth/update/${userId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/update/${userId}`,
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );

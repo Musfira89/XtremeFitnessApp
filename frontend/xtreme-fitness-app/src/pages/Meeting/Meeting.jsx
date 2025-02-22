@@ -12,7 +12,7 @@ const ZoomMeetings = () => {
     const fetchMeetings = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/meeting/user/${userId}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/meeting/user/${userId}`
         );
         const uniqueMeetings = Array.from(
           new Set(response.data.map((m) => m.id))

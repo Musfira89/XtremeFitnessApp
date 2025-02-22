@@ -15,7 +15,7 @@ const MonthlyProgress = () => {
     const fetchAllProgressImages = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:5000/api/${userId}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/${userId}`);
         setProgressImages(response.data);
       } catch (error) {
         console.error("Error fetching progress images:", error);

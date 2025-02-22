@@ -12,7 +12,7 @@ const Progress = () => {
     const fetchProgress = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/progress/${userId}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/progress/${userId}`
         );
         setProgressData(response.data);
       } catch (error) {

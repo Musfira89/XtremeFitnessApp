@@ -13,7 +13,7 @@ const Feedback = () => {
   const [fullName, setFullName] = useState(""); 
   const [loading, setLoading] = useState(false);
   const { userId } = useParams(); 
-  const navigate = useNavigate(); // 👈 Navigation hook
+  const navigate = useNavigate(); // 
 
   // Handles file selection
   const handleFileChange = (e, setImage, setPreview) => {
@@ -49,7 +49,7 @@ const Feedback = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`http://localhost:5000/feedback/submit/${userId}`, formData, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/feedback/submit/${userId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

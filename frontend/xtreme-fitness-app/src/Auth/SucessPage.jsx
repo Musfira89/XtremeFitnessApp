@@ -25,7 +25,7 @@ const PaymentSuccess = () => {
 
     const checkPaymentStatus = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/payment-status/${session_id}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/payment-status/${session_id}`);
 
         if (response.status === 200 && response.data.user?._id) {
           setUserId(response.data.user._id);

@@ -20,7 +20,7 @@ const Topbar = ({ toggleSidebar }) => {
     const fetchPlanDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/auth/${userId}/plan`
+          `${import.meta.env.VITE_API_BASE_URL}/api/auth/${userId}/plan`
         );
         console.log("API Response:", response.data);
 

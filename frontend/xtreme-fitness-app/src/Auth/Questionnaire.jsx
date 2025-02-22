@@ -30,7 +30,7 @@ const Questionnaire = () => {
       try {
         const category = categories[currentCategory];
         const response = await axios.get(
-          `http://localhost:5000/api/question/${category}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/question/${category}`
         );
         setQuestionsData(response.data); // Set the questions
         setCurrentQuestion(0); // Reset question index
@@ -84,7 +84,7 @@ const Questionnaire = () => {
           weekNumber: new Date().getWeekNumber(),
         };
 
-        await axios.post("http://localhost:5000/api/response/save", payload);
+        await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/response/save`, payload);
 
         if (currentCategory < categories.length - 1) {
           setCurrentCategory((prev) => prev + 1);
@@ -92,7 +92,7 @@ const Questionnaire = () => {
           setSelectedOption(""); // Reset selected option for new category
         } else {
           await axios.put(
-            `http://localhost:5000/api/auth/mark-complete/${userId}`
+            `${import.meta.env.VITE_API_BASE_URL}/api/auth/mark-complete/${userId}`
           );
           toast.success("Responses saved successfully!");
           navigate(`/planpage/${userId}`);

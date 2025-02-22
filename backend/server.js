@@ -55,7 +55,7 @@ app.use("/api/contact", contactRoutes);  // Added
 app.use("/api", supplementRoutes);
 
 app.use("/api", progressRoutes);  // Added
-app.use('/feedback', feedbackRoutes);
+app.use('api/feedback', feedbackRoutes);
 app.use('/api', imageProgress);
 // app.use("/api/reviews", reviewRoutes);
 

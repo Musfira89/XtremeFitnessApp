@@ -15,7 +15,7 @@ const RenewPlan = () => {
     const fetchPlanPrice = async () => {
       if (planId) {
         try {
-          const response = await axios.get("http://localhost:5000/api/plans/get");
+          const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/plans/get`);
           console.log("API Response:", response.data);
           const plan = response.data.find((plan) => plan._id === planId);
           if (plan && plan.price) {
@@ -46,7 +46,7 @@ const RenewPlan = () => {
       console.log("Plan Price:", planPrice);
       console.log("Discounted Price (in cents):", discountedPrice); // Log the discounted price
       axios
-        .post("http://localhost:5000/api/create-renewal-session", {
+        .post(`${import.meta.env.VITE_API_BASE_URL}/api/create-renewal-session`, {
           userId,
           planId,
           discountedPrice, // Send the discounted price in cents

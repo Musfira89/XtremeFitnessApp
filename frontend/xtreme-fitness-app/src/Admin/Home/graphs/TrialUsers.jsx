@@ -23,7 +23,7 @@ const TrialUsersGraph = () => {
   useEffect(() => {
     const fetchTrialData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/trial-users");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/trial-users`);
     
         console.log("API Response:", response.data); // Debugging
     

@@ -31,7 +31,7 @@ const NotificationsDropdown = () => {
 
       // Fetch Meetings
       const meetingResponse = await axios.get(
-        `http://localhost:5000/api/meeting/user/${userId}`
+        `${import.meta.env.VITE_API_BASE_URL}/api/meeting/user/${userId}`
       );
       const meetingNotifications = meetingResponse.data.map((meeting) => ({
         id: `meeting-${meeting.id}`,
@@ -44,7 +44,7 @@ const NotificationsDropdown = () => {
 
       // Fetch Messages
       const messageResponse = await axios.get(
-        `http://localhost:5000/api/messages/${userId}`
+        `${import.meta.env.VITE_API_BASE_URL}/api/messages/${userId}`
       );
       const messageNotifications = messageResponse.data.data.map((message) => ({
         id: `message-${message.id}`,
@@ -57,7 +57,7 @@ const NotificationsDropdown = () => {
 
       // Fetch Meal Plan
       const mealPlanResponse = await axios.get(
-        `http://localhost:5000/api/response/${userId}`
+        `${import.meta.env.VITE_API_BASE_URL}/api/response/${userId}`
       );
       if (mealPlanResponse.data?.meals) {
         const todayMeal = getTodayMeal(mealPlanResponse.data.meals);

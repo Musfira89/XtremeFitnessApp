@@ -20,7 +20,7 @@ const Revenue = () => {
   useEffect(() => {
     const fetchRevenue = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/total-revenue");
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/total-revenue`);
         const { totalRevenue, history, churnRate, arpu } = response.data;
 
         setTotalRevenue(totalRevenue || 0);

@@ -12,7 +12,7 @@ const UserProfile = () => {
       if (!userId) return;
       try {
         const response = await axios.get(
-          `http://localhost:5000/api/auth/profile/${userId}`
+          `${import.meta.env.VITE_API_BASE_URL}/api/auth/profile/${userId}`
         );
 
         // Extract necessary data properly
