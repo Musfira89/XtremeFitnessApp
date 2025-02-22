@@ -22,14 +22,13 @@ import "./cron.js";  // Runs cron jobs
 // import reviewRoutes from "./routes/reviews.js";
 
 dotenv.config();
-console.log("Email User:", process.env.EMAIL_USER);
-console.log("Email Pass:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
+
 
 const app = express();
 
 // Middleware
 app.use(cors({
-  origin: "http://localhost:5173", // Your frontend's URL
+  origin: ["http://localhost:5173", "https://www.xtremeft.com"],
   methods: ["GET", "POST"],
   credentials: true 
 }));
