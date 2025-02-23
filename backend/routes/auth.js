@@ -20,7 +20,21 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+// File filter: Only allow images
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error("Invalid file type. Only JPEG, PNG, JPG allowed."), false);
+  }
+};
+
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 }, // Limit to 5MB
+});
 
 router.post("/signup", registerUser);
 router.post("/login", loginUser);

@@ -13,6 +13,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 const Settings = () => {
   const { userId } = useParams();
   const [formData, setFormData] = useState({
@@ -26,34 +27,6 @@ const Settings = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [preview, setPreview] = useState("");
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!userId) return;
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/auth/profile/${userId}`
-        );
-        const user = response.data;
-
-        setFormData({
-          fullName: user.fullName || "",
-          email: user.email || "",
-          contact: user.contact || "",
-          location: user.location || "",
-          password: "",
-        });
-
-        if (user.profileImage) {
-          setPreview(`${import.meta.env.VITE_API_BASE_URL}${user.profileImage}`);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, [userId]);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -61,7 +34,6 @@ const Settings = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check if file size exceeds 50MB
       if (file.size > 50 * 1024 * 1024) {
         toast.error("Image size exceeds 50MB. Please upload a smaller image.", {
           position: "top-right",
@@ -74,7 +46,6 @@ const Settings = () => {
         });
         return;
       }
-
       setProfileImage(file);
       setPreview(URL.createObjectURL(file));
     }
@@ -85,10 +56,9 @@ const Settings = () => {
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
-      if (formData[key]) {
-        formDataToSend.append(key, formData[key]);
-      }
+      formDataToSend.append(key, formData[key]);
     });
+
     if (profileImage) {
       formDataToSend.append("profileImage", profileImage);
     }
@@ -111,12 +81,7 @@ const Settings = () => {
       });
     } catch (error) {
       console.error("Error updating profile:", error);
-      const errorMessage =
-        error.response?.status === 413
-          ? "Image size too large. Try a smaller image."
-          : "Failed to update profile.";
-
-      toast.error(errorMessage, {
+      toast.error("Failed to update profile.", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
