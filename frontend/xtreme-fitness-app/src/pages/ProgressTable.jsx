@@ -75,14 +75,7 @@ const MonthlyProgress = () => {
           No progress images found.
         </motion.p>
       )}
-{/* 
-      INFO SECTION
-      <div className="max-w-4xl mx-auto sm:mt-12 mb-6 px-4 sm:px-6 text-center">
-        <p className="text-sm sm:text-base text-gray-700 font-medium bg-yellow-100 p-4 rounded-md border border-yellow-300">
-          Your monthly progress images showcase your journey. Keep uploading
-          your pictures and see how far you've come!
-        </p>
-      </div> */}
+
 
       {/* GRID LAYOUT FOR IMAGES */}
       <motion.div
@@ -102,7 +95,7 @@ const MonthlyProgress = () => {
               {image.month} {image.year}
             </div>
             <img
-              src={`http://localhost:5000/${image.image}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}/${image.image}`}
               alt="Progress"
               className="w-full h-auto object-contain rounded-2xl"
             />

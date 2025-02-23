@@ -73,7 +73,7 @@ const UserProfile = () => {
             }}
           >
             <Avatar
-              src={`http://localhost:5000${userData.profileImage}`}
+              src={`${import.meta.env.VITE_API_BASE_URL}${userData.profileImage}`}
               alt={userData.fullName}
               sx={{
                 width: 220, // Increased size

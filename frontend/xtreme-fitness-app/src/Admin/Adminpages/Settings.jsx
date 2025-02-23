@@ -37,8 +37,8 @@ const CoachSettings = () => {
     if (!adminAuth.adminId) return;
   
     // Check if profile image exceeds 2MB limit
-    if (coachData.profileImage && coachData.profileImage.size > 2 * 1024 * 1024) {
-      toast.error("Image size exceeds 2MB. Please upload a smaller image.", {
+    if (coachData.profileImage && coachData.profileImage.size > 50 * 1024 * 1024) {
+      toast.error("Image size exceeds 50MB. Please upload a smaller image.", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: true,
