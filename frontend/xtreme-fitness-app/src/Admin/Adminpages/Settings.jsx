@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useAdminAuth } from "../../context/AdminAuthContext";
 import axios from "axios";
 import { Box, Typography, Grid, Paper, Button, TextField } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CoachSettings = () => {
   const { adminAuth } = useAdminAuth();
@@ -33,23 +35,63 @@ const CoachSettings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!adminAuth.adminId) return;
+  
+    // Check if profile image exceeds 2MB limit
+    if (coachData.profileImage && coachData.profileImage.size > 2 * 1024 * 1024) {
+      toast.error("Image size exceeds 2MB. Please upload a smaller image.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: { background: "black", color: "white" }, // Black background
+      });
+      return;
+    }
+  
     try {
       const formData = new FormData();
       Object.keys(coachData).forEach((key) => {
         if (coachData[key]) formData.append(key, coachData[key]);
       });
+  
       console.log("FormData:", [...formData]); // Debugging
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/admin/update/${adminAuth.adminId}`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+  
+      await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/admin/update/${adminAuth.adminId}`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+  
+      toast.success("Profile updated successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: { background: "black", color: "white" }, // Black background
       });
-
-      alert("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
+  
+      const errorMessage = error.response?.status === 413
+        ? "Image size too large. Try a smaller image."
+        : "Failed to update profile.";
+  
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        style: { background: "black", color: "white" }, // Black background
+      });
     }
   };
-
+  
   return (
     <Box sx={{ p: 3, maxWidth: 1100, margin: "0 auto", backgroundColor: "#fff" }}>
       <Typography variant="h4" sx={{ mb: 4, textAlign: "center", fontWeight: "bold", color: "#991b1b" }}>
