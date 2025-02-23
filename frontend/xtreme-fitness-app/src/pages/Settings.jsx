@@ -35,64 +35,47 @@ const Settings = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 50 * 1024 * 1024) {
-        toast.error("Image size exceeds 50MB. Please upload a smaller image.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          style: { background: "black", color: "white" },
-        });
+        toast.error("Image size exceeds 50MB. Please upload a smaller image.");
         return;
       }
+      console.log("Selected Image: ", file); // Debugging
       setProfileImage(file);
       setPreview(URL.createObjectURL(file));
     }
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key]);
     });
-
+  
     if (profileImage) {
       formDataToSend.append("profileImage", profileImage);
     }
-
+  
+    // Debugging
+    for (let pair of formDataToSend.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+  
     try {
       await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/api/auth/update/${userId}`,
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
-      toast.success("Profile updated successfully!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        style: { background: "black", color: "white" },
-      });
+  
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error("Failed to update profile.", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        style: { background: "black", color: "white" },
-      });
+      toast.error("Failed to update profile.");
     }
   };
-
+  
   return (
     <Box
       sx={{ p: 3, maxWidth: 1100, margin: "0 auto", backgroundColor: "#fff" }}

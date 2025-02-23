@@ -1,41 +1,21 @@
 import express from "express";
 import { registerUser, loginUser , markQuestionnaireComplete,getAllUsers,getTotalUsers, getUserPlan,deleteUser ,getUserProfile, updateUserProfile} from "../controllers/auth.js";
 import multer from "multer";
-import path from "path";
-import fs from "fs";
+
 
 const router = express.Router();
 
 // Set up storage engine
+
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = "uploads/";
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Folder where images will be stored
   },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}${path.extname(file.originalname)}`);
-  },
-});
-
-// File filter: Only allow images
-const fileFilter = (req, file, cb) => {
-  const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error("Invalid file type. Only JPEG, PNG, JPG allowed."), false);
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname); // Unique filename
   }
-};
-
-const upload = multer({
-  storage,
-  fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limit to 5MB
 });
-
+const upload = multer({ storage ,   limits: { fileSize: 50 * 1024 * 1024 } });
 router.post("/signup", registerUser);
 router.post("/login", loginUser);
 router.put("/mark-complete/:userId", markQuestionnaireComplete);
