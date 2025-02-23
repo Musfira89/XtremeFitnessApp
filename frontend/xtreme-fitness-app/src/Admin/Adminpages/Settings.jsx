@@ -38,7 +38,7 @@ const CoachSettings = () => {
       Object.keys(coachData).forEach((key) => {
         if (coachData[key]) formData.append(key, coachData[key]);
       });
-
+      console.log("FormData:", [...formData]); // Debugging
       await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/admin/update/${adminAuth.adminId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -71,9 +71,7 @@ const CoachSettings = () => {
           <label htmlFor="upload-btn">
             <Button component="span" variant="contained" sx={{ mr: 2, background: "#991b1b", color: "#fff" }}>Upload Image</Button>
           </label>
-          <Button variant="contained" sx={{ background: "#991b1b", color: "#fff" }} onClick={() => setPreviewImage(null)}>
-            Delete Image
-          </Button>
+
         </Box>
       </Box>
 

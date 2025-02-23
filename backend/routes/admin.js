@@ -3,7 +3,18 @@ import {adminSignup, adminLogin , updateAdminProfile,getAdminProfile} from "../c
 import multer from 'multer';
 
 const router = express.Router();
-const upload = multer({ dest: 'uploads/' }); // Store uploaded images
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'); // Folder where images will be stored
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname); // Unique filename
+    }
+  });
+  const upload = multer({ storage });
+  
+
 
 router.post("/login", adminLogin);
 router.post('/signup', adminSignup);

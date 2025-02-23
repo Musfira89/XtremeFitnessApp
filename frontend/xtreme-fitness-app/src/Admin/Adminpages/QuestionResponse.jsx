@@ -29,7 +29,7 @@ const QuestionResponse = () => {
   // Fetch available weeks for the selected user
   const fetchAvailableWeeks = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/response/weeks/${userId}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/response/weeks/${userId}`);
       setAvailableWeeks(response.data.weeks); // Extract weeks array
       console.log("Weeks Data:", response.data.weeks);
     } catch (error) {
@@ -40,7 +40,7 @@ const QuestionResponse = () => {
   
   const fetchUserResponses = useCallback(async (userId, category, week) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/response/${userId}/${category}/${week}`);
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/response/${userId}/${category}/${week}`);
       setUserResponses((prevResponses) => ({
         ...prevResponses,
         [category]: response.data,
