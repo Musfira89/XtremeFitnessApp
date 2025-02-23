@@ -14,6 +14,7 @@ const UserProfile = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/api/auth/profile/${userId}`
         );
+        console.log("API Response:", response.data); // Debug API response
 
         // Extract necessary data properly
         const user = response.data;
@@ -42,6 +43,12 @@ const UserProfile = () => {
 
   if (!userData) return <Typography>Loading...</Typography>;
 
+  const profileImageUrl = userData.profileImage
+  ? `${import.meta.env.VITE_API_BASE_URL}${userData.profileImage}`
+  : "/default-avatar.png";
+
+
+
   return (
     <Box
       sx={{ p: 3, maxWidth: 1100, margin: "0 auto", backgroundColor: "#fff" }}
@@ -62,32 +69,38 @@ const UserProfile = () => {
         sx={{ p: 3, borderRadius: 2, border: "1px solid lightgrey" }}
       >
         <Grid container spacing={3}>
-          <Grid
-            item
-            xs={12}
-            md={4}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Avatar
-              src={`${import.meta.env.VITE_API_BASE_URL}${userData.profileImage}`}
-              alt={userData.fullName}
+          {userData ? (
+            <Grid
+              item
+              xs={12}
+              md={4}
               sx={{
-                width: 220, // Increased size
-                height: 220, // Keep height and width equal for a perfect circle
-                borderRadius: "50%", // Ensures a circular shape
-                border: "3px solid #991b1b", // Thicker border for better visibility
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-              imgProps={{
-                style: {
-                  objectFit: "contain", // Ensures the full image is visible without cropping
-                },
-              }}
-            />
-          </Grid>
+            >
+              <Avatar
+                src={profileImageUrl}
+                alt={userData.fullName || "User Avatar"}
+                sx={{
+                  width: 220,
+                  height: 220,
+                  borderRadius: "50%",
+                  border: "3px solid #991b1b",
+                }}
+                imgProps={{
+                  style: {
+                    objectFit: "contain",
+                  },
+                }}
+              />
+            </Grid>
+          ) : (
+            <Typography variant="h6" sx={{ textAlign: "center", mt: 2 }}>
+              Loading profile...
+            </Typography>
+          )}
 
           {/* Right Side: Profile Details (60%) */}
           <Grid item xs={12} md={8}>
