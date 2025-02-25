@@ -3,7 +3,8 @@ import { FaClipboardCheck } from "react-icons/fa";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Message from "./Message"
+import Message from "./Message";
+
 const AdminZoomMeetings = () => {
   const [meetingLink, setMeetingLink] = useState(null);
   const [meetingHistory, setMeetingHistory] = useState([]);
@@ -11,19 +12,21 @@ const AdminZoomMeetings = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [topic, setTopic] = useState("");
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   // Fetch users
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/users`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/users`
+      );
       setUserData(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
-
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
   // Start Meeting
   const handleStartMeeting = async () => {
@@ -39,7 +42,7 @@ const AdminZoomMeetings = () => {
       });
       return;
     }
-  
+
     if (!topic.trim()) {
       toast.error("Please enter a topic for the meeting.", {
         position: "top-right",
@@ -52,16 +55,24 @@ const AdminZoomMeetings = () => {
       });
       return;
     }
-  
+
     try {
-      const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/meeting/create`, {
-        userId: selectedUser,
-        topic,
-      });
-  
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/meeting/create`,
+        {
+          userId: selectedUser,
+          topic,
+          duration: 30, // 30 minutes
+        }
+      );
+
       setMeetingLink(data.link);
-  
-      toast.success(`Meeting link sent to ${data.user}`, {
+
+      // Find the user email from userData
+      const user = userData.find((u) => u._id === selectedUser);
+      const userEmail = user ? user.email : "Unknown User";
+
+      toast.success(`Meeting link sent to ${userEmail}`, {
         position: "top-right",
         autoClose: 3000,
         hideProgressBar: true,
@@ -70,7 +81,21 @@ const AdminZoomMeetings = () => {
         draggable: true,
         style: { backgroundColor: "black", color: "white" },
       });
-  
+
+      // Remove the meeting link after 30 minutes
+      setTimeout(() => {
+        setMeetingLink(null);
+        toast.info("Meeting link expired.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          style: { backgroundColor: "black", color: "white" },
+        });
+      }, 1800000); // 30 minutes
+
       // Store meeting in history
       const newMeeting = {
         name: topic,
@@ -79,13 +104,18 @@ const AdminZoomMeetings = () => {
         user: selectedUser,
       };
       setMeetingHistory((prev) => [...prev, newMeeting]);
-  
+
       setTopic(""); // Clear topic input after starting meeting
     } catch (error) {
       console.error("Error creating meeting:", error);
     }
   };
-  
+
+  // Clear Meeting History
+  const handleClearHistory = () => {
+    setMeetingHistory([]);
+  };
+
   return (
     <div className="p-6 bg-gray-100 rounded-lg shadow-lg">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -97,7 +127,9 @@ const AdminZoomMeetings = () => {
           </h3>
 
           {/* Select User Dropdown */}
-          <label className="block text-sm font-medium text-gray-700 mt-4">Select a User:</label>
+          <label className="block text-sm font-medium text-gray-700 mt-4">
+            Select a User:
+          </label>
           <select
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
@@ -114,7 +146,9 @@ const AdminZoomMeetings = () => {
           {/* Topic Input */}
           {selectedUser && (
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">Topic:</label>
+              <label className="block text-sm font-medium text-gray-700">
+                Topic:
+              </label>
               <input
                 type="text"
                 value={topic}
@@ -136,8 +170,15 @@ const AdminZoomMeetings = () => {
           {/* Meeting Link */}
           {meetingLink && (
             <div className="mt-4">
-              <p className="text-gray-700">Meeting Link:</p>
-              <a href={meetingLink} target="_blank" rel="noopener noreferrer" className="text-red-600 font-bold underline">
+              <p className="text-gray-700 mb-2">
+                Meeting Link (expires in 30 minutes):
+              </p>
+              <a
+                href={meetingLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-red-600 font-bold underline"
+              >
                 {meetingLink}
               </a>
             </div>
@@ -150,18 +191,29 @@ const AdminZoomMeetings = () => {
           {meetingHistory.length === 0 ? (
             <p className="text-gray-700 mt-2">No past meetings found.</p>
           ) : (
-            <ul className="mt-4 space-y-2">
-              {meetingHistory.map((meeting, index) => (
-                <li key={index} className="text-gray-700 border-b pb-2">
-                  <strong>{meeting.name}</strong> - {meeting.date} ({meeting.day})
-                </li>
-              ))}
-            </ul>
+            <>
+              <ul className="mt-4 space-y-2">
+                {meetingHistory.map((meeting, index) => (
+                  <li key={index} className="text-gray-700 border-b pb-2">
+                    <strong>{meeting.name}</strong> - {meeting.date} (
+                    {meeting.day})
+                  </li>
+                ))}
+              </ul>
+              {/* Clear History Button */}
+              <button
+                onClick={handleClearHistory}
+                className="mt-4 w-full bg-red-700 text-white font-medium px-6 py-2 rounded-lg shadow-md"
+              >
+                Clear History
+              </button>
+            </>
           )}
         </div>
       </div>
-        {/* Coach Communication */}
-        <div className="mt-10 w-full">
+
+      {/* Coach Communication */}
+      <div className="mt-10 w-full">
         <Message />
       </div>
     </div>

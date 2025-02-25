@@ -8,6 +8,11 @@ import AdminProfile from "./Adminpages/AdminProfile";
 import User from "./Adminpages/User"
 import Settings from "./Adminpages/Settings"
 import Feedback from "./Adminpages/Feedback";
+import Meal from "./Adminpages/Meal"
+import Workout from "./Adminpages/Workout"
+import Supplements from "./Adminpages/Supplements"
+import Progress from "./Adminpages/UserProgress"
+
 const AdminRoutes = () => (
   <Routes>
     {/* Parent Layout with Sidebar and Topbar */}
@@ -17,9 +22,13 @@ const AdminRoutes = () => (
       <Route path="questionaire" element={<QuestionResponse />} />
       <Route path="meeting" element={<Meeting />} />
       <Route path="feedback" element={<Feedback />} />
+      <Route path="userprogress" element={<Progress />} />
 
       <Route path="profilepage" element={<AdminProfile />} />
       <Route path="settings" element={<Settings />} />
+      <Route path="mealplan" element={<Meal />} />
+      <Route path="workoutplan" element={<Workout />} />
+      <Route path="supplement" element={<Supplements />} />
 
     </Route>
   </Routes>

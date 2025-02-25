@@ -20,9 +20,9 @@ const AnalyticsSection = () => {
 
 
       {/* 3-Day Free Trial Graph */}
-      <div className="p-4 bg-white shadow-md rounded-lg col-span-3 lg:col-span-3">
+      {/* <div className="p-4 bg-white shadow-md rounded-lg col-span-3 lg:col-span-3">
         <FreeTrialGraph />
-      </div>
+      </div> */}
     </div>
   );
 };

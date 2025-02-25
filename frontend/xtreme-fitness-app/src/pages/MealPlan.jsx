@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { AiOutlineCheckCircle } from "react-icons/ai";
+import { CircularProgress } from "@mui/material";
+import { toast } from "react-toastify";
 
 const MealPlan = () => {
   const [showPopup, setShowPopup] = useState(false);
   const { userId } = useParams();
   const [mealPlan, setMealPlan] = useState([]);
+  const [completedmeal, setCompletedmeal] = useState({});
+  const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedDay, setSelectedDay] = useState(null);
@@ -30,8 +35,87 @@ const MealPlan = () => {
         setLoading(false);
       }
     };
+
     fetchMealPlan();
   }, [userId]);
+
+  // Fetch progress separately
+  useEffect(() => {
+    if (mealPlan.length === 0) return; // Ensure mealPlan is loaded before fetching progress
+
+    const fetchMealProgress = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/get-mealprogress/${userId}`
+        );
+
+        if (response.data) {
+          const storedProgress = response.data.reduce((acc, item) => {
+            acc[item.day] = item.completed; // Store progress by day
+            return acc;
+          }, {});
+
+          setCompletedmeal(storedProgress);
+
+          // Update progress percentage
+          const totalDays = mealPlan.length;
+          const completedDays =
+            Object.values(storedProgress).filter(Boolean).length;
+          setProgress(
+            totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching meal progress:", error);
+      }
+    };
+
+    fetchMealProgress();
+  }, [userId, mealPlan]);
+
+  const toggleDayCompletion = async () => {
+    const selectedMealDay = mealPlan[selectedDay]?.day;
+    if (!selectedMealDay || completedmeal[selectedMealDay]) return;
+  
+    const newStatus = true; // Mark as complete
+  
+    // Optimistic UI update
+    setCompletedmeal((prev) => ({
+      ...prev,
+      [selectedMealDay]: newStatus,
+    }));
+  
+    // Calculate and update progress
+    const totalDays = mealPlan.length;
+    const completedDays = Object.values({
+      ...completedmeal,
+      [selectedMealDay]: newStatus,
+    }).filter(Boolean).length;
+    setProgress(Math.round((completedDays / totalDays) * 100));
+  
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/update-mealprogress`,
+        {
+          userId,
+          day: selectedMealDay,
+          completed: newStatus,
+        }
+      );
+  
+      // Show success toast with black background
+      toast.success("Meal day marked as complete!", {
+        style: {
+          background: "#000",
+          color: "#fff",
+        },
+      });
+  
+    } catch (error) {
+      console.error("Error updating progress:", error);
+    }
+  };
+
   const getImageFromLocalStorage = (mealId) => {
     return localStorage.getItem(`meal_image_${mealId}`) || "";
   };
@@ -48,17 +132,17 @@ const MealPlan = () => {
 
   const extractGroceryList = (recipeInstructions) => {
     if (!recipeInstructions) return [];
-  
+
     // Ensure instructions are in string format
     const instructionsString = Array.isArray(recipeInstructions)
       ? recipeInstructions.join(" ") // Convert array to a single string
       : recipeInstructions;
-  
+
     if (typeof instructionsString !== "string") {
       console.warn("Expected string, received:", instructionsString);
       return [];
     }
-  
+
     return instructionsString
       .split(/[\n,.]/) // Split by new lines, commas, or periods
       .map((line) =>
@@ -74,7 +158,6 @@ const MealPlan = () => {
       .filter((line) => line.length > 2) // Ignore empty or small words
       .flatMap((line) => line.split(/\s+and\s+/)); // Handle multiple ingredients in a single line
   };
-  
 
   const saveGroceryList = (list) => {
     if (!list.length) {
@@ -101,14 +184,15 @@ const MealPlan = () => {
           Your customized plan for the week
         </p>
       </header>
+      <div className="flex items-center gap-2 mt-4">
+        <CircularProgress variant="determinate" value={progress} size={40} />
+        <span className="text-gray-800 dark:text-white">{progress}%</span>
+      </div>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center h-40">
-          <div className="animate-spin rounded-full h-14 w-14 border-b-4 border-red-600"></div>
-          <p className="text-lg font-semibold text-red-700 mt-4">
-            Loading your meal plan...
-          </p>
-        </div>
+        <div className="flex justify-center items-center min-h-[200px]">
+        <div className="w-12 h-12 border-4 border-gray-300 border-t-red-600 rounded-full animate-spin"></div>
+      </div>
       ) : error ? (
         <p className="text-center text-red-500 font-semibold">{error}</p>
       ) : (
@@ -211,6 +295,20 @@ const MealPlan = () => {
               </table>
             </div>
           )}
+
+          <button
+            onClick={toggleDayCompletion}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold transition-all shadow-md mt-6 ${
+              completedmeal[mealPlan[selectedDay]?.day]
+                ? "bg-green-600"
+                : "bg-gray-400"
+            }`}
+          >
+            <AiOutlineCheckCircle className="text-xl" />
+            {completedmeal[mealPlan[selectedDay]?.day]
+              ? "Completed"
+              : "Mark as Complete"}
+          </button>
         </>
       )}
 

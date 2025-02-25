@@ -19,6 +19,10 @@ import supplementRoutes from "./routes/supplement.js"
 import feedbackRoutes from './routes/feedbackRoutes.js';
 import imageProgress from './routes/imageprogress.js'
 import "./cron.js";  // Runs cron jobs
+import WorkoutprogressRoutes from './routes/workoutProgress.js'
+import MealprogressRoutes from './routes/mealProgress.js'
+
+
 // import reviewRoutes from "./routes/reviews.js";
 
 dotenv.config();
@@ -61,8 +65,8 @@ app.use("/api", supplementRoutes);
 app.use("/api", progressRoutes);  // Added
 app.use('api/feedback', feedbackRoutes);
 app.use('/api', imageProgress);
-// app.use("/api/reviews", reviewRoutes);
-
+app.use("/api", WorkoutprogressRoutes);
+app.use("/api", MealprogressRoutes);
 
 
 

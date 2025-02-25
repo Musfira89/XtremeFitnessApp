@@ -32,71 +32,95 @@ export const generateSupplement = async (req, res) => {
     }
 
     /// Extract relevant user details
-let age, gender, weight, fitnessGoal, dietaryRestrictions, supplement, deficiencies;
+    let age,
+      gender,
+      weight,
+      fitnessGoal,
+      dietaryRestrictions,
+      supplement,
+      deficiencies;
 
-responses.forEach((response) => {
-  if (response.category === "Demographics") {
-    age = response.answers.find((a) => a.questionId === "age")?.answer;
-    gender = response.answers.find((a) => a.questionId === "gender")?.answer;
-    weight = response.answers.find((a) => a.questionId === "weight")?.answer;
-  }
-  if (response.category === "Fitness Goals") {
-    fitnessGoal = response.answers.find((a) => a.questionId === "goal")?.answer;
-  }
-  if (response.category === "Diet and Nutrition") {
-    dietaryRestrictions = response.answers.find((a) => a.questionId === "dietaryRestrictions")?.answer;
-    supplement = response.answers.find((a) => a.questionId === "supplement")?.answer;
-    deficiencies = response.answers.find((a) => a.questionId === "deficiencies")?.answer;
-  }
-});
-
-    // AI Prompt
-    const prompt = `Generate a supplement recommendation list in strict JSON format based on the following user details:
-    - Age: ${age}
-    - Gender: ${gender}
-    - Weight: ${weight}
-    - Fitness Goal: ${fitnessGoal}
-    - Dietary Restrictions: ${dietaryRestrictions}
-    - Deficiencies: ${deficiencies}
-    - supplement: ${supplement}
-
-    
-    Provide a structured JSON array like this:
-    [
-      {
-        "name": "Supplement Name",
-        "description": "Brief description of benefits",
-        "category": "Protein, Vitamins, Minerals, etc.",
-        "recommendedFor": "Specific needs like muscle gain, weight loss, energy boost, etc.",
-        "price": "Estimated price range in USD",
-        "amazonLink": "Amazon product link"
+    responses.forEach((response) => {
+      if (response.category === "Demographics") {
+        age = response.answers.find((a) => a.questionId === "age")?.answer;
+        gender = response.answers.find(
+          (a) => a.questionId === "gender"
+        )?.answer;
+        weight = response.answers.find(
+          (a) => a.questionId === "weight"
+        )?.answer;
       }
-    ]
-
-    Ensure all values are properly formatted and realistic. Do not include additional text, return only JSON.`;
-
-    const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4-turbo",
-        messages: [{ role: "user", content: prompt }],
-        max_tokens: 1500,
-      }),
+      if (response.category === "Fitness Goals") {
+        fitnessGoal = response.answers.find(
+          (a) => a.questionId === "goal"
+        )?.answer;
+      }
+      if (response.category === "Diet and Nutrition") {
+        dietaryRestrictions = response.answers.find(
+          (a) => a.questionId === "dietaryRestrictions"
+        )?.answer;
+        supplement = response.answers.find(
+          (a) => a.questionId === "supplement"
+        )?.answer;
+        deficiencies = response.answers.find(
+          (a) => a.questionId === "deficiencies"
+        )?.answer;
+      }
     });
 
+    // AI Prompt
+    const prompt = `Generate a supplement recommendation list in strict JSON format. If possible, prioritize Nutrex supplements. User details:
+- Age: ${age}
+- Gender: ${gender}
+- Weight: ${weight}
+- Fitness Goal: ${fitnessGoal}
+- Dietary Restrictions: ${dietaryRestrictions}
+- Deficiencies: ${deficiencies}
+- Supplement preference: ${supplement}
+
+Format:
+[
+  {
+    "name": "Supplement Name",
+    "brand": "Nutrex or another well-known brand",
+    "description": "Brief description of benefits",
+    "category": "Protein, Vitamins, Minerals, etc.",
+    "recommendedFor": "Muscle gain, weight loss, energy boost, etc.",
+  }
+]
+
+
+    Ensure all values are properly formatted and realistic. Do not include additional text,also Ensure Nutrex is prioritized where applicable ,return only JSON.`;
+
+    const aiResponse = await fetch(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: "gpt-4-turbo",
+          messages: [{ role: "user", content: prompt }],
+          max_tokens: 2500,
+        }),
+      }
+    );
+
     if (!aiResponse.ok) {
-      return res.status(500).json({ message: "Failed to fetch supplement recommendations from AI" });
+      return res.status(500).json({
+        message: "Failed to fetch supplement recommendations from AI",
+      });
     }
 
     const aiData = await aiResponse.json();
     const supplementText = aiData.choices?.[0]?.message?.content?.trim();
 
     if (!supplementText) {
-      return res.status(500).json({ message: "Invalid supplement response from AI" });
+      return res
+        .status(500)
+        .json({ message: "Invalid supplement response from AI" });
     }
 
     // Parse AI response JSON
@@ -105,7 +129,9 @@ responses.forEach((response) => {
       supplements = JSON.parse(supplementText);
     } catch (error) {
       console.error("JSON Parsing Error:", error);
-      return res.status(500).json({ message: "Invalid supplement format from AI" });
+      return res
+        .status(500)
+        .json({ message: "Invalid supplement format from AI" });
     }
 
     // Generate images for supplements
@@ -118,7 +144,9 @@ responses.forEach((response) => {
     res.status(200).json(newSupplementPlan);
   } catch (error) {
     console.error("Error generating supplement recommendations:", error);
-    res.status(500).json({ message: "Failed to generate supplement recommendations" });
+    res
+      .status(500)
+      .json({ message: "Failed to generate supplement recommendations" });
   }
 };
 
@@ -128,26 +156,32 @@ const fetchSupplementImages = async (supplements) => {
 
   for (const supplement of supplements) {
     try {
-      const dalleResponse = await fetch("https://api.openai.com/v1/images/generations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "dall-e-2",
-          prompt: `A high-quality product image of ${supplement.name}, a dietary supplement in a bottle or packaging.`,
-          n: 1,
-          size: "1024x1024",
-        }),
-      });
+      const dalleResponse = await fetch(
+        "https://api.openai.com/v1/images/generations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${API_KEY}`,
+          },
+          body: JSON.stringify({
+            model: "dall-e-2",
+            prompt: `A high-quality product image of ${supplement.name}, a dietary supplement in a bottle or packaging.`,
+            n: 1,
+            size: "1024x1024",
+          }),
+        }
+      );
 
       const dalleData = await dalleResponse.json();
 
       if (dalleResponse.ok && dalleData.data?.length > 0) {
         supplement.image = dalleData.data[0].url;
       } else {
-        console.error(`Image generation failed for ${supplement.name}`, dalleData);
+        console.error(
+          `Image generation failed for ${supplement.name}`,
+          dalleData
+        );
         supplement.image = "default-image-url.jpg";
       }
     } catch (error) {

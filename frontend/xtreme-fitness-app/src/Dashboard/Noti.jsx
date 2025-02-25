@@ -10,11 +10,12 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  Button, // Added Button
 } from "@mui/material";
-import { Bell, Video, MessageCircle, Utensils, X } from "lucide-react"; // Added Utensils icon
+import { Bell, Video, MessageCircle, Utensils, X, Trash2 } from "lucide-react"; // Added Trash2 icon
 import { useParams } from "react-router-dom";
 import moment from "moment";
-import { getTodayMeal, sendDailyReminder } from "./NotiService"; // Import meal plan notifications
+import { getTodayMeal, sendDailyReminder } from "./NotiService";
 
 const NotificationsDropdown = () => {
   const [notifications, setNotifications] = useState([]);
@@ -22,7 +23,10 @@ const NotificationsDropdown = () => {
   const { userId } = useParams();
 
   useEffect(() => {
-    fetchNotifications();
+    const clearedNotifications = localStorage.getItem("clearedNotifications");
+    if (!clearedNotifications) {
+      fetchNotifications();
+    }
   }, []);
 
   const fetchNotifications = async () => {
@@ -36,7 +40,7 @@ const NotificationsDropdown = () => {
       const meetingNotifications = meetingResponse.data.map((meeting) => ({
         id: `meeting-${meeting.id}`,
         message: "Admin scheduled a meeting with you",
-        timeAgo: moment(meeting.created_at).fromNow(),
+        time: moment(meeting.created_at).format("dddd, D MMMM YYYY, h:mm A"),
         icon: <Video className="text-gray-700" size={20} />,
         timestamp: new Date(meeting.created_at).getTime(),
       }));
@@ -49,7 +53,7 @@ const NotificationsDropdown = () => {
       const messageNotifications = messageResponse.data.data.map((message) => ({
         id: `message-${message.id}`,
         message: "Admin sent you a new message.",
-        timeAgo: moment(message.created_at).fromNow(),
+        time: moment(message.created_at).format("dddd, D MMMM YYYY, h:mm A"),
         icon: <MessageCircle className="text-gray-700" size={20} />,
         timestamp: new Date(message.created_at).getTime(),
       }));
@@ -65,12 +69,12 @@ const NotificationsDropdown = () => {
           const mealNotification = {
             id: `meal-${userId}`,
             message: `Today's Meal Plan: ${Object.keys(todayMeal).join(", ")}`,
-            timeAgo: "Today at 8 AM",
+            time: moment().format("dddd, D MMMM YYYY, h:mm A"),
             icon: <Utensils className="text-gray-700" size={20} />,
-            timestamp: new Date().setHours(8, 0, 0, 0), // Meal notification at 8 AM
+            timestamp: new Date().setHours(8, 0, 0, 0),
           };
           allNotifications.push(mealNotification);
-          sendDailyReminder(todayMeal); // Trigger daily meal notification
+          sendDailyReminder(todayMeal);
         }
       }
 
@@ -89,6 +93,11 @@ const NotificationsDropdown = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClearNotifications = () => {
+    setNotifications([]);
+    localStorage.setItem("clearedNotifications", "true");
   };
 
   return (
@@ -115,7 +124,7 @@ const NotificationsDropdown = () => {
           },
         }}
       >
-        {/* Header */}
+        {/* Header with Clear Button */}
         <div
           className="flex justify-between items-center p-6"
           style={{
@@ -128,9 +137,28 @@ const NotificationsDropdown = () => {
           <Typography variant="h6" fontWeight="bold">
             Notifications
           </Typography>
-          <IconButton onClick={handleClose} size="small" style={{ color: "white" }}>
-            <X size={20} />
-          </IconButton>
+          <div>
+            {notifications.length > 0 && (
+              <Button
+                size="small"
+                startIcon={<Trash2 size={16} />}
+                onClick={handleClearNotifications}
+                style={{
+                  color: "white",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  padding: "4px 8px",
+                  marginRight: "8px",
+                  borderRadius: "6px",
+                  fontSize: "12px",
+                }}
+              >
+                Clear All
+              </Button>
+            )}
+            <IconButton onClick={handleClose} size="small" style={{ color: "white" }}>
+              <X size={20} />
+            </IconButton>
+          </div>
         </div>
 
         {/* Notifications List */}
@@ -151,7 +179,7 @@ const NotificationsDropdown = () => {
                   <ListItemIcon>{notification.icon}</ListItemIcon>
                   <ListItemText
                     primary={notification.message}
-                    secondary={notification.timeAgo}
+                    secondary={notification.time}
                   />
                 </ListItem>
                 {index !== notifications.length - 1 && <Divider />}

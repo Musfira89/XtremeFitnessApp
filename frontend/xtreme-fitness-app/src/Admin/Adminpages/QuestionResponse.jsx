@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { FaUser, FaRunning, FaAppleAlt, FaHeartbeat, FaDumbbell } from "react-icons/fa";
+import {
+  FaUser,
+  FaRunning,
+  FaAppleAlt,
+  FaHeartbeat,
+  FaDumbbell,
+} from "react-icons/fa";
 import { motion } from "framer-motion";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
@@ -17,7 +23,9 @@ const QuestionResponse = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/users`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/auth/users`
+        );
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -29,18 +37,32 @@ const QuestionResponse = () => {
   // Fetch available weeks for the selected user
   const fetchAvailableWeeks = async (userId) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/response/weeks/${userId}`);
-      setAvailableWeeks(response.data.weeks); // Extract weeks array
-      console.log("Weeks Data:", response.data.weeks);
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/response/weeks/${userId}`
+      );
+      
+      const originalWeeks = response.data.weeks.sort((a, b) => a - b); // Sort weeks in ascending order
+      const mappedWeeks = originalWeeks.map((week, index) => ({
+        originalWeek: week, // Store the actual week number
+        displayWeek: `Week ${index + 1}`, // Re-map to sequential weeks
+      }));
+  
+      setAvailableWeeks(mappedWeeks);
+      console.log("Mapped Weeks:", mappedWeeks);
     } catch (error) {
       console.error("Error fetching available weeks:", error);
       setAvailableWeeks([]);
     }
   };
   
+
   const fetchUserResponses = useCallback(async (userId, category, week) => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/response/${userId}/${category}/${week}`);
+      const response = await axios.get(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/response/${userId}/${category}/${week}`
+      );
       setUserResponses((prevResponses) => ({
         ...prevResponses,
         [category]: response.data,
@@ -75,10 +97,14 @@ const QuestionResponse = () => {
   };
 
   const handleWeekSelect = (e) => {
-    setWeekNumber(e.target.value);
+    const selectedDisplayWeek = e.target.value;
+    const selectedWeekObj = availableWeeks.find(w => w.displayWeek === selectedDisplayWeek);
+    
+    setWeekNumber(selectedWeekObj?.originalWeek || ""); 
     setUserResponses({});
     setExpandedCategory(null);
   };
+  
 
   const categoryIcons = {
     Demographics: <FaUser className="text-white text-2xl" />,
@@ -90,60 +116,120 @@ const QuestionResponse = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-6">
-   <motion.h1
-  className="text-xl sm:text-2xl md:text-3xl font-bold text-red-600 mb-4 text-left"
-  initial={{ opacity: 0, y: -50 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5 }}
->
-  User Health Questionnaire Responses
-</motion.h1>
+      <motion.h1
+        className="text-xl sm:text-2xl md:text-3xl font-bold text-red-600 mb-4 text-left"
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        User Health Questionnaire Responses
+      </motion.h1>
 
       {/* Select User */}
-      <motion.div className="mb-6 max-w-md text-left" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-        <label className="block text-gray-700 font-medium mb-2">Select User</label>
-        <select value={selectedUserId || ""} onChange={handleUserSelect} className="w-full bg-white border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
+      <motion.div
+        className="mb-6 max-w-md text-left"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <label className="block text-gray-700 font-medium mb-2">
+          Select User
+        </label>
+        <select
+          value={selectedUserId || ""}
+          onChange={handleUserSelect}
+          className="w-full bg-white border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+        >
           <option value="">Choose a user...</option>
           {userData.map((user) => (
-            <option key={user._id} value={user._id}>{user.fullName}</option>
+            <option key={user._id} value={user._id}>
+              {user.fullName}
+            </option>
           ))}
         </select>
       </motion.div>
 
-      {/* Select Week */}
-      {selectedUserId && (
-        <motion.div className="mb-6 max-w-md text-left" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-          <label className="block text-gray-700 font-medium mb-2">Select Week</label>
-          <select value={weekNumber} onChange={handleWeekSelect} className="w-full bg-white border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500">
-            <option value="">Choose a week...</option>
-            {availableWeeks.length > 0 ? (
-              availableWeeks.map((week) => (
-                <option key={week} value={week}>Week {week}</option>
-              ))
-            ) : (
-              <option disabled>No weeks available</option>
-            )}
-          </select>
-        </motion.div>
+ {/* Select Week */}
+{selectedUserId && (
+  <motion.div
+    className="mb-6 max-w-md text-left"
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.5 }}
+  >
+    <label className="block text-gray-700 font-medium mb-2">
+      Select Week
+    </label>
+    <select
+      value={availableWeeks.find(w => w.originalWeek === weekNumber)?.displayWeek || ""}
+      onChange={handleWeekSelect}
+      className="w-full bg-white border border-gray-300 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+    >
+      <option value="">Choose a week...</option>
+      {availableWeeks.length > 0 ? (
+        availableWeeks.map((weekObj) => (
+          <option key={weekObj.originalWeek} value={weekObj.displayWeek}>
+            {weekObj.displayWeek}
+          </option>
+        ))
+      ) : (
+        <option disabled>No weeks available</option>
       )}
+    </select>
+  </motion.div>
+)}
+
 
       {/* Response Sections */}
       {selectedUserId && weekNumber && (
-        <motion.div className="flex flex-col gap-4 max-w-5xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}>
-          {["Demographics", "Physical Activity", "Diet and Nutrition", "Health and Medical", "Fitness Goals"].map((category, index) => (
-            <motion.div key={index} className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-red-500" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: index * 0.1 }}>
-              <div className="flex items-center justify-between cursor-pointer" onClick={() => toggleCategory(category)}>
+        <motion.div
+          className="flex flex-col gap-4 max-w-5xl"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          {[
+            "Demographics",
+            "Physical Activity",
+            "Diet and Nutrition",
+            "Health and Medical",
+            "Fitness Goals",
+          ].map((category, index) => (
+            <motion.div
+              key={index}
+              className="bg-white rounded-lg shadow-lg p-6 border-l-4 border-red-500"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: index * 0.1 }}
+            >
+              <div
+                className="flex items-center justify-between cursor-pointer"
+                onClick={() => toggleCategory(category)}
+              >
                 <div className="flex items-center space-x-3">
-                  <div className="bg-red-500 p-3 rounded-full">{categoryIcons[category]}</div>
-                  <h3 className="text-xl font-bold text-gray-800">{category}</h3>
+                  <div className="bg-red-500 p-3 rounded-full">
+                    {categoryIcons[category]}
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-800">
+                    {category}
+                  </h3>
                 </div>
-                {expandedCategory === category ? <ExpandLessIcon className="text-gray-500" /> : <ExpandMoreIcon className="text-gray-500" />}
+                {expandedCategory === category ? (
+                  <ExpandLessIcon className="text-gray-500" />
+                ) : (
+                  <ExpandMoreIcon className="text-gray-500" />
+                )}
               </div>
               {expandedCategory === category && userResponses[category] && (
                 <ul className="mt-4 space-y-2">
                   {userResponses[category].map((response, idx) => (
-                    <li key={idx} className="bg-gray-50 p-4 rounded-lg border-l-4 border-red-500 shadow-sm">
-                      <p className="text-sm text-gray-600 font-bold pb-3">{response.questionText}</p>
+                    <li
+                      key={idx}
+                      className="bg-gray-50 p-4 rounded-lg border-l-4 border-red-500 shadow-sm"
+                    >
+                      <p className="text-sm text-gray-600 font-bold pb-3">
+                        {response.questionText}
+                      </p>
                       <p className="text-sm text-gray-800">{response.answer}</p>
                     </li>
                   ))}

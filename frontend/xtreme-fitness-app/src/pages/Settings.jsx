@@ -91,7 +91,7 @@ const Settings = () => {
       >
         Settings
       </Typography>
-
+  
       <Grid container spacing={3}>
         {/* Left Section - Profile Upload (40%) */}
         <Grid item xs={12} md={4}>
@@ -111,6 +111,9 @@ const Settings = () => {
             <Typography variant="h6" gutterBottom>
               Profile Picture
             </Typography>
+            <Typography color="textSecondary" sx={{ mb: 2, fontSize: 14 }}>
+              * Please fill in all your details when uploading a new profile picture.
+            </Typography>
             <Button
               variant="contained"
               sx={{ mt: 1, background: "#991b1b", color: "#fff" }}
@@ -126,7 +129,7 @@ const Settings = () => {
             </Button>
           </Paper>
         </Grid>
-
+  
         {/* Right Section - Editable Fields (60%) */}
         <Grid item xs={12} md={8}>
           <Paper
@@ -204,6 +207,6 @@ const Settings = () => {
       </Grid>
     </Box>
   );
-};
-
-export default Settings;
+          };
+  export default Settings;
+  

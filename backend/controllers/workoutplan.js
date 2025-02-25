@@ -33,6 +33,8 @@ export const generateWorkoutPlan = async (req, res) => {
     let physicalLimitations = [];
     let dietType = "Balanced";
     let dailyExerciseDuration = "30-60 minutes";
+    let workoutDays = 7; // Default to 3 days if not specified
+    let workoutType = "Mixed"; // Could be 'Weightlifting', 'Bodyweight', or 'Mixed'
 
     responses.forEach((response) => {
       response.answers.forEach((answer) => {
@@ -45,7 +47,7 @@ export const generateWorkoutPlan = async (req, res) => {
         if (response.category === "Diet and Nutrition" && answer.questionText.toLowerCase().includes("diet")) {
           dietType = answer.answer;
         }
-        if (response.category === "Diet and Nutrition" && answer.questionText.toLowerCase().includes("equipment")) {
+        if (response.category === "Physical Activity" && answer.questionText.toLowerCase().includes("equipment")) {
           equipment = answer.answer.split(",").map((e) => e.trim());
         }
         if (response.category === "Health and Medical" && answer.questionText.toLowerCase().includes("limitations")) {
@@ -54,43 +56,60 @@ export const generateWorkoutPlan = async (req, res) => {
         if (response.category === "Physical Activity" && answer.questionText.toLowerCase().includes("exercise duration")) {
           dailyExerciseDuration = answer.answer;
         }
+        if (response.category === "Physical Activity" && answer.questionText.toLowerCase().includes("workout days")) {
+          workoutDays = parseInt(answer.answer) || 3;
+        }
+        if (response.category === "Physical Activity" && answer.questionText.toLowerCase().includes("workout type")) {
+          workoutType = answer.answer;
+        }
       });
     });
-
     // **Prepare AI prompt**
     const prompt = `
-      Based on the user's fitness assessment, generate a structured weekly workout plan in JSON format:
-      - Fitness Goal: ${fitnessGoal}
-      - Experience Level: ${experienceLevel}
-      - Available Equipment: ${equipment.length ? equipment.join(", ") : "None"}
-      - Physical Limitations: ${physicalLimitations.length ? physicalLimitations.join(", ") : "None"}
-      - Diet Type: ${dietType}
-      - Daily Exercise Duration: ${dailyExerciseDuration}
-
-      Provide a structured plan including:
-      - A weekly split (Monday-Sunday)
-      - Exercises per day
-      - Required equipment
-      - Descriptions
-      - Targeted muscle groups
-      - Recommended sets & reps
-
-      Format:
-      {
-        "Monday": [
-          {
-            "exercise": "Exercise Name",
-            "equipment": "Required Equipment",
-            "description": "Short description",
-            "muscleGroup": "Targeted muscle group",
-            "setsReps": "3 sets of 10 reps"
-          }
-        ],
-        "Tuesday": [...],
-        ...
-      }
-    `;
-
+    Based on the user's fitness assessment, generate a structured weekly workout plan in JSON format:
+    - Fitness Goal: ${fitnessGoal}
+    - Experience Level: ${experienceLevel}
+    - Available Equipment: ${equipment.length ? equipment.join(", ") : "None"}
+    - Physical Limitations: ${physicalLimitations.length ? physicalLimitations.join(", ") : "None"}
+    - Diet Type: ${dietType}
+    - Daily Exercise Duration: ${dailyExerciseDuration}
+    - Workout Days Per Week: ${workoutDays}
+    - Preferred Workout Type: ${workoutType} (e.g., Weightlifting, Bodyweight, or Mixed)
+  
+    Ensure the workout plan follows these conditions:
+    - Split the workout over ${workoutDays} days.
+    - Each day must have **unique** exercises (No repetitions throughout the week).
+    - If Weightlifting is chosen, suggest **strength training** exercises with weights.
+    - If Bodyweight is chosen, suggest **calisthenics** and resistance-based movements.
+    - If Mixed is chosen, provide **a combination** of both.
+    - Each day should target **different muscle groups** for variety and balanced training.
+    - Provide details for each exercise, including:
+      - Exercise Name
+      - Required Equipment (if any)
+      - Short Description
+      - Targeted Muscle Group
+      - Recommended Sets & Reps
+  
+    **Important:**
+    - Ensure exercises are **not repeated** throughout the entire week.
+    - Suggest **alternative variations** for similar muscle groups instead of repeating the same exercise.
+  
+    Format:
+    {
+      "Monday": [
+        {
+          "exercise": "Exercise Name",
+          "equipment": "Required Equipment",
+          "description": "Short description",
+          "muscleGroup": "Targeted muscle group",
+          "setsReps": "3 sets of 10 reps"
+        }
+      ],
+      "Tuesday": [...],
+      ...
+    }
+  `;
+  
     // **Fetch AI-generated workout plan**
     const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -101,7 +120,7 @@ export const generateWorkoutPlan = async (req, res) => {
       body: JSON.stringify({
         model: "gpt-4",
         messages: [{ role: "user", content: prompt }],
-        max_tokens: 2000,
+        max_tokens: 4000,
       }),
     });
 

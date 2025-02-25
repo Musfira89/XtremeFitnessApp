@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserList = () => {
   const [userData, setUserData] = useState([]);
@@ -25,10 +27,9 @@ const UserList = () => {
     setShowModal(true);
   };
 
-  // Function to handle user deletion
   const handleDeleteUser = async () => {
     if (!selectedUserId) return;
-
+  
     try {
       await axios.delete(
         `${import.meta.env.VITE_API_BASE_URL}/api/auth/users/${selectedUserId}`
@@ -37,10 +38,29 @@ const UserList = () => {
         prevUsers.filter((user) => user._id !== selectedUserId)
       );
       setShowModal(false);
-      alert("User deleted successfully");
+  
+      toast.success("User deleted successfully", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        style: { backgroundColor: "black", color: "white" },
+      });
     } catch (error) {
       console.error("Error deleting user:", error);
-      alert("Failed to delete user");
+      toast.error("Failed to delete user", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        style: { backgroundColor: "black", color: "white" },
+      });
     }
   };
 

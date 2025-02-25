@@ -8,7 +8,6 @@ const SupplementSchema = new mongoose.Schema({
       description: String,
       image: String,
       price: String,
-      amazonLink: String,
       category: String,
       recommendedFor: String,
     },

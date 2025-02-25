@@ -9,7 +9,7 @@ const UserMessages = () => {
   const [newMessage, setNewMessage] = useState("");
   const { userId } = useParams();
   const { adminAuth } = useAdminAuth();
-  const adminId = adminAuth.adminId;
+  const adminId = adminAuth?.adminId;
   const messagesEndRef = useRef(null);
 
   // Fetch messages
@@ -34,7 +34,7 @@ const UserMessages = () => {
         content: newMessage,
       });
 
-      setMessages([...messages, response.data.message]);
+      setMessages((prev) => [...prev, response.data.message]); // Ensure immediate update
       setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -46,8 +46,11 @@ const UserMessages = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Fetch messages every 5 seconds for real-time updates
   useEffect(() => {
     fetchMessages();
+    const interval = setInterval(fetchMessages, 5000);
+    return () => clearInterval(interval); // Cleanup on unmount
   }, [userId]);
 
   return (
@@ -73,7 +76,9 @@ const UserMessages = () => {
                 >
                   <p>{message.content}</p>
                   <p className="text-xs mt-1 text-gray-300 text-right">
-                    {new Date(message.timestamp).toLocaleTimeString()}
+                    {message.timestamp
+                      ? new Date(message.timestamp).toLocaleString()
+                      : "Just now"}
                   </p>
                 </div>
               </li>
