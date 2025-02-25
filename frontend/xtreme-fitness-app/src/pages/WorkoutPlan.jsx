@@ -28,8 +28,12 @@ const WorkoutPlan = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/api/generate-workout-plan/${userId}`
         );
-        setWorkoutPlan(response.data?.workoutPlan || {});
-        setActiveDay(Object.keys(response.data?.workoutPlan?.weeklyWorkoutPlan || {})[0]);
+        const plan = response.data?.workoutPlan || {};
+        setWorkoutPlan(plan);
+        setActiveDay(Object.keys(plan?.weeklyWorkoutPlan || {})[0]);
+  
+        // Fetch progress after workout plan is set
+        fetchProgress(plan);
       } catch (error) {
         console.error("Error fetching workout plan:", error);
       } finally {
@@ -37,50 +41,67 @@ const WorkoutPlan = () => {
       }
     };
   
+    const fetchProgress = async (plan) => {
+      try {
+        const progressResponse = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/get-progress/${userId}`
+        );
+        const progressData = progressResponse.data?.progress || [];
+  
+        let completedMap = {};
+        let completedCount = 0;
+        let totalExercises = 0;
+  
+        // Ensure `totalExercises` is correctly calculated
+        Object.values(plan?.weeklyWorkoutPlan || {}).forEach((exercises) => {
+          totalExercises += exercises.length;
+        });
+  
+        progressData.forEach((entry) => {
+          entry.exercises.forEach((exercise, index) => {
+            if (exercise.completed) {
+              completedCount++;
+              completedMap[`${entry.day}-${index}`] = true;
+            }
+          });
+        });
+  
+        setCompletedExercises(completedMap);
+        setProgress(totalExercises > 0 ? Math.round((completedCount / totalExercises) * 100) : 0);
+      } catch (error) {
+        console.error("Error fetching progress:", error);
+      }
+    };
+  
     fetchWorkoutPlan();
   }, [userId]);
   
   
-
+  
+  
   const toggleCompletion = async (day, index) => {
-    if (completedExercises[`${day}-${index}`]) return;
-  
-    setCompletedExercises((prev) => {
-      const updatedExercises = { ...prev, [`${day}-${index}`]: true };
-  
-      // Ensure totalExercises is calculated correctly
-      const totalExercises = Object.values(workoutPlan?.weeklyWorkoutPlan || {}).reduce(
-        (acc, exercises) => acc + exercises.length,
-        0
-      );
-  
-      const completedCount = Object.values(updatedExercises).filter(Boolean).length;
-      setProgress(
-        totalExercises > 0 ? Math.round((completedCount / totalExercises) * 100) : 0
-      );
-  
-      return updatedExercises;
-    });
+    if (completedExercises[`${day}-${index}`]) return; // Prevent unmarking
   
     try {
-      await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/update-progress`,
-        { userId, day, exerciseIndex: index, completed: true }
-      );
-  
-      // Show toast message **after successful API call**
-      toast.success("Workout marked as complete!", {
-        duration: 1500, // Short duration
-        style: {
-          background: "#000", // Black background
-          color: "#fff", // White text
-        },
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/update-progress`, {
+        userId,
+        day,
+        exerciseIndex: index,
+        completed: true,
       });
   
+      setCompletedExercises((prev) => ({ ...prev, [`${day}-${index}`]: true }));
+  
+      toast.success("Workout marked as complete!", {
+        duration: 1500,
+        style: { background: "#000", color: "#fff" },
+      });
     } catch (error) {
       console.error("Error updating progress:", error);
     }
   };
+  
+
   
 
   const getYouTubeThumbnail = (url) => {
