@@ -6,14 +6,17 @@ import "react-toastify/dist/ReactToastify.css";
 import Message from "./Message";
 
 const AdminZoomMeetings = () => {
-  const [meetingLink, setMeetingLink] = useState(null);
-  const [meetingHistory, setMeetingHistory] = useState([]);
+  const [meetingLink, setMeetingLink] = useState(localStorage.getItem("meetingLink") || null);
+  const [meetingHistory, setMeetingHistory] = useState(
+    JSON.parse(localStorage.getItem("meetingHistory")) || []
+  );
   const [userData, setUserData] = useState([]);
   const [selectedUser, setSelectedUser] = useState("");
   const [topic, setTopic] = useState("");
 
   useEffect(() => {
     fetchUsers();
+    checkMeetingExpiration();
   }, []);
 
   // Fetch users
@@ -28,31 +31,29 @@ const AdminZoomMeetings = () => {
     }
   };
 
+  // Check if stored meeting link is expired
+  const checkMeetingExpiration = () => {
+    const storedTimestamp = localStorage.getItem("meetingTimestamp");
+    if (storedTimestamp) {
+      const elapsedTime = Date.now() - parseInt(storedTimestamp, 10);
+      if (elapsedTime > 1800000) {
+        // 30 minutes passed, remove expired meeting link
+        localStorage.removeItem("meetingLink");
+        localStorage.removeItem("meetingTimestamp");
+        setMeetingLink(null);
+      }
+    }
+  };
+
   // Start Meeting
   const handleStartMeeting = async () => {
     if (!selectedUser) {
-      toast.error("Please select a user before starting a meeting.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        style: { backgroundColor: "black", color: "white" },
-      });
+      toast.error("Please select a user before starting a meeting.");
       return;
     }
 
     if (!topic.trim()) {
-      toast.error("Please enter a topic for the meeting.", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        style: { backgroundColor: "black", color: "white" },
-      });
+      toast.error("Please enter a topic for the meeting.");
       return;
     }
 
@@ -67,34 +68,13 @@ const AdminZoomMeetings = () => {
       );
 
       setMeetingLink(data.link);
+      localStorage.setItem("meetingLink", data.link);
+      localStorage.setItem("meetingTimestamp", Date.now().toString());
 
-      // Find the user email from userData
       const user = userData.find((u) => u._id === selectedUser);
       const userEmail = user ? user.email : "Unknown User";
 
-      toast.success(`Meeting link sent to ${userEmail}`, {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        style: { backgroundColor: "black", color: "white" },
-      });
-
-      // Remove the meeting link after 30 minutes
-      setTimeout(() => {
-        setMeetingLink(null);
-        toast.info("Meeting link expired.", {
-          position: "top-right",
-          autoClose: 3000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          style: { backgroundColor: "black", color: "white" },
-        });
-      }, 1800000); // 30 minutes
+      toast.success(`Meeting link sent to ${userEmail}`);
 
       // Store meeting in history
       const newMeeting = {
@@ -103,9 +83,11 @@ const AdminZoomMeetings = () => {
         day: new Date().toLocaleString("en-us", { weekday: "long" }),
         user: selectedUser,
       };
-      setMeetingHistory((prev) => [...prev, newMeeting]);
+      const updatedHistory = [...meetingHistory, newMeeting];
+      setMeetingHistory(updatedHistory);
+      localStorage.setItem("meetingHistory", JSON.stringify(updatedHistory));
 
-      setTopic(""); // Clear topic input after starting meeting
+      setTopic(""); // Clear topic input
     } catch (error) {
       console.error("Error creating meeting:", error);
     }
@@ -114,6 +96,7 @@ const AdminZoomMeetings = () => {
   // Clear Meeting History
   const handleClearHistory = () => {
     setMeetingHistory([]);
+    localStorage.removeItem("meetingHistory");
   };
 
   return (

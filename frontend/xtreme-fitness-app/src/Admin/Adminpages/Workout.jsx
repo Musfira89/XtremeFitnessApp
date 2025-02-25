@@ -59,24 +59,28 @@ const Workout = () => {
       try {
         // Fetch workout plan for total exercises count
         const planResponse = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/generate-workout-plan/${selectedUserId}`
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/generate-workout-plan/${selectedUserId}`
         );
         const plan = planResponse.data?.workoutPlan || {};
-    
+
         let totalExercises = 0;
         Object.values(plan.weeklyWorkoutPlan || {}).forEach((exercises) => {
           totalExercises += exercises.length;
         });
-    
+
         // Fetch user progress
         const progressResponse = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/get-progress/${selectedUserId}`
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/get-progress/${selectedUserId}`
         );
         const progressData = progressResponse.data?.progress || [];
-    
+
         let completedCount = 0;
         let progressMap = {}; // ✅ New progress mapping
-    
+
         progressData.forEach((entry) => {
           entry.exercises.forEach((exercise, index) => {
             if (exercise.completed) {
@@ -85,20 +89,19 @@ const Workout = () => {
             }
           });
         });
-    
+
         // Ensure correct percentage calculation
         const progress =
           totalExercises > 0
             ? Math.round((completedCount / totalExercises) * 100)
             : 0;
-    
+
         setUserProgress(progressMap); // ✅ Store user progress
         setProgressPercentage(progress); // ✅ Update percentage
       } catch (error) {
         console.error("Error fetching progress:", error);
       }
     };
-    
 
     fetchWorkoutPlan();
     fetchProgress();
@@ -106,7 +109,7 @@ const Workout = () => {
 
   return (
     <div className="p-8 flex flex-col items-center">
-       <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+      <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
         Users Workout plan
       </h1>
       <p className="text-gray-500 dark:text-gray-400 text-md mb-6">
@@ -137,7 +140,7 @@ const Workout = () => {
 
       {loading ? (
         <div className="text-center text-red-600 font-semibold">
-          Loading workout plan...
+ 
         </div>
       ) : workoutPlan && workoutPlan.weeklyWorkoutPlan ? (
         <>
@@ -212,7 +215,7 @@ const Workout = () => {
                       )}
 
                       <span className="text-sm font-semibold">
-                        {userProgress[activeDay]?.[index]
+                        {userProgress[`${activeDay}-${index}`]
                           ? "Completed"
                           : "Not Completed"}
                       </span>

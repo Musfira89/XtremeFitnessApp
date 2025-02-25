@@ -85,59 +85,58 @@ const Supplements = () => {
         </select>
       </div>
 
-      {/* Supplements Table */}
-      {loading ? (
-        <div className="flex items-center justify-center space-x-3">
-          <div className="w-6 h-6 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">
-            Fetching supplements...
-          </p>
-        </div>
-      ) : supplements.length > 0 ? (
-        <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden p-6">
-          <table className="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-            <thead className="bg-gradient-to-r from-gray-200 to-gray-100 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300">
-              <tr>
-                <th className="px-6 py-3 text-left text-lg font-semibold">Name</th>
-                <th className="px-6 py-3 text-left text-lg font-semibold">Description</th>
-                <th className="px-6 py-3 text-left text-lg font-semibold">Category</th>
-                <th className="px-6 py-3 text-left text-lg font-semibold">Recommended For</th>
-              </tr>
-            </thead>
-            <tbody>
-              {supplements.map((supplement, index) => (
-                <tr
-                  key={supplement._id}
-                  className={`${
-                    index % 2 === 0 ? "bg-gray-50 dark:bg-gray-700" : "bg-white dark:bg-gray-800"
-                  } hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200`}
-                >
-                  <td className="px-6 py-4 font-semibold text-gray-800 dark:text-gray-200">
-                    {supplement.name}
-                  </td>
-                  <td className="px-6 py-4 text-gray-600 dark:text-gray-300 text-sm">
-                    {supplement.description}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-semibold ${getCategoryColor(
-                        supplement.category
-                      )}`}
-                    >
-                      {supplement.category}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
-                    {supplement.recommendedFor}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <p className="text-gray-500 dark:text-gray-400 text-lg">No supplements found.</p>
-      )}
+    {/* Supplements Table */}
+{loading ? (
+  <div className="flex items-center justify-center space-x-3">
+    <div className="w-6 h-6 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+    <p className="text-gray-600 dark:text-gray-400 text-lg">......</p>
+  </div>
+) : selectedUserId && supplements.length > 0 ? ( // Ensure supplements are only shown if a user is selected
+  <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden p-6">
+    <table className="min-w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+      <thead className="bg-gradient-to-r from-gray-200 to-gray-100 dark:from-gray-700 dark:to-gray-600 text-gray-700 dark:text-gray-300">
+        <tr>
+          <th className="px-6 py-3 text-left text-lg font-semibold">Name</th>
+          <th className="px-6 py-3 text-left text-lg font-semibold">Description</th>
+          <th className="px-6 py-3 text-left text-lg font-semibold">Category</th>
+          <th className="px-6 py-3 text-left text-lg font-semibold">Recommended For</th>
+        </tr>
+      </thead>
+      <tbody>
+        {supplements.map((supplement, index) => (
+          <tr
+            key={supplement._id}
+            className={`${
+              index % 2 === 0 ? "bg-gray-50 dark:bg-gray-700" : "bg-white dark:bg-gray-800"
+            } hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200`}
+          >
+            <td className="px-6 py-4 font-semibold text-gray-800 dark:text-gray-200">
+              {supplement.name}
+            </td>
+            <td className="px-6 py-4 text-gray-600 dark:text-gray-300 text-sm">
+              {supplement.description}
+            </td>
+            <td className="px-6 py-4">
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-semibold ${getCategoryColor(
+                  supplement.category
+                )}`}
+              >
+                {supplement.category}
+              </span>
+            </td>
+            <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
+              {supplement.recommendedFor}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+) : selectedUserId ? ( // Only show "No supplements found" when a user is selected
+  <p className="text-gray-500 dark:text-gray-400 text-lg">No supplements found.</p>
+) : null}
+
     </div>
   );
 };

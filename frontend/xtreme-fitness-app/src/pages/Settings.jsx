@@ -13,7 +13,6 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const Settings = () => {
   const { userId } = useParams();
   const [formData, setFormData] = useState({
@@ -43,39 +42,38 @@ const Settings = () => {
       setPreview(URL.createObjectURL(file));
     }
   };
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key]);
     });
-  
+
     if (profileImage) {
       formDataToSend.append("profileImage", profileImage);
     }
-  
+
     // Debugging
     for (let pair of formDataToSend.entries()) {
       console.log(pair[0], pair[1]);
     }
-  
+
     try {
       await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/api/auth/update/${userId}`,
         formDataToSend,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-  
+
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile.");
     }
   };
-  
+
   return (
     <Box
       sx={{ p: 3, maxWidth: 1100, margin: "0 auto", backgroundColor: "#fff" }}
@@ -91,7 +89,7 @@ const Settings = () => {
       >
         Settings
       </Typography>
-  
+
       <Grid container spacing={3}>
         {/* Left Section - Profile Upload (40%) */}
         <Grid item xs={12} md={4}>
@@ -112,8 +110,10 @@ const Settings = () => {
               Profile Picture
             </Typography>
             <Typography color="textSecondary" sx={{ mb: 2, fontSize: 14 }}>
-              * Please fill in all your details when uploading a new profile picture.
+              * Please fill in all your details when uploading a new profile
+              picture. <br />* Uploading may take a few seconds, please wait.
             </Typography>
+
             <Button
               variant="contained"
               sx={{ mt: 1, background: "#991b1b", color: "#fff" }}
@@ -129,7 +129,7 @@ const Settings = () => {
             </Button>
           </Paper>
         </Grid>
-  
+
         {/* Right Section - Editable Fields (60%) */}
         <Grid item xs={12} md={8}>
           <Paper
@@ -207,6 +207,5 @@ const Settings = () => {
       </Grid>
     </Box>
   );
-          };
-  export default Settings;
-  
+};
+export default Settings;

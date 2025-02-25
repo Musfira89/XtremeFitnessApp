@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 import { FaPlayCircle } from "react-icons/fa";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { CircularProgress } from "@mui/material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const WorkoutPlan = () => {
   const { userId } = useParams();

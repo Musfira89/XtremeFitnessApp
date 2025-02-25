@@ -32,7 +32,7 @@ const Meal = () => {
 
   useEffect(() => {
     if (!selectedUserId) return;
-  
+
     const fetchMealPlan = async () => {
       setLoading(true);
       try {
@@ -53,15 +53,17 @@ const Meal = () => {
         setLoading(false);
       }
     };
-  
+
     const fetchProgress = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_BASE_URL}/api/get-mealprogress/${selectedUserId}`
+          `${
+            import.meta.env.VITE_API_BASE_URL
+          }/api/get-mealprogress/${selectedUserId}`
         );
-  
+
         console.log("Fetched progress data:", response.data); // Debugging
-  
+
         // Ensure progress is always an array
         const progressData = Array.isArray(response.data) ? response.data : [];
         setUserProgress(progressData);
@@ -70,39 +72,42 @@ const Meal = () => {
         setUserProgress([]); // Default to empty array on error
       }
     };
-  
+
     // **Step 1:** Fetch Meal Plan First
     fetchMealPlan().then(() => {
       // **Step 2:** Fetch Progress Only After Meal Plan is Loaded
       fetchProgress();
     });
   }, [selectedUserId]);
-  
+
   // Ensure progress is calculated after meal plan is set
   useEffect(() => {
     if (mealPlan.length === 0 || userProgress.length === 0) {
       setProgress(0);
       return;
     }
-  
+
     const totalDays = mealPlan.length;
-    const completedDays = userProgress.filter((progress) => progress.completed)
-      .length;
-  
-    setProgress(totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0);
+    const completedDays = userProgress.filter(
+      (progress) => progress.completed
+    ).length;
+
+    setProgress(
+      totalDays > 0 ? Math.round((completedDays / totalDays) * 100) : 0
+    );
   }, [mealPlan, userProgress]);
-  
+
   const currentDay = mealPlan[selectedDay]?.day?.trim(); // Ensure no extra spaces
-  
+
   const isDayCompleted = userProgress?.some(
     (progress) =>
       progress.day?.trim().toLowerCase() === currentDay?.toLowerCase() &&
       progress.completed
   );
-  
+
   return (
     <div className="p-8 flex flex-col items-center">
-       <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+      <h1 className="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-2">
         Users Weekly Meal plan
       </h1>
       <p className="text-gray-500 dark:text-gray-400 text-md mb-6">
@@ -131,9 +136,7 @@ const Meal = () => {
       </div>
 
       {loading ? (
-        <div className="text-center text-red-600 font-semibold">
-          Loading meal plan...
-        </div>
+        <div className="text-center text-red-600 font-semibold"></div>
       ) : error ? (
         <p className="text-center text-red-500 font-semibold">{error}</p>
       ) : mealPlan.length > 0 ? (
@@ -155,14 +158,15 @@ const Meal = () => {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 mt-4">
-            <CircularProgress
-              variant="determinate"
-              value={progress}
-              size={40}
-            />
-            <span className="text-gray-800 dark:text-white">{progress}%</span>
-          </div>
+          <div className="flex items-center gap-2 mt-2 mb-8 justify-start">
+  <CircularProgress
+    variant="determinate"
+    value={progress}
+    size={40}
+  />
+  <span className="text-gray-800 dark:text-white">{progress}%</span>
+</div>
+
 
           {/* Meal Table */}
           {selectedDay !== null && (
