@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { CircularProgress } from "@mui/material";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MealPlan = () => {
   const [showPopup, setShowPopup] = useState(false);

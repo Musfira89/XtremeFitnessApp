@@ -147,6 +147,9 @@ const CoachSettings = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField label="Location" name="location" value={coachData.location} fullWidth onChange={handleChange} />
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField label="Password" name="password" value={coachData.password} fullWidth onChange={handleChange} />
+                </Grid>
                 <Grid item xs={12}>
                   <Button type="submit" variant="contained" sx={{ mt: 2, background: "#991b1b", color: "#fff" }}>
                     Save Changes
