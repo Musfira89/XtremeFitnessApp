@@ -24,7 +24,7 @@ export const Home = () => {
 
       <PricingPlans />
       <FaqSection />
-      <GoogleReviews email="Xtremefit8@gmail.com" />
+      {/* <GoogleReviews email="Xtremefit8@gmail.com" /> */}
 
       <Support />
       <Contactform />
