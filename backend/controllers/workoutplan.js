@@ -6,7 +6,7 @@ import fetch from "node-fetch";
 dotenv.config();
 
 const API_KEY = process.env.OPENAI_API_KEY;
- 
+
 export const generateWorkoutPlan = async (req, res) => {
   const { userId } = req.params;
 
@@ -75,40 +75,42 @@ export const generateWorkoutPlan = async (req, res) => {
     - Daily Exercise Duration: ${dailyExerciseDuration}
     - Workout Days Per Week: ${workoutDays}
     - Preferred Workout Type: ${workoutType} (e.g., Weightlifting, Bodyweight, or Mixed)
-  
-    Ensure the workout plan follows these conditions:
-    - Split the workout over ${workoutDays} days.
-    - Each day must have **unique** exercises (No repetitions throughout the week).
-    - If Weightlifting is chosen, suggest **strength training** exercises with weights.
-    - If Bodyweight is chosen, suggest **calisthenics** and resistance-based movements.
-    - If Mixed is chosen, provide **a combination** of both.
-    - Each day should target **different muscle groups** for variety and balanced training.
-    - Provide details for each exercise, including:
-      - Exercise Name
-      - Required Equipment (if any)
-      - Short Description
-      - Targeted Muscle Group
-      - Recommended Sets & Reps
-  
-    **Important:**
-    - Ensure exercises are **not repeated** throughout the entire week.
-    - Suggest **alternative variations** for similar muscle groups instead of repeating the same exercise.
-  
-    Format:
+    
+    **Workout Plan Guidelines:**
+    - **Each day must contain exactly 4 to 5 unique exercises.**
+    - Ensure **no exercise is repeated** throughout the week.
+    - If Weightlifting is chosen, include **strength training** with weights.
+    - If Bodyweight is chosen, include **calisthenics** and resistance movements.
+    - If Mixed is chosen, include **both types**.
+    - Each day must focus on **different muscle groups**.
+    - Each exercise must include:
+      - **Exercise Name**
+      - **Required Equipment (if any)**
+      - **Short Description**
+      - **Targeted Muscle Group**
+      - **Recommended Sets & Reps**
+    
+    **Example Format (JSON):**
     {
       "Monday": [
         {
-          "exercise": "Exercise Name",
-          "equipment": "Required Equipment",
-          "description": "Short description",
-          "muscleGroup": "Targeted muscle group",
-          "setsReps": "3 sets of 10 reps"
-        }
+          "exercise": "Push-Ups",
+          "equipment": "None",
+          "description": "A basic bodyweight exercise for chest and triceps",
+          "muscleGroup": "Chest, Triceps",
+          "setsReps": "3 sets of 12 reps"
+        },
+        ...
       ],
       "Tuesday": [...],
       ...
     }
-  `;
+    
+    **Important:**
+    - **Do not repeat exercises across different days.**
+    - Ensure each workout day has **exactly 4 to 5 exercises.**
+    `;
+    
   
     // **Fetch AI-generated workout plan**
     const aiResponse = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -130,13 +132,23 @@ export const generateWorkoutPlan = async (req, res) => {
 
     const aiData = await aiResponse.json();
     const workoutPlanJson = aiData.choices?.[0]?.message?.content?.trim();
-
-    // **Ensure valid JSON**
-    if (!workoutPlanJson.startsWith("{")) {
-      return res.status(500).json({ message: "Invalid AI response format" });
-    }
-
+    
     let workoutPlan;
+    // **Ensure valid JSON**
+    if (!workoutPlan || Object.keys(workoutPlan).length === 0) {
+      return res.status(500).json({ message: "Invalid workout plan format from AI" });
+    }
+    
+    // Ensure each day has 4-5 exercises
+    for (const day in workoutPlan) {
+      if (!Array.isArray(workoutPlan[day]) || workoutPlan[day].length < 4 || workoutPlan[day].length > 5) {
+        console.error(`Invalid workout plan for ${day}:`, workoutPlan[day]);
+        return res.status(500).json({ message: `Invalid workout plan: ${day} does not have 4-5 exercises` });
+      }
+    }
+    
+
+
     try {
       workoutPlan = JSON.parse(workoutPlanJson);
     } catch (error) {
@@ -170,13 +182,24 @@ export const generateWorkoutPlan = async (req, res) => {
 const fetchExerciseVideo = async (exerciseName) => {
   try {
     const apiKey = process.env.YOUTUBE_API_KEY;
+    
+    // List of trusted fitness channels
+    const trustedChannels = [
+      "UC68TLK0mAEzUyHx5x5k-S1Q", // Jeff Nippard
+      "UCe0TLA0EsQbE-MjuHXevj2A", // Athlean-X
+      "UCsKbelzYJ1d1zQuq5SxDvJA", // ThenX
+    ];
+
+    // Randomly select a channel from the trusted list
+    const channelId = trustedChannels[Math.floor(Math.random() * trustedChannels.length)];
+
     const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
       exerciseName + " workout"
-    )}&type=video&maxResults=1&key=${apiKey}`;
+    )}&channelId=${channelId}&type=video&maxResults=1&key=${apiKey}`;
 
     const response = await fetch(url);
     const data = await response.json();
-    
+
     console.log("YouTube API Response:", data); // Debugging output
 
     if (!data.items || data.items.length === 0) {
@@ -190,5 +213,6 @@ const fetchExerciseVideo = async (exerciseName) => {
     return null;
   }
 };
+
 
 
