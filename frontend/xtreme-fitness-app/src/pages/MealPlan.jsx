@@ -384,21 +384,6 @@ const MealPlan = () => {
                 </ol>
               </div>
 
-              {/* Nutritional Benefits */}
-              <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-200 dark:border-gray-700">
-                <h4 className="text-xl font-semibold text-gray-900 dark:text-gray-300 mb-4 uppercase">
-                  Nutritional Benefits
-                </h4>
-                <ul className="space-y-3 text-gray-700 dark:text-gray-300">
-                  {selectedRecipe.recipe?.nutritional_benefits?.map(
-                    (benefit, index) => (
-                      <li key={index} className="ml-4 list-disc">
-                        {benefit}
-                      </li>
-                    )
-                  ) || <li>No nutritional benefits available.</li>}
-                </ul>
-              </div>
             </div>
           </div>
         </div>

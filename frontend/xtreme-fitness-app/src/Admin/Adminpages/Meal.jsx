@@ -290,23 +290,7 @@ const Meal = () => {
               </div>
             </div>
 
-            {/* Nutritional Benefits */}
-            <div className="mt-4">
-              <h4 className="text-lg font-semibold mb-2">
-                Nutritional Benefits
-              </h4>
-              <ul className="list-disc list-inside text-gray-700 text-sm">
-                {selectedRecipe.recipe?.nutritional_benefits?.length > 0 ? (
-                  selectedRecipe.recipe.nutritional_benefits.map(
-                    (benefit, index) => <li key={index}>{benefit}</li>
-                  )
-                ) : (
-                  <li className="text-gray-500">
-                    No nutritional benefits available.
-                  </li>
-                )}
-              </ul>
-            </div>
+
           </div>
         </div>
       )}

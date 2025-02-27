@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import WeeklyMealPlan from "../models/MealPlan.js";
 import fetch from "node-fetch";
 import jsonlint from "jsonlint";
-import Question from "../models/question.js"
+import Question from "../models/question.js";
 import mongoose from "mongoose";
 dotenv.config();
 
@@ -54,107 +54,42 @@ export const generateMealPlan = async (req, res) => {
     });
 
     // AI Prompt
-    const prompt = `Generate a structured meal plan for 7 days in strict JSON format.
-    The meal plan should be customized based on the following user preferences:
-    - Age: ${age}
-    - Gender: ${gender}
-    - Diet Preference: ${dietPreference}
-    - Calories Needed: ${caloriesNeeded}
-    - Fitness Goal: ${goal}
+    const prompt = `Generate a 7-day structured meal plan in strict JSON format based on:  
+    - Age: ${age}  
+    - Gender: ${gender}  
+    - Diet: ${dietPreference}  
+    - Calories: ${caloriesNeeded}  
+    - Goal: ${goal}  
     
-    The JSON must be a valid array of objects with no missing brackets, no trailing commas, and correct string formatting.
-    Structure:
+    **Dietary Guidelines:**  
+    - "Vegetarian/Vegan": No meat, poultry, seafood, or animal products.  
+    - "Low-Carb/Keto": Keep carbs minimal.  
+    - "High-Protein": Prioritize lean meats, legumes, and protein-rich foods.  
+    
+    **Weight Loss Plans (Non-Diabetic):**  
+    - Low-carb days: 10-20% of calories from carbs.  
+    - High-carb days: 40-50% of calories from carbs.  
+    
+    **Output JSON Format (Example for Monday):**  
     [
       {
         "day": "Monday",
-        "breakfast": { 
-          "name": "Meal Name", 
-          "calories": 300, 
-          "carbs": 30, 
-          "protein": 20, 
-          "fat": 10, 
-          "recipe": {
-            "ingredients": [
-              "1 cup rolled oats",
-              "2 cups milk (or water for a lighter option)",
-              "1 medium banana, mashed",
-              "1 tbsp honey or maple syrup",
-              "2 tbsp raisins or dried cranberries",
-              "1 tbsp chia seeds or flaxseeds",
-              "1 tbsp peanut butter or almond butter",
-              "½ tsp cinnamon (optional)",
-              "¼ cup chopped nuts (almonds, walnuts, or cashews)",
-              "½ cup fresh fruit (berries, apples, or mango)"
-            ],
-            "instructions": [
-              "In a pot, bring milk (or water) to a simmer over medium heat.",
-              "Add rolled oats and stir occasionally for 5-7 minutes until thickened.",
-              "Mix in the mashed banana, honey, and chia seeds. Cook for another 2 minutes.",
-              "Remove from heat and stir in peanut butter, raisins, and cinnamon.",
-              "Top with fresh fruit and chopped nuts before serving."
-            ],
-            "nutritional_benefits": [
-              "High in complex carbs  (Oats, banana, and dried fruit provide sustained energy.)",
-              "Good source of fiber (Aids digestion and keeps you full longer.)",
-              "Healthy fats & protein (Nuts, seeds, and peanut butter for balanced nutrition.)"
-            ]
-          }
-        },
-        "lunch": { 
-          "name": "Meal Name", 
-          "calories": 450, 
-          "carbs": 40, 
-          "protein": 30, 
-          "fat": 15,
-          "recipe": {
-            "ingredients": ["..."],
-            "instructions": ["..."],
-            "nutritional_benefits": ["..."]
-          }
-        },
-        "dinner": { 
-          "name": "Meal Name", 
-          "calories": 500, 
-          "carbs": 50, 
-          "protein": 40, 
-          "fat": 20,
-          "recipe": {
-            "ingredients": ["..."],
-            "instructions": ["..."],
-            "nutritional_benefits": ["..."]
-          }
-        },
-        "snacks": { 
-          "name": "Snack Name", 
-          "calories": 200, 
-          "carbs": 15, 
-          "protein": 5, 
-          "fat": 5,
-          "recipe": {
-            "ingredients": ["..."],
-            "instructions": ["..."],
-            "nutritional_benefits": ["..."]
-          }
+        "meals": {
+          "breakfast": { "name": "Meal Name", "calories": 300, "macros": {"carbs": 30, "protein": 20, "fat": 10}, "recipe": {"ingredients": ["..."], "instructions": ["..."]} },
+          "lunch": { "name": "Meal Name", "calories": 450, "macros": {"carbs": 40, "protein": 30, "fat": 15}, "recipe": {"ingredients": ["..."], "instructions": ["..."]} },
+          "dinner": { "name": "Meal Name", "calories": 500, "macros": {"carbs": 50, "protein": 40, "fat": 20}, "recipe": {"ingredients": ["..."], "instructions": ["..."]} },
+          "snacks": { "name": "Snack Name", "calories": 200, "macros": {"carbs": 15, "protein": 5, "fat": 5}, "recipe": {"ingredients": ["..."], "instructions": ["..."]} }
         }
       },
-      { "day": "Tuesday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
-      { "day": "Wednesday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
-      { "day": "Thursday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
-      { "day": "Friday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
-      { "day": "Saturday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } },
-      { "day": "Sunday", "breakfast": { ... }, "lunch": { ... }, "dinner": { ... }, "snacks": { ... } }
+      { "day": "Tuesday", "meals": { ... } },
+      { "day": "Wednesday", "meals": { ... } },
+      { "day": "Thursday", "meals": { ... } },
+      { "day": "Friday", "meals": { ... } },
+      { "day": "Saturday", "meals": { ... } },
+      { "day": "Sunday", "meals": { ... } }
     ]
     
-    ALL WEIGHTLOSS PLANS MUST BE CARB CYCLING UNLESS CLIENT IS A DIABETIC.
-    - Low carb days: 10-20% of the calories must come from carbs.
-    - High carb days: 40-50% of the calories must come from carbs.
-    
-    For example:
-    Monday (High-Carb Day)
-    Breakfast: 1/2 cup old-fashioned oats cooked with 1 cup 1 percent milk, an apple or banana, and 2 tablespoons chopped walnuts (443 cals, 67 g carbs, 16 g protein, 15 g fat)
-    
-    Return only JSON, no additional text.`;
-    
+    Return **only valid JSON** with no extra text.`;
 
     const aiResponse = await fetch(
       "https://api.openai.com/v1/chat/completions",
@@ -238,7 +173,10 @@ const fetchMealImages = async (mealPlan) => {
         );
 
         const dalleData = await dalleResponse.json();
-        meal.image = dalleData.data?.length > 0 ? dalleData.data[0].url : "default-image-url.jpg";
+        meal.image =
+          dalleData.data?.length > 0
+            ? dalleData.data[0].url
+            : "default-image-url.jpg";
 
         // Fetch video
         meal.video = await fetchMealVideo(meal.name);
@@ -251,7 +189,6 @@ const fetchMealImages = async (mealPlan) => {
   }
 };
 
-
 // **Fetch Meal Video Function**
 const fetchMealVideo = async (mealName) => {
   try {
@@ -262,7 +199,9 @@ const fetchMealVideo = async (mealName) => {
     }
 
     const query = `${mealName} recipe`;
-    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=1&key=${apiKey}`;
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(
+      query
+    )}&type=video&maxResults=1&key=${apiKey}`;
 
     const response = await fetch(url);
     const data = await response.json();
@@ -279,8 +218,6 @@ const fetchMealVideo = async (mealName) => {
   }
 };
 
-
-
 export const getUserResponses = async (req, res) => {
   try {
     const { userId, category, weekNumber } = req.params; // Include weekNumber
@@ -289,18 +226,21 @@ export const getUserResponses = async (req, res) => {
     const responses = await Response.find({ userId, category, weekNumber });
 
     // Fetch all questions related to this category
-    const questions = await Question.find({ category }).select("_id questionText");
+    const questions = await Question.find({ category }).select(
+      "_id questionText"
+    );
 
     // Map responses to their respective questions
     const formattedResponses = questions.map((question) => {
-      const response = responses.find((res) => 
+      const response = responses.find((res) =>
         res.answers.some((ans) => ans.questionId.equals(question._id))
       );
       return {
         questionId: question._id,
         questionText: question.questionText,
         answer: response
-          ? response.answers.find((ans) => ans.questionId.equals(question._id)).answer
+          ? response.answers.find((ans) => ans.questionId.equals(question._id))
+              .answer
           : "No Response",
       };
     });
@@ -311,8 +251,6 @@ export const getUserResponses = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
-
 
 export const saveResponses = async (req, res) => {
   try {
@@ -331,7 +269,7 @@ export const saveResponses = async (req, res) => {
     const newResponse = new Response({
       userId,
       category,
-      weekNumber,  // Add this field
+      weekNumber, // Add this field
       answers,
     });
 
@@ -362,4 +300,3 @@ export const getWeeksForUser = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-

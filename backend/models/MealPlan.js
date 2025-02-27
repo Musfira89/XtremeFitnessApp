@@ -9,7 +9,6 @@ const mealSchema = new mongoose.Schema({
   recipe: {
     ingredients: [String],  // List of ingredients
     instructions: [String],  // Step-by-step instructions
-    nutritional_benefits: [String] // Key nutritional benefits
   },
   image: String,
   video: String
